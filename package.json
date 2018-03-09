@@ -1,0 +1,27 @@
+{
+  "name": "hypnos",
+  "version": "0.1.0",
+  "description": "An API client and ORM for CoreAPI powered REST APIs.",
+  "main": "index.js",
+  "scripts": {
+    "test": "yarn run test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adventurerscodex/hypnos.git"
+  },
+  "keywords": [
+    "api",
+    "client",
+    "REST",
+    "Django-REST",
+    "ORM",
+    "CoreAPI"
+  ],
+  "author": "Brian Schrader",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/adventurerscodex/hypnos/issues"
+  },
+  "homepage": "https://github.com/adventurerscodex/hypnos#readme"
+}

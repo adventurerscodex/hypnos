@@ -1,0 +1,35 @@
+{
+  "verbose": true,
+  "clearMocks": true,
+  "transform": {
+    ".*": "babel-jest"
+  },
+  "moduleFileExtensions": [
+    "js"
+  ],
+  "moduleDirectories": [
+    "src",
+    "node_modules"
+  ],
+  "modulePaths": [
+    "src"
+  ],
+  "collectCoverageFrom": [
+    "src/**/*.{js,jsx}",
+    "!**/node_modules/**"
+  ],
+  "coverageDirectory": "./coverage",
+  "mapCoverage": true,
+  "notify": true,
+  "roots": [
+    "src/"
+  ],
+  "coverageThreshold": {
+     "global": {
+       "branches": 95,
+       "functions": 95,
+       "lines": 95,
+       "statements": 95
+     }
+   }
+}

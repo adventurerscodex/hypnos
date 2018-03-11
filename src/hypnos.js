@@ -5,23 +5,22 @@ import schema from 'schema';
 import APIResponse from './response';
 
 /**
- * The Hypnos Service is a light-weight ORM and API Client for
- * Javascript Web Clients.
+ * Hypnos is a light-weight ORM and API Client for Javascript Web Clients.
  *
  * It uses a CoreAPI client and a given API schema to allow clients easy access
  * to both raw response data and mapped custom Model objects.
  *
- * Hypnos Service returns all normal responses in the form of a APIResponse
+ * Hypnos returns all normal responses in the form of a APIResponse
  * which allows for easy navigation through paginated responses as well as automatic
  * mapping to custom Models (see `Model` and `APIResponse` for more information).
  *
- * Once a Model is mapped from a response, it is also registered with the
- * Hypnos Service and has access to shortcut methods via it's `ps` property.
+ * Once a Model is mapped from a response, it is also registered with
+ * Hypnos and has access to shortcut methods via it's `ps` property.
  *
  * Example
  * -------
  *
- *     HypnosService.retrieve(Book, { id: '1234' }).then(response => {
+ *     Hypnos.retrieve(Book, { id: '1234' }).then(response => {
  *         const book = response.object;
  *         // Update the local properties of the book object.
  *         book.title('My new favorite book');
@@ -36,7 +35,6 @@ import APIResponse from './response';
  *         book.ps.delete();
  *     });
  */
-// TODO: make this default....
 export class Hypnos {
     static configuration = {};
 
@@ -44,7 +42,7 @@ export class Hypnos {
 
     static get client() {
         if (!Hypnos._client) {
-            Hypnos._client = new _HypnosService(
+            Hypnos._client = new _Hypnos(
                 Hypnos.configuration.credentials,
                 Hypnos.configuration.schema
             );
@@ -57,7 +55,7 @@ export class Hypnos {
     }
 }
 
-class _HypnosService {
+class _Hypnos {
 
     constructor(credentials, schema) {
         this.schema = schema;
@@ -110,7 +108,7 @@ class _HypnosService {
      * Most times it is easiest to use subclasses of the base `Model` type
      * (see Model for more information), and if you need to provide a custom
      * object, you can refer to the `Model` documentation to see what fields
-     * are required in order to conform with the HypnosService API.
+     * are required in order to conform with the Hypnos API.
      */
 
     /**
@@ -121,7 +119,7 @@ class _HypnosService {
      * Example
      * -------
      *
-     *     HypnosService.list(Book).then(response => {
+     *     Hypnos.list(Book).then(response => {
      *         const books = response.objects;
      *         // Do stuff with books...
      *     });
@@ -139,7 +137,7 @@ class _HypnosService {
      * Example
      * -------
      *
-     *     HypnosService.read(Book, { id: '1234' }).then(response => {
+     *     Hypnos.read(Book, { id: '1234' }).then(response => {
      *         const book = response.object;
      *         // Do stuff with your book...
      *     });
@@ -158,7 +156,7 @@ class _HypnosService {
      * -------
      *
      *     const data = { title: 'An Adventure', author: 'John Smith' };
-     *     HypnosService.create(Book, data).then(response => {
+     *     Hypnos.create(Book, data).then(response => {
      *         const book = response.object;
      *         // Do stuff with your new book...
      *     });
@@ -177,7 +175,7 @@ class _HypnosService {
      * -------
      *
      *     const data = { id: '1234', title: 'An Adventure II', author: 'John Smith' };
-     *     HypnosService.update(Book, data).then(response => {
+     *     Hypnos.update(Book, data).then(response => {
      *         const book = response.object;
      *         // Do stuff with your updated book...
      *     });
@@ -195,7 +193,7 @@ class _HypnosService {
      * Example
      * -------
      *
-     *     HypnosService.delete(Book, { id: '1234' });
+     *     Hypnos.delete(Book, { id: '1234' });
      */
     delete = (model, params={}, raw=false) => {
         const keys = [...model.__skeys__, 'delete'];

@@ -3,7 +3,7 @@ import { Persistence } from './persistence_service';
 
 
 /**
- * A APIResponse is a convenience wrapper around the data received when doing
+ * An APIResponse is a convenience wrapper around the data received when doing
  * a mapped query to the API.
  *
  * If a model instance is provided, the APIResponse will map the response data

@@ -4,6 +4,7 @@
   "description": "An API client and ORM for CoreAPI powered REST APIs.",
   "main": "index.js",
   "scripts": {
+    "doc": "esdoc",
     "test": "yarn run test"
   },
   "repository": {
@@ -23,5 +24,15 @@
   "bugs": {
     "url": "https://github.com/adventurerscodex/hypnos/issues"
   },
-  "homepage": "https://github.com/adventurerscodex/hypnos#readme"
+  "homepage": "https://github.com/adventurerscodex/hypnos#readme",
+  "optionalDependencies": {
+    "knockout": "^3.5.0-beta"
+  },
+  "dependencies": {
+    "esdoc-ecmascript-proposal-plugin": "^1.0.0"
+  },
+  "devDependencies": {
+    "esdoc": "^1.0.4",
+    "esdoc-standard-plugin": "^1.0.0"
+  }
 }

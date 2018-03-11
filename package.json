@@ -2,9 +2,8 @@
   "name": "hypnos",
   "version": "0.1.0",
   "description": "An API client and ORM for CoreAPI powered REST APIs.",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
-    "doc": "esdoc",
     "test": "yarn run test"
   },
   "repository": {
@@ -28,9 +27,7 @@
   "optionalDependencies": {
     "knockout": "^3.5.0-beta"
   },
-  "dependencies": {
-    "esdoc-ecmascript-proposal-plugin": "^1.0.0"
-  },
+  "dependencies": {},
   "devDependencies": {
     "esdoc": "^1.0.4",
     "esdoc-standard-plugin": "^1.0.0"

@@ -1,5 +1,4 @@
 import uuid from 'uuid';
-import { Persistence } from './persistence_service';
 
 
 /**

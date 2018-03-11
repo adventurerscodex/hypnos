@@ -1,4 +1,4 @@
-import { InstanceToken, ModelToken } from './tokens';
+import { InstanceToken, ModelToken } from '../tokens';
 import ko from 'knockout';
 
 

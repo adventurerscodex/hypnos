@@ -14,7 +14,7 @@ import ko from 'knockout';
  * use-cases. This framework provides a few default implementations of usable
  * model classes like: JSONModel and KOModel.
  */
-export class BaseModel {
+class BaseModel {
 
     // Automatically register the given class to the persistence service.
     static get ps() {
@@ -34,3 +34,5 @@ export class BaseModel {
         throw new Error(`Model: "${this.constructor.name}" must override exportValues.`);
     };
 }
+
+export default BaseModel;

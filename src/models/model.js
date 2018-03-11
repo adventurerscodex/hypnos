@@ -1,4 +1,4 @@
-import BaseModel from './base';
+import { BaseModel } from './base';
 
 /**
  * A subclass of the Base `Model` class which provides serialization and

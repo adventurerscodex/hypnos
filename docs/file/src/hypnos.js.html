@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../">
+  <title data-ice="title">src/hypnos.js | hypnos</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  <script src="script/manual.js"></script>
+<meta name="description" content="An API client and ORM for CoreAPI powered REST APIs."><meta property="twitter:card" content="summary"><meta property="twitter:title" content="hypnos"><meta property="twitter:description" content="An API client and ORM for CoreAPI powered REST APIs."></head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+<a style="position:relative; top:3px;" href="https://github.com/adventurerscodex/hypnos"><img width="20px" src="./image/github.png"></a></header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/hypnos.js~Hypnos.html">Hypnos</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/response.js~APIResponse.html">APIResponse</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/tokens.js~InstanceToken.html">InstanceToken</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/tokens.js~ModelToken.html">ModelToken</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#models">models</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/models/base.js~BaseModel.html">BaseModel</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/models/ko.js~KOModel.html">KOModel</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/models/model.js~Model.html">Model</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">src/hypnos.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/*eslint no-console:0*/
+import coreapi from &apos;coreapi&apos;;
+import schema from &apos;schema&apos;;
+
+import APIResponse from &apos;./response&apos;;
+
+/**
+ * Hypnos is a light-weight ORM and API Client for Javascript Web Clients.
+ *
+ * It uses a CoreAPI client and a given API schema to allow clients easy access
+ * to both raw response data and mapped custom Model objects.
+ *
+ * Hypnos returns all normal responses in the form of a APIResponse
+ * which allows for easy navigation through paginated responses as well as automatic
+ * mapping to custom Models (see `Model` and `APIResponse` for more information).
+ *
+ * Once a Model is mapped from a response, it is also registered with
+ * Hypnos and has access to shortcut methods via it&apos;s `ps` property.
+ *
+ * Example
+ * -------
+ *
+ *     Hypnos.retrieve(Book, { id: &apos;1234&apos; }).then(response =&gt; {
+ *         const book = response.object;
+ *         // Update the local properties of the book object.
+ *         book.title(&apos;My new favorite book&apos;);
+ *
+ *         // Persist your changes back to the API.
+ *         book.ps.save();
+ *
+ *         // ...You can even refresh your local object from the API.
+ *         book.ps.refresh();
+ *
+ *         // ...Or delete it easily.
+ *         book.ps.delete();
+ *     });
+ */
+export class Hypnos {
+    static configuration = {};
+
+    static _client = null;
+
+    static get client() {
+        if (!Hypnos._client) {
+            Hypnos._client = new _Hypnos(
+                Hypnos.configuration.credentials,
+                Hypnos.configuration.schema
+            );
+        }
+        return Hypnos._client;
+    }
+
+    static flush() {
+        this._client = null;
+    }
+}
+
+class _Hypnos {
+
+    constructor(credentials, schema) {
+        this.schema = schema;
+
+        // Initialize the CoreAPI Client
+        const auth = new coreapi.auth.TokenAuthentication(credentials);
+        this.client = new coreapi.Client({ auth: auth });
+    }
+
+    // TODO: Implement Caching
+
+    /**
+     * TODO: Document
+     */
+    hash = (keys, params) =&gt; {
+        // TODO: Implement hashing for caching purposes.
+        return &apos;&apos;;
+    };
+
+    /**
+     * TODO: Document
+     */
+    action = (keys, params, raw, ...rest) =&gt; (new Promise((resolve) =&gt; {
+        this.client.action(this.schema, keys, params).then(response =&gt; {
+            if (raw) {
+                resolve(response);
+            } else {
+                const hash = this.hash(keys, params);
+                resolve(new APIResponse(response, keys, params, hash, ...rest));
+            }
+        });
+    }));
+
+    /**
+     * API Operations Methods
+     * ======================
+     * The following methods allow for easy interaction with the backing API
+     * using the provided API Schema.
+     * If you need functionality beyond the scope of these methods, refer to
+     * the lower-level `action` API which simply wraps the coreapi.Client and
+     * returns a APIResponse.
+     *
+     * Unmapped Responses
+     * ------------------
+     * To perform the query without mapping the results to a APIResponse set
+     * `raw` to true. This will return the JSON results of the query directly.
+     *
+     * Using Custom Models
+     * -------------------
+     * Most times it is easiest to use subclasses of the base `Model` type
+     * (see Model for more information), and if you need to provide a custom
+     * object, you can refer to the `Model` documentation to see what fields
+     * are required in order to conform with the Hypnos API.
+     */
+
+    /**
+     * Given a model type and an optional set of parameters, perform a list query
+     * against the backing API and return a promise of results in the form of a
+     * APIResponse (see APIResponse for more information).
+     *
+     * Example
+     * -------
+     *
+     *     Hypnos.list(Book).then(response =&gt; {
+     *         const books = response.objects;
+     *         // Do stuff with books...
+     *     });
+     */
+    list = (model, params={}, raw=false) =&gt; {
+        const keys = [...model.__skeys__, &apos;list&apos;];
+        return this.action(keys, params, raw, model, true);
+    };
+
+    /**
+     * Given a model type and an optional set of parameters, perform a retrieve
+     * query against the backing API and return a promise of results in the
+     * form of a APIResponse (see APIResponse for more information).
+     *
+     * Example
+     * -------
+     *
+     *     Hypnos.read(Book, { id: &apos;1234&apos; }).then(response =&gt; {
+     *         const book = response.object;
+     *         // Do stuff with your book...
+     *     });
+     */
+    read = (model, params={}, raw=false) =&gt; {
+        const keys = [...model.__skeys__, &apos;read&apos;];
+        return this.action(keys, params, raw, model, false);
+    };
+
+    /**
+     * Given a model type and an optional set of parameters, perform a create
+     * against the backing API and return a promise of results in the
+     * form of a APIResponse (see APIResponse for more information).
+     *
+     * Example
+     * -------
+     *
+     *     const data = { title: &apos;An Adventure&apos;, author: &apos;John Smith&apos; };
+     *     Hypnos.create(Book, data).then(response =&gt; {
+     *         const book = response.object;
+     *         // Do stuff with your new book...
+     *     });
+     */
+    create = (model, params={}, raw=false) =&gt; {
+        const keys = [...model.__skeys__, &apos;create&apos;];
+        return this.action(keys, params, raw, model, false);
+    };
+
+    /**
+     * Given a model type and an optional set of parameters, perform an update
+     * against the backing API and return a promise of results in the
+     * form of a APIResponse (see APIResponse for more information).
+     *
+     * Example
+     * -------
+     *
+     *     const data = { id: &apos;1234&apos;, title: &apos;An Adventure II&apos;, author: &apos;John Smith&apos; };
+     *     Hypnos.update(Book, data).then(response =&gt; {
+     *         const book = response.object;
+     *         // Do stuff with your updated book...
+     *     });
+     */
+    update = (model, params={}, raw=false) =&gt; {
+        const keys = [...model.__skeys__, &apos;update&apos;];
+        return this.action(keys, params, raw, model, false);
+    };
+
+    /**
+     * Given a model type and an optional set of parameters, perform a destroy
+     * against the backing API and return a promise of results in the
+     * form of a APIResponse (see APIResponse for more information).
+     *
+     * Example
+     * -------
+     *
+     *     Hypnos.delete(Book, { id: &apos;1234&apos; });
+     */
+    delete = (model, params={}, raw=false) =&gt; {
+        const keys = [...model.__skeys__, &apos;delete&apos;];
+        return this.action(keys, params, raw, model, false);
+    };
+};
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(1.0.4)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

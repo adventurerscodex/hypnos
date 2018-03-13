@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../">
+  <title data-ice="title">src/tokens.js | hypnos</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  <script src="script/manual.js"></script>
+<meta name="description" content="An API client and ORM for CoreAPI powered REST APIs."><meta property="twitter:card" content="summary"><meta property="twitter:title" content="hypnos"><meta property="twitter:description" content="An API client and ORM for CoreAPI powered REST APIs."></head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+<a style="position:relative; top:3px;" href="https://github.com/adventurerscodex/hypnos"><img width="20px" src="./image/github.png"></a></header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/hypnos.js~Hypnos.html">Hypnos</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/response.js~APIResponse.html">APIResponse</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/tokens.js~InstanceToken.html">InstanceToken</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/tokens.js~ModelToken.html">ModelToken</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#models">models</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/models/base.js~BaseModel.html">BaseModel</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/models/ko.js~KOModel.html">KOModel</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/models/model.js~Model.html">Model</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">src/tokens.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import { Hypnos } from &apos;./hypnos&apos;;
+
+
+/**
+ * TODO: Document
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ */
+export class InstanceToken {
+
+    constructor(model, instance) {
+        this.model = model;
+        this.instance = instance;
+        this.client = Hypnos.client;
+    }
+
+    /**
+     * Refresh the data for the given object from the remote store.
+     */
+    refresh = () =&gt; {
+        const keys = [...this.model.__skeys__, &apos;read&apos;];
+        // TODO: We don&apos;t know which fields to use as the ID to refresh.
+        const params = this.instance.exportValues();
+        return this.client.action(keys, params, false, this.model, false);
+    };
+
+    /**
+     * Persist the object&apos;s data to the remote store. This only works for
+     * existing objects.
+     *
+     * If a list of fields is provided, then only update those fields.
+     */
+    save = (fields=null, raw=false) =&gt; {
+        let method = &apos;update&apos;;
+        // TODO: We don&apos;t have snake_case variables here.
+        let params = this.instance.exportValues();
+
+        // Trim out unneeded fields if `fields` is provided and
+        // set the active method to use partial_update.
+        if (fields &amp;&amp; fields.length &gt; 0) {
+            method = &apos;partial_update&apos;;
+            for (key in params) {
+                if (!fields.contains(key)) {
+                    delete params[key];
+                }
+            }
+        }
+
+        const keys = [...this.model.__skeys__, method];
+        return this.client.action(keys, params, raw, this.model, false);
+    };
+
+    /**
+     * Tell the remote store to destroy the current object.
+     *
+     * WARNING: This does not remove the object from memory, only from
+     * the remote store.
+     */
+    delete = () =&gt; {
+        const keys = [...this.model.__skeys__, &apos;delete&apos;];
+        // TODO: We don&apos;t know which fields to use as the ID to delete.
+        const params = this.instance.exportValues();
+        return this.client.action(keys, params, true, this.model, false);
+    };
+}
+
+
+/**
+ * A ModelToken, like an InstanceToken provides quick access to the Persistence
+ * client methods without an active model instance to use. You can use an
+ * object&apos;s Model Token to easily and clearly perform queries and updates to the
+ * backing API using syntax bound to the Model class itself, rather than using
+ * the normal Persistence API.
+ *
+ * Example
+ * -------
+ * Let&apos;s say you want to search for all books in your collection. Using the
+ * normal Persistence API you could perform a query for all books like this:
+ *
+ *      Persistence.client.list(Book).then(response =&gt; {
+ *          const books = response.objects;
+ *          // Do stuff with books...
+ *      });
+ *
+ * But implementing the ModelToken API on a given Model would allow the
+ * following shortcut syntax.
+ *
+ *      Book.ps.list().then(response =&gt; {
+ *          const books = response.objects;
+ *          // Do stuff with books...
+ *      });
+ *
+ * For more information about what queries are available with this API, please
+ * see the associated documentation below.
+ *
+ * For more information about performing queries on mapped Model instances
+ * (i.e. your new book instances) please refer to the InstanceToken documentation.
+ */
+export class ModelToken {
+
+    constructor(model) {
+        this.model = model;
+        this.client = Hypnos.client;
+    }
+
+    /**
+     * Given a model type and an optional set of parameters, perform a list query
+     * against the backing API and return a promise of results in the form of a
+     * FetchResponse (see FetchResponse for more information).
+     *
+     * Example
+     * -------
+     *
+     *     Book.ps.list().then(response =&gt; {
+     *         const books = response.objects;
+     *         // Do stuff with books...
+     *     });
+     */
+    list = (params={}, raw=false) =&gt; {
+        const keys = [...this.model.__skeys__, &apos;list&apos;];
+        return this.client.action(keys, params, raw, this.model, true);
+    };
+
+    /**
+     * Given a model type and an optional set of parameters, perform a retrieve
+     * query against the backing API and return a promise of results in the
+     * form of a FetchResponse (see FetchResponse for more information).
+     *
+     * Example
+     * -------
+     *
+     *     Book.ps.read({ id: &apos;1234&apos; }).then(response =&gt; {
+     *         const book = response.object;
+     *         // Do stuff with your book...
+     *     });
+     */
+    read = (params={}, raw=false) =&gt; {
+        const keys = [...this.model.__skeys__, &apos;read&apos;];
+        return this.client.action(keys, params, raw, this.model, false);
+    };
+
+    /**
+     * Given a model type and an optional set of parameters, perform a create
+     * against the backing API and return a promise of results in the
+     * form of a FetchResponse (see FetchResponse for more information).
+     *
+     * Example
+     * -------
+     *
+     *     const data = { title: &apos;An Adventure&apos;, author: &apos;John Smith&apos; };
+     *     Book.ps.create(data).then(response =&gt; {
+     *         const book = response.object;
+     *         // Do stuff with your new book...
+     *     });
+     */
+    create = (params={}, raw=false) =&gt; {
+        const keys = [...this.model.__skeys__, &apos;create&apos;];
+        return this.client.action(keys, params, raw, this.model, false);
+    };
+
+    /**
+     * Given a model type and an optional set of parameters, perform an update
+     * against the backing API and return a promise of results in the
+     * form of a FetchResponse (see FetchResponse for more information).
+     *
+     * Example
+     * -------
+     *
+     *     const data = { id: &apos;1234&apos;, title: &apos;An Adventure II&apos;, author: &apos;John Smith&apos; };
+     *     Book.ps.update(data).then(response =&gt; {
+     *         const book = response.object;
+     *         // Do stuff with your updated book...
+     *     });
+     */
+    update = (params={}, raw=false) =&gt; {
+        const keys = [...this.model.__skeys__, &apos;update&apos;];
+        return this.client.action(keys, params, raw, this.model, false);
+    };
+
+    /**
+     * Given a model type and an optional set of parameters, perform a destroy
+     * against the backing API and return a promise of results in the
+     * form of a FetchResponse (see FetchResponse for more information).
+     *
+     * Example
+     * -------
+     *
+     *     Book.ps.delete({ id: &apos;1234&apos; });
+     */
+    delete = (params={}, raw=false) =&gt; {
+        const keys = [...this.model.__skeys__, &apos;delete&apos;];
+        return this.client.action(keys, params, raw, this.model, false);
+    };
+}
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(1.0.4)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

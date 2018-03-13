@@ -29,7 +29,7 @@ export class InstanceToken {
         const keys = [...this.model.__skeys__, 'read'];
         // TODO: We don't know which fields to use as the ID to refresh.
         const params = this.instance.exportValues();
-        return this.client.action(keys, params, raw, this.model, false);
+        return this.client.action(keys, params, false, this.model, false);
     };
 
     /**
@@ -38,7 +38,7 @@ export class InstanceToken {
      *
      * If a list of fields is provided, then only update those fields.
      */
-    save = (fields=null) => {
+    save = (fields=null, raw=false) => {
         let method = 'update';
         // TODO: We don't have snake_case variables here.
         let params = this.instance.exportValues();
@@ -68,7 +68,7 @@ export class InstanceToken {
         const keys = [...this.model.__skeys__, 'delete'];
         // TODO: We don't know which fields to use as the ID to delete.
         const params = this.instance.exportValues();
-        return this.client.action(keys, params, raw, this.model, false);
+        return this.client.action(keys, params, true, this.model, false);
     };
 }
 

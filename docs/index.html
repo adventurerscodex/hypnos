@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl">
+  <title data-ice="title">Home | hypnos</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  <script src="script/manual.js"></script>
+<meta name="description" content="An API client and ORM for CoreAPI powered REST APIs."><meta property="twitter:card" content="summary"><meta property="twitter:title" content="hypnos"><meta property="twitter:description" content="An API client and ORM for CoreAPI powered REST APIs."></head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+<a style="position:relative; top:3px;" href="https://github.com/adventurerscodex/hypnos"><img width="20px" src="./image/github.png"></a></header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/hypnos.js~Hypnos.html">Hypnos</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/response.js~APIResponse.html">APIResponse</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/tokens.js~InstanceToken.html">InstanceToken</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/tokens.js~ModelToken.html">ModelToken</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#models">models</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/models/base.js~BaseModel.html">BaseModel</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/models/ko.js~KOModel.html">KOModel</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/models/model.js~Model.html">Model</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><div data-ice="index" class="github-markdown"><h1 id="hypnos---a-better-way-to-rest">Hypnos - A Better Way to REST</h1><p><em>An API client and ORM for CoreAPI powered REST APIs.</em></p>
+<p>Hypnos is a light-weight ORM and API Client for Web apps. It provides a clean and concise way to interact with your API data <strong>without any URLs or manual requests</strong>. In a way, it is very similar to <code>Apollo</code> for GraphQL, but more inspired by projects like <code>Django ORM</code> and <code>SQLAlchemy</code>.</p>
+<p>Finally, web apps can have a real model layer.</p>
+<h2 id="overview">Overview</h2><p>Hypnos lets you feel like you&apos;re developing with a real database. Using the power of <a href="http://www.coreapi.org">CoreAPI</a> things like URLs and request methods are a thing of the past. You define a CoreAPI compatible data model in your API (via something like Django-REST framework) and point Hypnos at your API schema and Hypnos will take care of the rest.</p>
+<h3 id="features">Features</h3><p>Besides making your code easier to understand, Hypnos also has some really cool features out of the box!</p>
+<ul>
+<li><strong>Built-in pagination support</strong> for things like infinite scrolling.</li>
+<li><strong>Request caching</strong> to prevent repeated, identical queries to your API.</li>
+<li><strong>Smart Requests</strong>: Behind the scenes Hypnos will do the smart thing: if you tell Hypnos which fields to update, Hypnos will transform the request from <code>PUT</code> to <code>PATCH</code>.</li>
+<li><strong>Need custom behavior?</strong> Hypnos allows you to query your API directly in case you still need to do something we don&apos;t support.</li>
+</ul>
+<h2 id="example">Example</h2><pre><code><code class="source-code prettyprint">// book.js
+
+import { Model } from &apos;hypnos&apos;;
+
+class Book extends Model {
+    // The CoreAPI keys/path for this resource.
+    __skeys__ = [&apos;book&apos;];
+
+    // Properties from your API are mapped in dynamially so you only
+    // need to specify your computed properties.
+    // No need to repeat your data model!
+
+    get summary() {
+        const {title, type, author} = this;
+        return `${title} is a thrilling new ${type} from ${author}`;
+    }
+
+    toggleFavorite() {
+        this.favorite = !this.favorite;
+    }
+}
+
+// service/component/view_controller.js
+
+import Hypnos from &apos;hypnos&apos;;
+
+Book.ps.retrieve({ id: &apos;1234&apos; }).then(response =&gt; {
+     const book = response.object;
+     // Update the local properties of the book object.
+     book.title = &apos;My new favorite book&apos;;
+
+     // Persist your changes back to the API.
+     book.ps.save();
+
+     // ...You can even refresh your local object from the API.
+     book.ps.refresh();
+
+     // ...Or delete it easily.
+     book.ps.delete();
+});</code>
+</code></pre></div>
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(1.0.4)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

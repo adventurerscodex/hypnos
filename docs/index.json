@@ -1,0 +1,1773 @@
+[
+  {
+    "__docId__": 1,
+    "kind": "external",
+    "name": "Infinity",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Infinity",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~Infinity",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 2,
+    "kind": "external",
+    "name": "NaN",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/NaN",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~NaN",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 3,
+    "kind": "external",
+    "name": "undefined",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/undefined",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~undefined",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 4,
+    "kind": "external",
+    "name": "null",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/null",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~null",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 5,
+    "kind": "external",
+    "name": "Object",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~Object",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 6,
+    "kind": "external",
+    "name": "object",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~object",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 7,
+    "kind": "external",
+    "name": "Function",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~Function",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 8,
+    "kind": "external",
+    "name": "function",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~function",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 9,
+    "kind": "external",
+    "name": "Boolean",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~Boolean",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 10,
+    "kind": "external",
+    "name": "boolean",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~boolean",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 11,
+    "kind": "external",
+    "name": "Symbol",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Symbol",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~Symbol",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 12,
+    "kind": "external",
+    "name": "Error",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~Error",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 13,
+    "kind": "external",
+    "name": "EvalError",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/EvalError",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~EvalError",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 14,
+    "kind": "external",
+    "name": "InternalError",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/InternalError",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~InternalError",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 15,
+    "kind": "external",
+    "name": "RangeError",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RangeError",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~RangeError",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 16,
+    "kind": "external",
+    "name": "ReferenceError",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ReferenceError",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~ReferenceError",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 17,
+    "kind": "external",
+    "name": "SyntaxError",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/SyntaxError",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~SyntaxError",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 18,
+    "kind": "external",
+    "name": "TypeError",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypeError",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~TypeError",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 19,
+    "kind": "external",
+    "name": "URIError",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/URIError",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~URIError",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 20,
+    "kind": "external",
+    "name": "Number",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~Number",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 21,
+    "kind": "external",
+    "name": "number",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~number",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 22,
+    "kind": "external",
+    "name": "Date",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~Date",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 23,
+    "kind": "external",
+    "name": "String",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~String",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 24,
+    "kind": "external",
+    "name": "string",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~string",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 25,
+    "kind": "external",
+    "name": "RegExp",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~RegExp",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 26,
+    "kind": "external",
+    "name": "Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~Array",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 27,
+    "kind": "external",
+    "name": "Int8Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int8Array",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~Int8Array",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 28,
+    "kind": "external",
+    "name": "Uint8Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint8Array",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~Uint8Array",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 29,
+    "kind": "external",
+    "name": "Uint8ClampedArray",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint8ClampedArray",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~Uint8ClampedArray",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 30,
+    "kind": "external",
+    "name": "Int16Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int16Array",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~Int16Array",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 31,
+    "kind": "external",
+    "name": "Uint16Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint16Array",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~Uint16Array",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 32,
+    "kind": "external",
+    "name": "Int32Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~Int32Array",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 33,
+    "kind": "external",
+    "name": "Uint32Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint32Array",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~Uint32Array",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 34,
+    "kind": "external",
+    "name": "Float32Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~Float32Array",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 35,
+    "kind": "external",
+    "name": "Float64Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~Float64Array",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 36,
+    "kind": "external",
+    "name": "Map",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~Map",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 37,
+    "kind": "external",
+    "name": "Set",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~Set",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 38,
+    "kind": "external",
+    "name": "WeakMap",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakMap",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~WeakMap",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 39,
+    "kind": "external",
+    "name": "WeakSet",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakSet",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~WeakSet",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 40,
+    "kind": "external",
+    "name": "ArrayBuffer",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~ArrayBuffer",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 41,
+    "kind": "external",
+    "name": "DataView",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DataView",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~DataView",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 42,
+    "kind": "external",
+    "name": "JSON",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~JSON",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 43,
+    "kind": "external",
+    "name": "Promise",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~Promise",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 44,
+    "kind": "external",
+    "name": "Generator",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Generator",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~Generator",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 45,
+    "kind": "external",
+    "name": "GeneratorFunction",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/GeneratorFunction",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~GeneratorFunction",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 46,
+    "kind": "external",
+    "name": "Reflect",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Reflect",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~Reflect",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 47,
+    "kind": "external",
+    "name": "Proxy",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy",
+    "memberof": "src/.external-ecmascript.js",
+    "static": true,
+    "longname": "src/.external-ecmascript.js~Proxy",
+    "access": "public",
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 48,
+    "kind": "file",
+    "name": "src/__mocks__/coreapi.js",
+    "content": "\n",
+    "static": true,
+    "longname": "/Users/ifoundit/Dropbox/Source_Code/Repos/adventurerscodex/hypnos/src/__mocks__/coreapi.js",
+    "access": "public",
+    "description": null,
+    "lineNumber": 1
+  },
+  {
+    "__docId__": 49,
+    "kind": "file",
+    "name": "src/__mocks__/schema.js",
+    "content": "",
+    "static": true,
+    "longname": "/Users/ifoundit/Dropbox/Source_Code/Repos/adventurerscodex/hypnos/src/__mocks__/schema.js",
+    "access": "public",
+    "description": null,
+    "lineNumber": 1
+  },
+  {
+    "__docId__": 50,
+    "kind": "file",
+    "name": "src/hypnos.js",
+    "content": "/*eslint no-console:0*/\nimport coreapi from 'coreapi';\nimport schema from 'schema';\n\nimport APIResponse from './response';\n\n/**\n * Hypnos is a light-weight ORM and API Client for Javascript Web Clients.\n *\n * It uses a CoreAPI client and a given API schema to allow clients easy access\n * to both raw response data and mapped custom Model objects.\n *\n * Hypnos returns all normal responses in the form of a APIResponse\n * which allows for easy navigation through paginated responses as well as automatic\n * mapping to custom Models (see `Model` and `APIResponse` for more information).\n *\n * Once a Model is mapped from a response, it is also registered with\n * Hypnos and has access to shortcut methods via it's `ps` property.\n *\n * Example\n * -------\n *\n *     Hypnos.retrieve(Book, { id: '1234' }).then(response => {\n *         const book = response.object;\n *         // Update the local properties of the book object.\n *         book.title('My new favorite book');\n *\n *         // Persist your changes back to the API.\n *         book.ps.save();\n *\n *         // ...You can even refresh your local object from the API.\n *         book.ps.refresh();\n *\n *         // ...Or delete it easily.\n *         book.ps.delete();\n *     });\n */\nexport class Hypnos {\n    static configuration = {};\n\n    static _client = null;\n\n    static get client() {\n        if (!Hypnos._client) {\n            Hypnos._client = new _Hypnos(\n                Hypnos.configuration.credentials,\n                Hypnos.configuration.schema\n            );\n        }\n        return Hypnos._client;\n    }\n\n    static flush() {\n        this._client = null;\n    }\n}\n\nclass _Hypnos {\n\n    constructor(credentials, schema) {\n        this.schema = schema;\n\n        // Initialize the CoreAPI Client\n        const auth = new coreapi.auth.TokenAuthentication(credentials);\n        this.client = new coreapi.Client({ auth: auth });\n    }\n\n    // TODO: Implement Caching\n\n    /**\n     * TODO: Document\n     */\n    hash = (keys, params) => {\n        // TODO: Implement hashing for caching purposes.\n        return '';\n    };\n\n    /**\n     * TODO: Document\n     */\n    action = (keys, params, raw, ...rest) => (new Promise((resolve) => {\n        this.client.action(this.schema, keys, params).then(response => {\n            if (raw) {\n                resolve(response);\n            } else {\n                const hash = this.hash(keys, params);\n                resolve(new APIResponse(response, keys, params, hash, ...rest));\n            }\n        });\n    }));\n\n    /**\n     * API Operations Methods\n     * ======================\n     * The following methods allow for easy interaction with the backing API\n     * using the provided API Schema.\n     * If you need functionality beyond the scope of these methods, refer to\n     * the lower-level `action` API which simply wraps the coreapi.Client and\n     * returns a APIResponse.\n     *\n     * Unmapped Responses\n     * ------------------\n     * To perform the query without mapping the results to a APIResponse set\n     * `raw` to true. This will return the JSON results of the query directly.\n     *\n     * Using Custom Models\n     * -------------------\n     * Most times it is easiest to use subclasses of the base `Model` type\n     * (see Model for more information), and if you need to provide a custom\n     * object, you can refer to the `Model` documentation to see what fields\n     * are required in order to conform with the Hypnos API.\n     */\n\n    /**\n     * Given a model type and an optional set of parameters, perform a list query\n     * against the backing API and return a promise of results in the form of a\n     * APIResponse (see APIResponse for more information).\n     *\n     * Example\n     * -------\n     *\n     *     Hypnos.list(Book).then(response => {\n     *         const books = response.objects;\n     *         // Do stuff with books...\n     *     });\n     */\n    list = (model, params={}, raw=false) => {\n        const keys = [...model.__skeys__, 'list'];\n        return this.action(keys, params, raw, model, true);\n    };\n\n    /**\n     * Given a model type and an optional set of parameters, perform a retrieve\n     * query against the backing API and return a promise of results in the\n     * form of a APIResponse (see APIResponse for more information).\n     *\n     * Example\n     * -------\n     *\n     *     Hypnos.read(Book, { id: '1234' }).then(response => {\n     *         const book = response.object;\n     *         // Do stuff with your book...\n     *     });\n     */\n    read = (model, params={}, raw=false) => {\n        const keys = [...model.__skeys__, 'read'];\n        return this.action(keys, params, raw, model, false);\n    };\n\n    /**\n     * Given a model type and an optional set of parameters, perform a create\n     * against the backing API and return a promise of results in the\n     * form of a APIResponse (see APIResponse for more information).\n     *\n     * Example\n     * -------\n     *\n     *     const data = { title: 'An Adventure', author: 'John Smith' };\n     *     Hypnos.create(Book, data).then(response => {\n     *         const book = response.object;\n     *         // Do stuff with your new book...\n     *     });\n     */\n    create = (model, params={}, raw=false) => {\n        const keys = [...model.__skeys__, 'create'];\n        return this.action(keys, params, raw, model, false);\n    };\n\n    /**\n     * Given a model type and an optional set of parameters, perform an update\n     * against the backing API and return a promise of results in the\n     * form of a APIResponse (see APIResponse for more information).\n     *\n     * Example\n     * -------\n     *\n     *     const data = { id: '1234', title: 'An Adventure II', author: 'John Smith' };\n     *     Hypnos.update(Book, data).then(response => {\n     *         const book = response.object;\n     *         // Do stuff with your updated book...\n     *     });\n     */\n    update = (model, params={}, raw=false) => {\n        const keys = [...model.__skeys__, 'update'];\n        return this.action(keys, params, raw, model, false);\n    };\n\n    /**\n     * Given a model type and an optional set of parameters, perform a destroy\n     * against the backing API and return a promise of results in the\n     * form of a APIResponse (see APIResponse for more information).\n     *\n     * Example\n     * -------\n     *\n     *     Hypnos.delete(Book, { id: '1234' });\n     */\n    delete = (model, params={}, raw=false) => {\n        const keys = [...model.__skeys__, 'delete'];\n        return this.action(keys, params, raw, model, false);\n    };\n};\n",
+    "static": true,
+    "longname": "/Users/ifoundit/Dropbox/Source_Code/Repos/adventurerscodex/hypnos/src/hypnos.js",
+    "access": "public",
+    "description": null,
+    "lineNumber": 1
+  },
+  {
+    "__docId__": 51,
+    "kind": "class",
+    "name": "Hypnos",
+    "memberof": "src/hypnos.js",
+    "static": true,
+    "longname": "src/hypnos.js~Hypnos",
+    "access": "public",
+    "export": true,
+    "importPath": "hypnos/src/hypnos.js",
+    "importStyle": "{Hypnos}",
+    "description": "Hypnos is a light-weight ORM and API Client for Javascript Web Clients.\n\nIt uses a CoreAPI client and a given API schema to allow clients easy access\nto both raw response data and mapped custom Model objects.\n\nHypnos returns all normal responses in the form of a APIResponse\nwhich allows for easy navigation through paginated responses as well as automatic\nmapping to custom Models (see `Model` and `APIResponse` for more information).\n\nOnce a Model is mapped from a response, it is also registered with\nHypnos and has access to shortcut methods via it's `ps` property.\n\nExample\n-------\n\n    Hypnos.retrieve(Book, { id: '1234' }).then(response => {\n        const book = response.object;\n        // Update the local properties of the book object.\n        book.title('My new favorite book');\n\n        // Persist your changes back to the API.\n        book.ps.save();\n\n        // ...You can even refresh your local object from the API.\n        book.ps.refresh();\n\n        // ...Or delete it easily.\n        book.ps.delete();\n    });",
+    "lineNumber": 38,
+    "interface": false
+  },
+  {
+    "__docId__": 52,
+    "kind": "member",
+    "name": "configuration",
+    "memberof": "src/hypnos.js~Hypnos",
+    "static": true,
+    "longname": "src/hypnos.js~Hypnos.configuration",
+    "access": "public",
+    "description": null,
+    "lineNumber": 39,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 53,
+    "kind": "member",
+    "name": "_client",
+    "memberof": "src/hypnos.js~Hypnos",
+    "static": true,
+    "longname": "src/hypnos.js~Hypnos._client",
+    "access": "private",
+    "description": null,
+    "lineNumber": 41,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 54,
+    "kind": "get",
+    "name": "client",
+    "memberof": "src/hypnos.js~Hypnos",
+    "generator": false,
+    "async": false,
+    "static": true,
+    "longname": "src/hypnos.js~Hypnos.client",
+    "access": "public",
+    "description": null,
+    "lineNumber": 43,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 55,
+    "kind": "method",
+    "name": "flush",
+    "memberof": "src/hypnos.js~Hypnos",
+    "generator": false,
+    "async": false,
+    "static": true,
+    "longname": "src/hypnos.js~Hypnos.flush",
+    "access": "public",
+    "description": null,
+    "lineNumber": 53,
+    "undocument": true,
+    "params": [],
+    "return": null
+  },
+  {
+    "__docId__": 57,
+    "kind": "class",
+    "name": "_Hypnos",
+    "memberof": "src/hypnos.js",
+    "static": true,
+    "longname": "src/hypnos.js~_Hypnos",
+    "access": "private",
+    "export": false,
+    "importPath": "hypnos/src/hypnos.js",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 58,
+    "undocument": true,
+    "interface": false,
+    "ignore": true
+  },
+  {
+    "__docId__": 58,
+    "kind": "constructor",
+    "name": "constructor",
+    "memberof": "src/hypnos.js~_Hypnos",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/hypnos.js~_Hypnos#constructor",
+    "access": "public",
+    "description": null,
+    "lineNumber": 60,
+    "undocument": true
+  },
+  {
+    "__docId__": 59,
+    "kind": "member",
+    "name": "schema",
+    "memberof": "src/hypnos.js~_Hypnos",
+    "static": false,
+    "longname": "src/hypnos.js~_Hypnos#schema",
+    "access": "public",
+    "description": null,
+    "lineNumber": 61,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 60,
+    "kind": "member",
+    "name": "client",
+    "memberof": "src/hypnos.js~_Hypnos",
+    "static": false,
+    "longname": "src/hypnos.js~_Hypnos#client",
+    "access": "public",
+    "description": null,
+    "lineNumber": 65,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 61,
+    "kind": "member",
+    "name": "hash",
+    "memberof": "src/hypnos.js~_Hypnos",
+    "static": false,
+    "longname": "src/hypnos.js~_Hypnos#hash",
+    "access": "public",
+    "description": "TODO: Document",
+    "lineNumber": 73,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 62,
+    "kind": "member",
+    "name": "action",
+    "memberof": "src/hypnos.js~_Hypnos",
+    "static": false,
+    "longname": "src/hypnos.js~_Hypnos#action",
+    "access": "public",
+    "description": "TODO: Document",
+    "lineNumber": 81,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 63,
+    "kind": "member",
+    "name": "list",
+    "memberof": "src/hypnos.js~_Hypnos",
+    "static": false,
+    "longname": "src/hypnos.js~_Hypnos#list",
+    "access": "public",
+    "description": "Given a model type and an optional set of parameters, perform a list query\nagainst the backing API and return a promise of results in the form of a\nAPIResponse (see APIResponse for more information).\n\nExample\n-------\n\n    Hypnos.list(Book).then(response => {\n        const books = response.objects;\n        // Do stuff with books...\n    });",
+    "lineNumber": 127,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 64,
+    "kind": "member",
+    "name": "read",
+    "memberof": "src/hypnos.js~_Hypnos",
+    "static": false,
+    "longname": "src/hypnos.js~_Hypnos#read",
+    "access": "public",
+    "description": "Given a model type and an optional set of parameters, perform a retrieve\nquery against the backing API and return a promise of results in the\nform of a APIResponse (see APIResponse for more information).\n\nExample\n-------\n\n    Hypnos.read(Book, { id: '1234' }).then(response => {\n        const book = response.object;\n        // Do stuff with your book...\n    });",
+    "lineNumber": 145,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 65,
+    "kind": "member",
+    "name": "create",
+    "memberof": "src/hypnos.js~_Hypnos",
+    "static": false,
+    "longname": "src/hypnos.js~_Hypnos#create",
+    "access": "public",
+    "description": "Given a model type and an optional set of parameters, perform a create\nagainst the backing API and return a promise of results in the\nform of a APIResponse (see APIResponse for more information).\n\nExample\n-------\n\n    const data = { title: 'An Adventure', author: 'John Smith' };\n    Hypnos.create(Book, data).then(response => {\n        const book = response.object;\n        // Do stuff with your new book...\n    });",
+    "lineNumber": 164,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 66,
+    "kind": "member",
+    "name": "update",
+    "memberof": "src/hypnos.js~_Hypnos",
+    "static": false,
+    "longname": "src/hypnos.js~_Hypnos#update",
+    "access": "public",
+    "description": "Given a model type and an optional set of parameters, perform an update\nagainst the backing API and return a promise of results in the\nform of a APIResponse (see APIResponse for more information).\n\nExample\n-------\n\n    const data = { id: '1234', title: 'An Adventure II', author: 'John Smith' };\n    Hypnos.update(Book, data).then(response => {\n        const book = response.object;\n        // Do stuff with your updated book...\n    });",
+    "lineNumber": 183,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 67,
+    "kind": "member",
+    "name": "delete",
+    "memberof": "src/hypnos.js~_Hypnos",
+    "static": false,
+    "longname": "src/hypnos.js~_Hypnos#delete",
+    "access": "public",
+    "description": "Given a model type and an optional set of parameters, perform a destroy\nagainst the backing API and return a promise of results in the\nform of a APIResponse (see APIResponse for more information).\n\nExample\n-------\n\n    Hypnos.delete(Book, { id: '1234' });",
+    "lineNumber": 198,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 68,
+    "kind": "file",
+    "name": "src/index.js",
+    "content": "/* API Client */\n\nexport { Hypnos } from './hypnos';\nexport { APIResponse } from './response';\nexport { ModelToken, InstanceToken } from './tokens';\n\n/* Models */\n\nexport { BaseModel } from './models/base';\nexport { KOModel } from './models/ko';\nexport { Model } from './models/model';\n",
+    "static": true,
+    "longname": "/Users/ifoundit/Dropbox/Source_Code/Repos/adventurerscodex/hypnos/src/index.js",
+    "access": "public",
+    "description": null,
+    "lineNumber": 1
+  },
+  {
+    "__docId__": 69,
+    "kind": "file",
+    "name": "src/index.spec.js",
+    "content": "import { KOModel } from './index';\n\ndescribe('Main Index', () => {\n    it('should import things', () => {\n        expect(KOModel).toBeDefined();\n    });\n});\n",
+    "static": true,
+    "longname": "/Users/ifoundit/Dropbox/Source_Code/Repos/adventurerscodex/hypnos/src/index.spec.js",
+    "access": "public",
+    "description": null,
+    "lineNumber": 1
+  },
+  {
+    "__docId__": 70,
+    "kind": "file",
+    "name": "src/models/base.js",
+    "content": "import { InstanceToken, ModelToken } from '../tokens';\nimport ko from 'knockout';\n\n\n/**\n * This class is the base definition of all ES6 style model objects.\n *\n * Models extending this class will gain the following benefits:\n * - Automatic Persistence Service Token registration.\n * - Automatic mapping via FetchResponses and mapped queries.\n *\n * This model provides no default implementation of serialization or\n * deserialization. Subclasses must implement this feature for their respective\n * use-cases. This framework provides a few default implementations of usable\n * model classes like: JSONModel and KOModel.\n */\nexport class BaseModel {\n\n    // Automatically register the given class to the persistence service.\n    static get ps() {\n        return new ModelToken(this);\n    }\n\n    constructor() {\n        // Automatically register the given object to the persistence service.\n        this.ps = new InstanceToken(this.constructor, this);\n    }\n\n    importValues = (values) => {\n        throw new Error(`Model: \"${this.constructor.name}\" must override importValues.`);\n    }\n\n    exportValues = () => {\n        throw new Error(`Model: \"${this.constructor.name}\" must override exportValues.`);\n    };\n}\n",
+    "static": true,
+    "longname": "/Users/ifoundit/Dropbox/Source_Code/Repos/adventurerscodex/hypnos/src/models/base.js",
+    "access": "public",
+    "description": null,
+    "lineNumber": 1
+  },
+  {
+    "__docId__": 71,
+    "kind": "class",
+    "name": "BaseModel",
+    "memberof": "src/models/base.js",
+    "static": true,
+    "longname": "src/models/base.js~BaseModel",
+    "access": "public",
+    "export": true,
+    "importPath": "hypnos/src/models/base.js",
+    "importStyle": "{BaseModel}",
+    "description": "This class is the base definition of all ES6 style model objects.\n\nModels extending this class will gain the following benefits:\n- Automatic Persistence Service Token registration.\n- Automatic mapping via FetchResponses and mapped queries.\n\nThis model provides no default implementation of serialization or\ndeserialization. Subclasses must implement this feature for their respective\nuse-cases. This framework provides a few default implementations of usable\nmodel classes like: JSONModel and KOModel.",
+    "lineNumber": 17,
+    "interface": false
+  },
+  {
+    "__docId__": 72,
+    "kind": "get",
+    "name": "ps",
+    "memberof": "src/models/base.js~BaseModel",
+    "generator": false,
+    "async": false,
+    "static": true,
+    "longname": "src/models/base.js~BaseModel.ps",
+    "access": "public",
+    "description": null,
+    "lineNumber": 20,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 73,
+    "kind": "constructor",
+    "name": "constructor",
+    "memberof": "src/models/base.js~BaseModel",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/models/base.js~BaseModel#constructor",
+    "access": "public",
+    "description": null,
+    "lineNumber": 24,
+    "undocument": true
+  },
+  {
+    "__docId__": 74,
+    "kind": "member",
+    "name": "ps",
+    "memberof": "src/models/base.js~BaseModel",
+    "static": false,
+    "longname": "src/models/base.js~BaseModel#ps",
+    "access": "public",
+    "description": null,
+    "lineNumber": 26,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 75,
+    "kind": "member",
+    "name": "importValues",
+    "memberof": "src/models/base.js~BaseModel",
+    "static": false,
+    "longname": "src/models/base.js~BaseModel#importValues",
+    "access": "public",
+    "description": null,
+    "lineNumber": 29,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 76,
+    "kind": "member",
+    "name": "exportValues",
+    "memberof": "src/models/base.js~BaseModel",
+    "static": false,
+    "longname": "src/models/base.js~BaseModel#exportValues",
+    "access": "public",
+    "description": null,
+    "lineNumber": 33,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 77,
+    "kind": "file",
+    "name": "src/models/ko.js",
+    "content": "import ko from 'knockout';\nimport { BaseModel } from './base';\n\n/**\n * A subclass of the Base `Model` class which adds serialization and\n * deserialization via Knockout's built-in mapping functionality.\n */\nexport class KOModel extends BaseModel {\n\n    /**\n     * Check to see if the subclasses provide a mapping, if they do\n     * not, then raise an exception.\n     */\n    get _mapping() {\n        const mapping = this.constructor.mapping;\n        if (!mapping) {\n            throw new Error(`Model: \"${this.constructor.name}\" does not provide a mapping.`);\n        }\n        return mapping;\n    }\n\n    /**\n     * A default implementation of object deserialization using Knockout autoignore\n     * mapping. For custom mapping, subclasses can override this method.\n     */\n    importValues = (values) => {\n        const mapping = ko.mapping.autoignore(this, this._mapping);\n        ko.mapping.fromJS(values, mapping, this);\n    }\n\n    /**\n     * A default implementation of object serialization using Knockout autoignore\n     * mapping. For custom mapping, subclasses can override this method.\n     */\n    exportValues = () => {\n        const mapping = ko.mapping.autoignore(this, this._mapping);\n        return ko.mapping.toJS(this, mapping);\n    };\n}\n",
+    "static": true,
+    "longname": "/Users/ifoundit/Dropbox/Source_Code/Repos/adventurerscodex/hypnos/src/models/ko.js",
+    "access": "public",
+    "description": null,
+    "lineNumber": 1
+  },
+  {
+    "__docId__": 78,
+    "kind": "class",
+    "name": "KOModel",
+    "memberof": "src/models/ko.js",
+    "static": true,
+    "longname": "src/models/ko.js~KOModel",
+    "access": "public",
+    "export": true,
+    "importPath": "hypnos/src/models/ko.js",
+    "importStyle": "{KOModel}",
+    "description": "A subclass of the Base `Model` class which adds serialization and\ndeserialization via Knockout's built-in mapping functionality.",
+    "lineNumber": 8,
+    "interface": false,
+    "extends": [
+      "src/models/base.js~BaseModel"
+    ]
+  },
+  {
+    "__docId__": 79,
+    "kind": "get",
+    "name": "_mapping",
+    "memberof": "src/models/ko.js~KOModel",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/models/ko.js~KOModel#_mapping",
+    "access": "private",
+    "description": "Check to see if the subclasses provide a mapping, if they do\nnot, then raise an exception.",
+    "lineNumber": 14,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 80,
+    "kind": "member",
+    "name": "importValues",
+    "memberof": "src/models/ko.js~KOModel",
+    "static": false,
+    "longname": "src/models/ko.js~KOModel#importValues",
+    "access": "public",
+    "description": "A default implementation of object deserialization using Knockout autoignore\nmapping. For custom mapping, subclasses can override this method.",
+    "lineNumber": 26,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 81,
+    "kind": "member",
+    "name": "exportValues",
+    "memberof": "src/models/ko.js~KOModel",
+    "static": false,
+    "longname": "src/models/ko.js~KOModel#exportValues",
+    "access": "public",
+    "description": "A default implementation of object serialization using Knockout autoignore\nmapping. For custom mapping, subclasses can override this method.",
+    "lineNumber": 35,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 82,
+    "kind": "file",
+    "name": "src/models/model.js",
+    "content": "import { BaseModel } from './base';\n\n/**\n * A subclass of the Base `Model` class which provides serialization and\n * deserialization via a whitelist of fields to serialize/deserialize.\n */\nexport class Model extends BaseModel {\n\n    static FIELDS = [];\n\n    importValues = (values) => {\n        this.constructor.FIELDS.forEach(field => {\n            this[field] = values[field];\n        });\n    };\n\n    exportValues = () => {\n        let values = {};\n        this.constructor.FIELDS.forEach(field => {\n            values[field] = this[field];\n        });\n        return values;\n    };\n}\n",
+    "static": true,
+    "longname": "/Users/ifoundit/Dropbox/Source_Code/Repos/adventurerscodex/hypnos/src/models/model.js",
+    "access": "public",
+    "description": null,
+    "lineNumber": 1
+  },
+  {
+    "__docId__": 83,
+    "kind": "class",
+    "name": "Model",
+    "memberof": "src/models/model.js",
+    "static": true,
+    "longname": "src/models/model.js~Model",
+    "access": "public",
+    "export": true,
+    "importPath": "hypnos/src/models/model.js",
+    "importStyle": "{Model}",
+    "description": "A subclass of the Base `Model` class which provides serialization and\ndeserialization via a whitelist of fields to serialize/deserialize.",
+    "lineNumber": 7,
+    "interface": false,
+    "extends": [
+      "src/models/base.js~BaseModel"
+    ]
+  },
+  {
+    "__docId__": 84,
+    "kind": "member",
+    "name": "FIELDS",
+    "memberof": "src/models/model.js~Model",
+    "static": true,
+    "longname": "src/models/model.js~Model.FIELDS",
+    "access": "public",
+    "description": null,
+    "lineNumber": 9,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 85,
+    "kind": "member",
+    "name": "importValues",
+    "memberof": "src/models/model.js~Model",
+    "static": false,
+    "longname": "src/models/model.js~Model#importValues",
+    "access": "public",
+    "description": null,
+    "lineNumber": 11,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 86,
+    "kind": "member",
+    "name": "[field]",
+    "memberof": "src/models/model.js~Model",
+    "longname": "src/models/model.js~Model#[field]",
+    "access": "public",
+    "description": null,
+    "lineNumber": 13,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 87,
+    "kind": "member",
+    "name": "exportValues",
+    "memberof": "src/models/model.js~Model",
+    "static": false,
+    "longname": "src/models/model.js~Model#exportValues",
+    "access": "public",
+    "description": null,
+    "lineNumber": 17,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 88,
+    "kind": "file",
+    "name": "src/response.js",
+    "content": "import uuid from 'uuid';\n\n\n/**\n * An APIResponse is a convenience wrapper around the data received when doing\n * a mapped query to the API.\n *\n * If a model instance is provided, the APIResponse will map the response data\n * to the model (see Model Serialization for more information). The APIResponse\n * also remembers the original response data for reference.\n *\n * Accessing the Response Objects\n * ------------------------------\n * Depending on the type of query, responses are mapped to either the `object`\n * or `objects` (note the plural) property on the APIResponse. In the case of\n * a query that will return multiple objects (i.e. when the `many` flag is set)\n * the resulting objects will be mapped and set to the `objects` property.\n * Otherwise single objects are always mapped to the `object` property.\n *\n * Navigating Paginated Responses\n * ------------------------------\n * A APIResponse provides an easy way to navigate through paginated results.\n * When retrieving a result set that is paginated (i.e. with\n * `Persistence.service.list()`), APIResponse provides two convenience methods:\n *\n * - getNextPage: Will fetch the next page in a result set if there is one.\n * - getPreviousPage: Will fetch the previous page in a result set if there is one.\n *\n * Using these two methods you can navigate the results of the query you made\n * originally. Note that you cannot change the parameters or modify the state\n * of the query once it is made. To sort and filter based on different critera,\n * you'll need to make a new query from the Persistence.service.\n *\n */\nclass APIResponse {\n\n    constructor(data, keys, params, requestId, model=null, many=false) {\n        this.id = uuid.v4().toString();\n        this.fetchParams = params;\n        this.fetchKeys = keys;\n        this.data = data;\n        this.requestId = requestId;\n        this.many = many;\n        this.model = model;\n\n        // Map response to model object(s).\n        if (model && data) {\n            if (many && data.results) {\n                this.objects = data.results.map(result => {\n                    const instance = new model();\n                    instance.importValues(result);\n                    return instance;\n                });\n            } else {\n                const instance = new model();\n                instance.importValues(data);\n                this.object = instance;\n            }\n        }\n    }\n\n    /**\n     * Returns whether or not the given fetch response has a next page.\n     */\n    hasNextPage = () => (\n        this.many && this.data.next\n    );\n\n    /**\n     * Returns whether or not the given fetch response has a previous page.\n     */\n    hasPreviousPage = () => (\n        this.many && this.data.previous\n    );\n\n    /**\n     * Fetch the next page of results in a paginated result set.\n     *\n     * This method returns a promise to the APIResponse of the next page.\n     *\n     * WARNING: This method will throw an error when attempting to fetch a next\n     * page for a single object result set or if there is no next page.\n     * To avoid this, check if the APIResponse `hasNextPage` before calling.\n     */\n    getNextPage = () => (new Promise((resolve) => {\n        if (!this.many || !this.hasNextPage()) {\n            throw new Error(`Given APIResponse: ${this.id} does not have a next value.`);\n        }\n\n        const nextPageFetchParams = { ...this.fetchParams, page: this._getNextPageNumber() };\n        return Persistence.service.action(\n            this.fetchKeys,\n            nextPageFetchParams,\n            false,\n            this.model,\n            this.many\n        ).then(resolve);\n    }));\n\n    /**\n     * Fetch the previous page of results in a paginated result set.\n     *\n     * This method returns a promise to the APIResponse of the previous page.\n     *\n     * WARNING: This method will throw an error when attempting to fetch a previous\n     * page for a single object result set or if there is no previous page.\n     * To avoid this, check if the APIResponse `hasPreviousPage` before calling.\n     */\n    getPreviousPage = () => (new Promise((resolve) => {\n        if (!this.many || !this.hasPreviousPage()) {\n            throw new Error(`Given APIResponse: ${this.id} does not have a previous value.`);\n        }\n        const previousPageFetchParams = { ...this.fetchParams, page: this._getPreviousPageNumber() };\n        return Persistence.service.action(\n            this.fetchKeys,\n            previousPageFetchParams,\n            false,\n            this.model,\n            this.many\n        ).then(resolve);\n    }));\n\n    /* Private Methods */\n\n    _getCurrentPage = () => (\n        this.fetchParams.page ? this.fetchParams.page : 1\n    );\n\n    _getNextPageNumber = () => (\n        this._getCurrentPage() + 1\n    );\n\n    _getPreviousPageNumber = () => (\n        this._getCurrentPage() - 1\n    );\n}\n\n\nexport default APIResponse;\n",
+    "static": true,
+    "longname": "/Users/ifoundit/Dropbox/Source_Code/Repos/adventurerscodex/hypnos/src/response.js",
+    "access": "public",
+    "description": null,
+    "lineNumber": 1
+  },
+  {
+    "__docId__": 89,
+    "kind": "class",
+    "name": "APIResponse",
+    "memberof": "src/response.js",
+    "static": true,
+    "longname": "src/response.js~APIResponse",
+    "access": "public",
+    "export": true,
+    "importPath": "hypnos/src/response.js",
+    "importStyle": "APIResponse",
+    "description": "An APIResponse is a convenience wrapper around the data received when doing\na mapped query to the API.\n\nIf a model instance is provided, the APIResponse will map the response data\nto the model (see Model Serialization for more information). The APIResponse\nalso remembers the original response data for reference.\n\nAccessing the Response Objects\n------------------------------\nDepending on the type of query, responses are mapped to either the `object`\nor `objects` (note the plural) property on the APIResponse. In the case of\na query that will return multiple objects (i.e. when the `many` flag is set)\nthe resulting objects will be mapped and set to the `objects` property.\nOtherwise single objects are always mapped to the `object` property.\n\nNavigating Paginated Responses\n------------------------------\nA APIResponse provides an easy way to navigate through paginated results.\nWhen retrieving a result set that is paginated (i.e. with\n`Persistence.service.list()`), APIResponse provides two convenience methods:\n\n- getNextPage: Will fetch the next page in a result set if there is one.\n- getPreviousPage: Will fetch the previous page in a result set if there is one.\n\nUsing these two methods you can navigate the results of the query you made\noriginally. Note that you cannot change the parameters or modify the state\nof the query once it is made. To sort and filter based on different critera,\nyou'll need to make a new query from the Persistence.service.",
+    "lineNumber": 35,
+    "interface": false
+  },
+  {
+    "__docId__": 90,
+    "kind": "constructor",
+    "name": "constructor",
+    "memberof": "src/response.js~APIResponse",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/response.js~APIResponse#constructor",
+    "access": "public",
+    "description": null,
+    "lineNumber": 37,
+    "undocument": true
+  },
+  {
+    "__docId__": 91,
+    "kind": "member",
+    "name": "id",
+    "memberof": "src/response.js~APIResponse",
+    "static": false,
+    "longname": "src/response.js~APIResponse#id",
+    "access": "public",
+    "description": null,
+    "lineNumber": 38,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 92,
+    "kind": "member",
+    "name": "fetchParams",
+    "memberof": "src/response.js~APIResponse",
+    "static": false,
+    "longname": "src/response.js~APIResponse#fetchParams",
+    "access": "public",
+    "description": null,
+    "lineNumber": 39,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 93,
+    "kind": "member",
+    "name": "fetchKeys",
+    "memberof": "src/response.js~APIResponse",
+    "static": false,
+    "longname": "src/response.js~APIResponse#fetchKeys",
+    "access": "public",
+    "description": null,
+    "lineNumber": 40,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 94,
+    "kind": "member",
+    "name": "data",
+    "memberof": "src/response.js~APIResponse",
+    "static": false,
+    "longname": "src/response.js~APIResponse#data",
+    "access": "public",
+    "description": null,
+    "lineNumber": 41,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 95,
+    "kind": "member",
+    "name": "requestId",
+    "memberof": "src/response.js~APIResponse",
+    "static": false,
+    "longname": "src/response.js~APIResponse#requestId",
+    "access": "public",
+    "description": null,
+    "lineNumber": 42,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 96,
+    "kind": "member",
+    "name": "many",
+    "memberof": "src/response.js~APIResponse",
+    "static": false,
+    "longname": "src/response.js~APIResponse#many",
+    "access": "public",
+    "description": null,
+    "lineNumber": 43,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 97,
+    "kind": "member",
+    "name": "model",
+    "memberof": "src/response.js~APIResponse",
+    "static": false,
+    "longname": "src/response.js~APIResponse#model",
+    "access": "public",
+    "description": null,
+    "lineNumber": 44,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 98,
+    "kind": "member",
+    "name": "objects",
+    "memberof": "src/response.js~APIResponse",
+    "static": false,
+    "longname": "src/response.js~APIResponse#objects",
+    "access": "public",
+    "description": null,
+    "lineNumber": 49,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 99,
+    "kind": "member",
+    "name": "object",
+    "memberof": "src/response.js~APIResponse",
+    "static": false,
+    "longname": "src/response.js~APIResponse#object",
+    "access": "public",
+    "description": null,
+    "lineNumber": 57,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 100,
+    "kind": "member",
+    "name": "hasNextPage",
+    "memberof": "src/response.js~APIResponse",
+    "static": false,
+    "longname": "src/response.js~APIResponse#hasNextPage",
+    "access": "public",
+    "description": "Returns whether or not the given fetch response has a next page.",
+    "lineNumber": 65,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 101,
+    "kind": "member",
+    "name": "hasPreviousPage",
+    "memberof": "src/response.js~APIResponse",
+    "static": false,
+    "longname": "src/response.js~APIResponse#hasPreviousPage",
+    "access": "public",
+    "description": "Returns whether or not the given fetch response has a previous page.",
+    "lineNumber": 72,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 102,
+    "kind": "member",
+    "name": "getNextPage",
+    "memberof": "src/response.js~APIResponse",
+    "static": false,
+    "longname": "src/response.js~APIResponse#getNextPage",
+    "access": "public",
+    "description": "Fetch the next page of results in a paginated result set.\n\nThis method returns a promise to the APIResponse of the next page.\n\nWARNING: This method will throw an error when attempting to fetch a next\npage for a single object result set or if there is no next page.\nTo avoid this, check if the APIResponse `hasNextPage` before calling.",
+    "lineNumber": 85,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 103,
+    "kind": "member",
+    "name": "getPreviousPage",
+    "memberof": "src/response.js~APIResponse",
+    "static": false,
+    "longname": "src/response.js~APIResponse#getPreviousPage",
+    "access": "public",
+    "description": "Fetch the previous page of results in a paginated result set.\n\nThis method returns a promise to the APIResponse of the previous page.\n\nWARNING: This method will throw an error when attempting to fetch a previous\npage for a single object result set or if there is no previous page.\nTo avoid this, check if the APIResponse `hasPreviousPage` before calling.",
+    "lineNumber": 109,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 104,
+    "kind": "member",
+    "name": "_getCurrentPage",
+    "memberof": "src/response.js~APIResponse",
+    "static": false,
+    "longname": "src/response.js~APIResponse#_getCurrentPage",
+    "access": "private",
+    "description": null,
+    "lineNumber": 125,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 105,
+    "kind": "member",
+    "name": "_getNextPageNumber",
+    "memberof": "src/response.js~APIResponse",
+    "static": false,
+    "longname": "src/response.js~APIResponse#_getNextPageNumber",
+    "access": "private",
+    "description": null,
+    "lineNumber": 129,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 106,
+    "kind": "member",
+    "name": "_getPreviousPageNumber",
+    "memberof": "src/response.js~APIResponse",
+    "static": false,
+    "longname": "src/response.js~APIResponse#_getPreviousPageNumber",
+    "access": "private",
+    "description": null,
+    "lineNumber": 133,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 107,
+    "kind": "file",
+    "name": "src/tokens.js",
+    "content": "import { Hypnos } from './hypnos';\n\n\n/**\n * TODO: Document\n *\n *\n *\n *\n *\n *\n *\n *\n *\n *\n */\nexport class InstanceToken {\n\n    constructor(model, instance) {\n        this.model = model;\n        this.instance = instance;\n        this.client = Hypnos.client;\n    }\n\n    /**\n     * Refresh the data for the given object from the remote store.\n     */\n    refresh = () => {\n        const keys = [...this.model.__skeys__, 'read'];\n        // TODO: We don't know which fields to use as the ID to refresh.\n        const params = this.instance.exportValues();\n        return this.client.action(keys, params, false, this.model, false);\n    };\n\n    /**\n     * Persist the object's data to the remote store. This only works for\n     * existing objects.\n     *\n     * If a list of fields is provided, then only update those fields.\n     */\n    save = (fields=null, raw=false) => {\n        let method = 'update';\n        // TODO: We don't have snake_case variables here.\n        let params = this.instance.exportValues();\n\n        // Trim out unneeded fields if `fields` is provided and\n        // set the active method to use partial_update.\n        if (fields && fields.length > 0) {\n            method = 'partial_update';\n            for (key in params) {\n                if (!fields.contains(key)) {\n                    delete params[key];\n                }\n            }\n        }\n\n        const keys = [...this.model.__skeys__, method];\n        return this.client.action(keys, params, raw, this.model, false);\n    };\n\n    /**\n     * Tell the remote store to destroy the current object.\n     *\n     * WARNING: This does not remove the object from memory, only from\n     * the remote store.\n     */\n    delete = () => {\n        const keys = [...this.model.__skeys__, 'delete'];\n        // TODO: We don't know which fields to use as the ID to delete.\n        const params = this.instance.exportValues();\n        return this.client.action(keys, params, true, this.model, false);\n    };\n}\n\n\n/**\n * A ModelToken, like an InstanceToken provides quick access to the Persistence\n * client methods without an active model instance to use. You can use an\n * object's Model Token to easily and clearly perform queries and updates to the\n * backing API using syntax bound to the Model class itself, rather than using\n * the normal Persistence API.\n *\n * Example\n * -------\n * Let's say you want to search for all books in your collection. Using the\n * normal Persistence API you could perform a query for all books like this:\n *\n *      Persistence.client.list(Book).then(response => {\n *          const books = response.objects;\n *          // Do stuff with books...\n *      });\n *\n * But implementing the ModelToken API on a given Model would allow the\n * following shortcut syntax.\n *\n *      Book.ps.list().then(response => {\n *          const books = response.objects;\n *          // Do stuff with books...\n *      });\n *\n * For more information about what queries are available with this API, please\n * see the associated documentation below.\n *\n * For more information about performing queries on mapped Model instances\n * (i.e. your new book instances) please refer to the InstanceToken documentation.\n */\nexport class ModelToken {\n\n    constructor(model) {\n        this.model = model;\n        this.client = Hypnos.client;\n    }\n\n    /**\n     * Given a model type and an optional set of parameters, perform a list query\n     * against the backing API and return a promise of results in the form of a\n     * FetchResponse (see FetchResponse for more information).\n     *\n     * Example\n     * -------\n     *\n     *     Book.ps.list().then(response => {\n     *         const books = response.objects;\n     *         // Do stuff with books...\n     *     });\n     */\n    list = (params={}, raw=false) => {\n        const keys = [...this.model.__skeys__, 'list'];\n        return this.client.action(keys, params, raw, this.model, true);\n    };\n\n    /**\n     * Given a model type and an optional set of parameters, perform a retrieve\n     * query against the backing API and return a promise of results in the\n     * form of a FetchResponse (see FetchResponse for more information).\n     *\n     * Example\n     * -------\n     *\n     *     Book.ps.read({ id: '1234' }).then(response => {\n     *         const book = response.object;\n     *         // Do stuff with your book...\n     *     });\n     */\n    read = (params={}, raw=false) => {\n        const keys = [...this.model.__skeys__, 'read'];\n        return this.client.action(keys, params, raw, this.model, false);\n    };\n\n    /**\n     * Given a model type and an optional set of parameters, perform a create\n     * against the backing API and return a promise of results in the\n     * form of a FetchResponse (see FetchResponse for more information).\n     *\n     * Example\n     * -------\n     *\n     *     const data = { title: 'An Adventure', author: 'John Smith' };\n     *     Book.ps.create(data).then(response => {\n     *         const book = response.object;\n     *         // Do stuff with your new book...\n     *     });\n     */\n    create = (params={}, raw=false) => {\n        const keys = [...this.model.__skeys__, 'create'];\n        return this.client.action(keys, params, raw, this.model, false);\n    };\n\n    /**\n     * Given a model type and an optional set of parameters, perform an update\n     * against the backing API and return a promise of results in the\n     * form of a FetchResponse (see FetchResponse for more information).\n     *\n     * Example\n     * -------\n     *\n     *     const data = { id: '1234', title: 'An Adventure II', author: 'John Smith' };\n     *     Book.ps.update(data).then(response => {\n     *         const book = response.object;\n     *         // Do stuff with your updated book...\n     *     });\n     */\n    update = (params={}, raw=false) => {\n        const keys = [...this.model.__skeys__, 'update'];\n        return this.client.action(keys, params, raw, this.model, false);\n    };\n\n    /**\n     * Given a model type and an optional set of parameters, perform a destroy\n     * against the backing API and return a promise of results in the\n     * form of a FetchResponse (see FetchResponse for more information).\n     *\n     * Example\n     * -------\n     *\n     *     Book.ps.delete({ id: '1234' });\n     */\n    delete = (params={}, raw=false) => {\n        const keys = [...this.model.__skeys__, 'delete'];\n        return this.client.action(keys, params, raw, this.model, false);\n    };\n}\n",
+    "static": true,
+    "longname": "/Users/ifoundit/Dropbox/Source_Code/Repos/adventurerscodex/hypnos/src/tokens.js",
+    "access": "public",
+    "description": null,
+    "lineNumber": 1
+  },
+  {
+    "__docId__": 108,
+    "kind": "class",
+    "name": "InstanceToken",
+    "memberof": "src/tokens.js",
+    "static": true,
+    "longname": "src/tokens.js~InstanceToken",
+    "access": "public",
+    "export": true,
+    "importPath": "hypnos/src/tokens.js",
+    "importStyle": "{InstanceToken}",
+    "description": "TODO: Document",
+    "lineNumber": 17,
+    "interface": false
+  },
+  {
+    "__docId__": 109,
+    "kind": "constructor",
+    "name": "constructor",
+    "memberof": "src/tokens.js~InstanceToken",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/tokens.js~InstanceToken#constructor",
+    "access": "public",
+    "description": null,
+    "lineNumber": 19,
+    "undocument": true
+  },
+  {
+    "__docId__": 110,
+    "kind": "member",
+    "name": "model",
+    "memberof": "src/tokens.js~InstanceToken",
+    "static": false,
+    "longname": "src/tokens.js~InstanceToken#model",
+    "access": "public",
+    "description": null,
+    "lineNumber": 20,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 111,
+    "kind": "member",
+    "name": "instance",
+    "memberof": "src/tokens.js~InstanceToken",
+    "static": false,
+    "longname": "src/tokens.js~InstanceToken#instance",
+    "access": "public",
+    "description": null,
+    "lineNumber": 21,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 112,
+    "kind": "member",
+    "name": "client",
+    "memberof": "src/tokens.js~InstanceToken",
+    "static": false,
+    "longname": "src/tokens.js~InstanceToken#client",
+    "access": "public",
+    "description": null,
+    "lineNumber": 22,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 113,
+    "kind": "member",
+    "name": "refresh",
+    "memberof": "src/tokens.js~InstanceToken",
+    "static": false,
+    "longname": "src/tokens.js~InstanceToken#refresh",
+    "access": "public",
+    "description": "Refresh the data for the given object from the remote store.",
+    "lineNumber": 28,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 114,
+    "kind": "member",
+    "name": "save",
+    "memberof": "src/tokens.js~InstanceToken",
+    "static": false,
+    "longname": "src/tokens.js~InstanceToken#save",
+    "access": "public",
+    "description": "Persist the object's data to the remote store. This only works for\nexisting objects.\n\nIf a list of fields is provided, then only update those fields.",
+    "lineNumber": 41,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 115,
+    "kind": "member",
+    "name": "delete",
+    "memberof": "src/tokens.js~InstanceToken",
+    "static": false,
+    "longname": "src/tokens.js~InstanceToken#delete",
+    "access": "public",
+    "description": "Tell the remote store to destroy the current object.\n\nWARNING: This does not remove the object from memory, only from\nthe remote store.",
+    "lineNumber": 67,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 116,
+    "kind": "class",
+    "name": "ModelToken",
+    "memberof": "src/tokens.js",
+    "static": true,
+    "longname": "src/tokens.js~ModelToken",
+    "access": "public",
+    "export": true,
+    "importPath": "hypnos/src/tokens.js",
+    "importStyle": "{ModelToken}",
+    "description": "A ModelToken, like an InstanceToken provides quick access to the Persistence\nclient methods without an active model instance to use. You can use an\nobject's Model Token to easily and clearly perform queries and updates to the\nbacking API using syntax bound to the Model class itself, rather than using\nthe normal Persistence API.\n\nExample\n-------\nLet's say you want to search for all books in your collection. Using the\nnormal Persistence API you could perform a query for all books like this:\n\n     Persistence.client.list(Book).then(response => {\n         const books = response.objects;\n         // Do stuff with books...\n     });\n\nBut implementing the ModelToken API on a given Model would allow the\nfollowing shortcut syntax.\n\n     Book.ps.list().then(response => {\n         const books = response.objects;\n         // Do stuff with books...\n     });\n\nFor more information about what queries are available with this API, please\nsee the associated documentation below.\n\nFor more information about performing queries on mapped Model instances\n(i.e. your new book instances) please refer to the InstanceToken documentation.",
+    "lineNumber": 107,
+    "interface": false
+  },
+  {
+    "__docId__": 117,
+    "kind": "constructor",
+    "name": "constructor",
+    "memberof": "src/tokens.js~ModelToken",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/tokens.js~ModelToken#constructor",
+    "access": "public",
+    "description": null,
+    "lineNumber": 109,
+    "undocument": true
+  },
+  {
+    "__docId__": 118,
+    "kind": "member",
+    "name": "model",
+    "memberof": "src/tokens.js~ModelToken",
+    "static": false,
+    "longname": "src/tokens.js~ModelToken#model",
+    "access": "public",
+    "description": null,
+    "lineNumber": 110,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 119,
+    "kind": "member",
+    "name": "client",
+    "memberof": "src/tokens.js~ModelToken",
+    "static": false,
+    "longname": "src/tokens.js~ModelToken#client",
+    "access": "public",
+    "description": null,
+    "lineNumber": 111,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 120,
+    "kind": "member",
+    "name": "list",
+    "memberof": "src/tokens.js~ModelToken",
+    "static": false,
+    "longname": "src/tokens.js~ModelToken#list",
+    "access": "public",
+    "description": "Given a model type and an optional set of parameters, perform a list query\nagainst the backing API and return a promise of results in the form of a\nFetchResponse (see FetchResponse for more information).\n\nExample\n-------\n\n    Book.ps.list().then(response => {\n        const books = response.objects;\n        // Do stuff with books...\n    });",
+    "lineNumber": 127,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 121,
+    "kind": "member",
+    "name": "read",
+    "memberof": "src/tokens.js~ModelToken",
+    "static": false,
+    "longname": "src/tokens.js~ModelToken#read",
+    "access": "public",
+    "description": "Given a model type and an optional set of parameters, perform a retrieve\nquery against the backing API and return a promise of results in the\nform of a FetchResponse (see FetchResponse for more information).\n\nExample\n-------\n\n    Book.ps.read({ id: '1234' }).then(response => {\n        const book = response.object;\n        // Do stuff with your book...\n    });",
+    "lineNumber": 145,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 122,
+    "kind": "member",
+    "name": "create",
+    "memberof": "src/tokens.js~ModelToken",
+    "static": false,
+    "longname": "src/tokens.js~ModelToken#create",
+    "access": "public",
+    "description": "Given a model type and an optional set of parameters, perform a create\nagainst the backing API and return a promise of results in the\nform of a FetchResponse (see FetchResponse for more information).\n\nExample\n-------\n\n    const data = { title: 'An Adventure', author: 'John Smith' };\n    Book.ps.create(data).then(response => {\n        const book = response.object;\n        // Do stuff with your new book...\n    });",
+    "lineNumber": 164,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 123,
+    "kind": "member",
+    "name": "update",
+    "memberof": "src/tokens.js~ModelToken",
+    "static": false,
+    "longname": "src/tokens.js~ModelToken#update",
+    "access": "public",
+    "description": "Given a model type and an optional set of parameters, perform an update\nagainst the backing API and return a promise of results in the\nform of a FetchResponse (see FetchResponse for more information).\n\nExample\n-------\n\n    const data = { id: '1234', title: 'An Adventure II', author: 'John Smith' };\n    Book.ps.update(data).then(response => {\n        const book = response.object;\n        // Do stuff with your updated book...\n    });",
+    "lineNumber": 183,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 124,
+    "kind": "member",
+    "name": "delete",
+    "memberof": "src/tokens.js~ModelToken",
+    "static": false,
+    "longname": "src/tokens.js~ModelToken#delete",
+    "access": "public",
+    "description": "Given a model type and an optional set of parameters, perform a destroy\nagainst the backing API and return a promise of results in the\nform of a FetchResponse (see FetchResponse for more information).\n\nExample\n-------\n\n    Book.ps.delete({ id: '1234' });",
+    "lineNumber": 198,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "kind": "index",
+    "content": "# Hypnos - A Better Way to REST\n\n*An API client and ORM for CoreAPI powered REST APIs.*\n\nHypnos is a light-weight ORM and API Client for Web apps. It provides a clean and concise way to interact with your API data **without any URLs or manual requests**. In a way, it is very similar to `Apollo` for GraphQL, but more inspired by projects like `Django ORM` and `SQLAlchemy`.\n\nFinally, web apps can have a real model layer.\n\n\nOverview\n--------\n\nHypnos lets you feel like you're developing with a real database. Using the power of [CoreAPI][coreapi] things like URLs and request methods are a thing of the past. You define a CoreAPI compatible data model in your API (via something like Django-REST framework) and point Hypnos at your API schema and Hypnos will take care of the rest.\n\n\n### Features\n\nBesides making your code easier to understand, Hypnos also has some really cool features out of the box!\n\n- **Built-in pagination support** for things like infinite scrolling.\n- **Request caching** to prevent repeated, identical queries to your API.\n- **Smart Requests**: Behind the scenes Hypnos will do the smart thing: if you tell Hypnos which fields to update, Hypnos will transform the request from `PUT` to `PATCH`.\n- **Need custom behavior?** Hypnos allows you to query your API directly in case you still need to do something we don't support.\n\n\n[coreapi]: http://www.coreapi.org\n\n\nExample\n-------\n\n    // book.js\n\n    import { Model } from 'hypnos';\n\n    class Book extends Model {\n        // The CoreAPI keys/path for this resource.\n        __skeys__ = ['book'];\n\n        // Properties from your API are mapped in dynamially so you only\n        // need to specify your computed properties.\n        // No need to repeat your data model!\n\n        get summary() {\n            const {title, type, author} = this;\n            return `${title} is a thrilling new ${type} from ${author}`;\n        }\n\n        toggleFavorite() {\n            this.favorite = !this.favorite;\n        }\n    }\n\n    // service/component/view_controller.js\n\n    import Hypnos from 'hypnos';\n\n    Book.ps.retrieve({ id: '1234' }).then(response => {\n         const book = response.object;\n         // Update the local properties of the book object.\n         book.title = 'My new favorite book';\n\n         // Persist your changes back to the API.\n         book.ps.save();\n\n         // ...You can even refresh your local object from the API.\n         book.ps.refresh();\n\n         // ...Or delete it easily.\n         book.ps.delete();\n    });\n",
+    "longname": "/Users/ifoundit/Dropbox/Source_Code/Repos/adventurerscodex/hypnos/README.md",
+    "name": "./README.md",
+    "static": true,
+    "access": "public"
+  },
+  {
+    "kind": "packageJSON",
+    "content": "{\n  \"name\": \"hypnos\",\n  \"version\": \"0.1.0\",\n  \"description\": \"An API client and ORM for CoreAPI powered REST APIs.\",\n  \"main\": \"./lib/index.js\",\n  \"scripts\": {\n    \"build\": \"npm run build:lib\",\n    \"build:lib\": \"cross-env BABEL_ENV=production babel src --out-dir lib\",\n    \"clean\": \"rimraf dist es lib\",\n    \"prepublish\": \"npm run clean && npm run build && npm run doc\",\n    \"test\": \"cross-env NODE_ENV=test jest --config=jest.json --coverage\",\n    \"lint\": \"eslint -c ./.eslintrc.yml --ext .jsx,.js src\",\n    \"doc\": \"esdoc\"\n  },\n  \"repository\": {\n    \"type\": \"git\",\n    \"url\": \"git+https://github.com/adventurerscodex/hypnos.git\"\n  },\n  \"keywords\": [\n    \"api\",\n    \"client\",\n    \"REST\",\n    \"Django-REST\",\n    \"ORM\",\n    \"CoreAPI\"\n  ],\n  \"author\": \"Brian Schrader\",\n  \"license\": \"MIT\",\n  \"bugs\": {\n    \"url\": \"https://github.com/adventurerscodex/hypnos/issues\"\n  },\n  \"homepage\": \"https://github.com/adventurerscodex/hypnos#readme\",\n  \"optionalDependencies\": {\n    \"knockout\": \"^3.5.0-beta\"\n  },\n  \"dependencies\": {\n    \"babel\": \"^6.23.0\",\n    \"babel-cli\": \"^6.26.0\",\n    \"babel-core\": \"^6.26.0\",\n    \"babel-loader\": \"^7.1.2\",\n    \"babel-plugin-transform-class-properties\": \"^6.24.1\",\n    \"babel-preset-env\": \"^1.6.1\",\n    \"babel-preset-es2015\": \"^6.24.1\",\n    \"babel-preset-stage-0\": \"^6.24.1\",\n    \"babel-register\": \"^6.26.0\",\n    \"cross-env\": \"^5.0.5\",\n    \"jest\": \"^20.0.4\",\n    \"rimraf\": \"^2.6.1\",\n    \"webpack\": \"^4.1.1\",\n    \"webpack-cli\": \"^2.0.11\"\n  },\n  \"devDependencies\": {\n    \"esdoc\": \"^1.0.4\",\n    \"esdoc-standard-plugin\": \"^1.0.0\",\n    \"esdoc-ecmascript-proposal-plugin\": \"^1.0.0\"\n  }\n}\n",
+    "longname": "/Users/ifoundit/Dropbox/Source_Code/Repos/adventurerscodex/hypnos/package.json",
+    "name": "package.json",
+    "static": true,
+    "access": "public"
+  }
+]

@@ -24,8 +24,7 @@ export class KOModel extends BaseModel {
      * mapping. For custom mapping, subclasses can override this method.
      */
     importValues = (values) => {
-        const mapping = ko.mapping.autoignore(this, this._mapping);
-        ko.mapping.fromJS(values, mapping, this);
+        ko.mapping.fromJS(values, this._mapping, this);
     }
 
     /**
@@ -33,7 +32,6 @@ export class KOModel extends BaseModel {
      * mapping. For custom mapping, subclasses can override this method.
      */
     exportValues = () => {
-        const mapping = ko.mapping.autoignore(this, this._mapping);
-        return ko.mapping.toJS(this, mapping);
+        return ko.mapping.toJS(this, this._mapping);
     };
 }

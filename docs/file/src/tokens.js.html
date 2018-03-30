@@ -43,7 +43,6 @@
 <div class="content" data-ice="content"><h1 data-ice="title">src/tokens.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import { Hypnos } from &apos;./hypnos&apos;;
 
-
 /**
  * TODO: Document
  *
@@ -90,6 +89,7 @@ export class InstanceToken {
     create = () =&gt; {
         const keys = [...this.model.__skeys__, &apos;create&apos;];
         const params = this.instance.exportValues();
+        const cleanedParams = this.instance.clean(params);
         return this.client.action(keys, params, false, this.model, false);
     };
 
@@ -99,6 +99,7 @@ export class InstanceToken {
     refresh = () =&gt; {
         const keys = [...this.model.__skeys__, &apos;read&apos;];
         const params = this.instance.exportValues();
+        const cleanedParams = this.instance.clean(this.model, keys, params);
         return this.client.action(keys, params, false, this.model, false);
     };
 
@@ -110,7 +111,8 @@ export class InstanceToken {
      */
     save = (fields=null, raw=false) =&gt; {
         let method = &apos;update&apos;;
-        let params = this.instance.exportValues();
+        const params = this.instance.exportValues();
+        const cleanedParams = this.instance.clean(this.model, keys, params);
 
         // Trim out unneeded fields if `fields` is provided and
         // set the active method to use partial_update.
@@ -136,6 +138,7 @@ export class InstanceToken {
     delete = () =&gt; {
         const keys = [...this.model.__skeys__, &apos;delete&apos;];
         const params = this.instance.exportValues();
+        const cleanedParams = this.instance.clean(this.model, keys, params);
         return this.client.action(keys, params, true, this.model, false);
     };
 }

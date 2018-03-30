@@ -384,6 +384,12 @@ window.esdocSearchIndex = [
     "file"
   ],
   [
+    "src/models/base.js~basemodel#clean",
+    "class/src/models/base.js~BaseModel.html#instance-member-clean",
+    "src/models/base.js~BaseModel#clean",
+    "member"
+  ],
+  [
     "src/models/base.js~basemodel#constructor",
     "class/src/models/base.js~BaseModel.html#instance-constructor-constructor",
     "src/models/base.js~BaseModel#constructor",

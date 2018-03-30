@@ -993,7 +993,7 @@
     "__docId__": 77,
     "kind": "file",
     "name": "src/models/ko.js",
-    "content": "import ko from 'knockout';\nimport { BaseModel } from './base';\n\n/**\n * A subclass of the Base `Model` class which adds serialization and\n * deserialization via Knockout's built-in mapping functionality.\n */\nexport class KOModel extends BaseModel {\n\n    /**\n     * Check to see if the subclasses provide a mapping, if they do\n     * not, then raise an exception.\n     */\n    get _mapping() {\n        const mapping = this.constructor.mapping;\n        if (!mapping) {\n            throw new Error(`Model: \"${this.constructor.name}\" does not provide a mapping.`);\n        }\n        return mapping;\n    }\n\n    /**\n     * A default implementation of object deserialization using Knockout autoignore\n     * mapping. For custom mapping, subclasses can override this method.\n     */\n    importValues = (values) => {\n        ko.mapping.fromJS(values, this._mapping, this);\n    }\n\n    /**\n     * A default implementation of object serialization using Knockout autoignore\n     * mapping. For custom mapping, subclasses can override this method.\n     */\n    exportValues = () => {\n        return ko.mapping.toJS(this, this._mapping);\n    };\n}\n",
+    "content": "import ko from 'knockout';\nimport { BaseModel } from './base';\n\n/**\n * A subclass of the Base `Model` class which adds serialization and\n * deserialization via Knockout's built-in mapping functionality.\n */\nexport class KOModel extends BaseModel {\n\n    /**\n     * Check to see if the subclasses provide a mapping, if they do\n     * not, then raise an exception.\n     */\n    get _mapping() {\n        const mapping = this.constructor.mapping;\n        if (!mapping) {\n            throw new Error(`Model: \"${this.constructor.name}\" does not provide a mapping.`);\n        }\n\n        const ignoreFields = ['exportValues', 'importValues'];\n        if (mapping.ignore) {\n            const combined = mapping.ignore.concat(ignoreFields);\n            mapping.ignore = [...new Set(combined)];\n        }\n\n        return mapping;\n    }\n\n    /**\n     * A default implementation of object deserialization using Knockout autoignore\n     * mapping. For custom mapping, subclasses can override this method.\n     */\n    importValues = (values) => {\n        ko.mapping.fromJS(values, this._mapping, this);\n    }\n\n    /**\n     * A default implementation of object serialization using Knockout autoignore\n     * mapping. For custom mapping, subclasses can override this method.\n     */\n    exportValues = () => {\n        return ko.mapping.toJS(this, this._mapping);\n    };\n}\n",
     "static": true,
     "longname": "/Users/ifoundit/Projects/adventurers_codex/hypnos/src/models/ko.js",
     "access": "public",
@@ -1045,7 +1045,7 @@
     "longname": "src/models/ko.js~KOModel#importValues",
     "access": "public",
     "description": "A default implementation of object deserialization using Knockout autoignore\nmapping. For custom mapping, subclasses can override this method.",
-    "lineNumber": 26,
+    "lineNumber": 33,
     "type": {
       "types": [
         "*"
@@ -1061,7 +1061,7 @@
     "longname": "src/models/ko.js~KOModel#exportValues",
     "access": "public",
     "description": "A default implementation of object serialization using Knockout autoignore\nmapping. For custom mapping, subclasses can override this method.",
-    "lineNumber": 34,
+    "lineNumber": 41,
     "type": {
       "types": [
         "*"
@@ -1476,7 +1476,7 @@
     "__docId__": 107,
     "kind": "file",
     "name": "src/tokens.js",
-    "content": "import { Hypnos } from './hypnos';\n\n\n/**\n * TODO: Document\n *\n *\n *\n *\n *\n *\n *\n *\n *\n *\n */\nexport class InstanceToken {\n\n    constructor(model, instance) {\n        this.model = model;\n        this.instance = instance;\n        this.client = Hypnos.client;\n    }\n\n    /**\n     * This method allows the creation of model object data directly to the\n     * remote API.\n     *\n     * WARNING: Once you've used the original \"template\" instance to create an\n     * object, you should not continue using that object in your code. Always\n     * use the instance returned from the response since it has all of the required\n     * data from the API to perform the rest of the expected functionality.\n     *\n     * Example\n     * -------\n     * Let's assume that you have a model you've created locally, you've\n     * filed in the values, and now you want to tell your API to create that\n     * new object.\n     *\n     *      const instance = new MyModel();\n     *      // ...fill in the values...\n     *      instance.ps.create().then(response => {\n     *          const persistedInstance = response.object;\n     *      });\n     */\n    create = () => {\n        const keys = [...this.model.__skeys__, 'create'];\n        const params = this.instance.exportValues();\n        return this.client.action(keys, params, false, this.model, false);\n    };\n\n    /**\n     * Refresh the data for the given object from the remote store.\n     */\n    refresh = () => {\n        const keys = [...this.model.__skeys__, 'read'];\n        const params = this.instance.exportValues();\n        return this.client.action(keys, params, false, this.model, false);\n    };\n\n    /**\n     * Persist the object's data to the remote store. This only works for\n     * existing objects.\n     *\n     * If a list of fields is provided, then only update those fields.\n     */\n    save = (fields=null, raw=false) => {\n        let method = 'update';\n        let params = this.instance.exportValues();\n\n        // Trim out unneeded fields if `fields` is provided and\n        // set the active method to use partial_update.\n        if (fields && fields.length > 0) {\n            method = 'partial_update';\n            for (key in params) {\n                if (!fields.contains(key)) {\n                    delete params[key];\n                }\n            }\n        }\n\n        const keys = [...this.model.__skeys__, method];\n        return this.client.action(keys, params, raw, this.model, false);\n    };\n\n    /**\n     * Tell the remote store to destroy the current object.\n     *\n     * WARNING: This does not remove the object from memory, only from\n     * the remote store.\n     */\n    delete = () => {\n        const keys = [...this.model.__skeys__, 'delete'];\n        const params = this.instance.exportValues();\n        return this.client.action(keys, params, true, this.model, false);\n    };\n}\n\n\n/**\n * A ModelToken, like an InstanceToken provides quick access to the Persistence\n * client methods without an active model instance to use. You can use an\n * object's Model Token to easily and clearly perform queries and updates to the\n * backing API using syntax bound to the Model class itself, rather than using\n * the normal Persistence API.\n *\n * Example\n * -------\n * Let's say you want to search for all books in your collection. Using the\n * normal Persistence API you could perform a query for all books like this:\n *\n *      Persistence.client.list(Book).then(response => {\n *          const books = response.objects;\n *          // Do stuff with books...\n *      });\n *\n * But implementing the ModelToken API on a given Model would allow the\n * following shortcut syntax.\n *\n *      Book.ps.list().then(response => {\n *          const books = response.objects;\n *          // Do stuff with books...\n *      });\n *\n * For more information about what queries are available with this API, please\n * see the associated documentation below.\n *\n * For more information about performing queries on mapped Model instances\n * (i.e. your new book instances) please refer to the InstanceToken documentation.\n */\nexport class ModelToken {\n\n    constructor(model) {\n        this.model = model;\n        this.client = Hypnos.client;\n    }\n\n    /**\n     * Given a model type and an optional set of parameters, perform a list query\n     * against the backing API and return a promise of results in the form of a\n     * FetchResponse (see FetchResponse for more information).\n     *\n     * Example\n     * -------\n     *\n     *     Book.ps.list().then(response => {\n     *         const books = response.objects;\n     *         // Do stuff with books...\n     *     });\n     */\n    list = (params={}, raw=false) => {\n        const keys = [...this.model.__skeys__, 'list'];\n        return this.client.action(keys, params, raw, this.model, true);\n    };\n\n    /**\n     * Given a model type and an optional set of parameters, perform a retrieve\n     * query against the backing API and return a promise of results in the\n     * form of a FetchResponse (see FetchResponse for more information).\n     *\n     * Example\n     * -------\n     *\n     *     Book.ps.read({ id: '1234' }).then(response => {\n     *         const book = response.object;\n     *         // Do stuff with your book...\n     *     });\n     */\n    read = (params={}, raw=false) => {\n        const keys = [...this.model.__skeys__, 'read'];\n        return this.client.action(keys, params, raw, this.model, false);\n    };\n\n    /**\n     * Given a model type and an optional set of parameters, perform a create\n     * against the backing API and return a promise of results in the\n     * form of a FetchResponse (see FetchResponse for more information).\n     *\n     * Example\n     * -------\n     *\n     *     const data = { title: 'An Adventure', author: 'John Smith' };\n     *     Book.ps.create(data).then(response => {\n     *         const book = response.object;\n     *         // Do stuff with your new book...\n     *     });\n     */\n    create = (params={}, raw=false) => {\n        const keys = [...this.model.__skeys__, 'create'];\n        return this.client.action(keys, params, raw, this.model, false);\n    };\n\n    /**\n     * Given a model type and an optional set of parameters, perform an update\n     * against the backing API and return a promise of results in the\n     * form of a FetchResponse (see FetchResponse for more information).\n     *\n     * Example\n     * -------\n     *\n     *     const data = { id: '1234', title: 'An Adventure II', author: 'John Smith' };\n     *     Book.ps.update(data).then(response => {\n     *         const book = response.object;\n     *         // Do stuff with your updated book...\n     *     });\n     */\n    update = (params={}, raw=false) => {\n        const keys = [...this.model.__skeys__, 'update'];\n        return this.client.action(keys, params, raw, this.model, false);\n    };\n\n    /**\n     * Given a model type and an optional set of parameters, perform a destroy\n     * against the backing API and return a promise of results in the\n     * form of a FetchResponse (see FetchResponse for more information).\n     *\n     * Example\n     * -------\n     *\n     *     Book.ps.delete({ id: '1234' });\n     */\n    delete = (params={}, raw=false) => {\n        const keys = [...this.model.__skeys__, 'delete'];\n        return this.client.action(keys, params, raw, this.model, false);\n    };\n}\n",
+    "content": "import { Hypnos } from './hypnos';\n\n\n/**\n * TODO: Document\n *\n *\n *\n *\n *\n *\n *\n *\n *\n *\n */\nexport class InstanceToken {\n\n    constructor(model, instance) {\n        this.model = model;\n        this.instance = instance;\n        this.client = Hypnos.client;\n    }\n\n    /**\n     * This method allows the creation of model object data directly to the\n     * remote API.\n     *\n     * WARNING: Once you've used the original \"template\" instance to create an\n     * object, you should not continue using that object in your code. Always\n     * use the instance returned from the response since it has all of the required\n     * data from the API to perform the rest of the expected functionality.\n     *\n     * Example\n     * -------\n     *\n     * Let's assume that you have a model you've created locally, you've\n     * filed in the values, and now you want to tell your API to create that\n     * new object.\n     *\n     *      const instance = new MyModel();\n     *      // ...fill in the values...\n     *      instance.ps.create().then(response => {\n     *          const persistedInstance = response.object;\n     *      });\n     */\n    create = () => {\n        const keys = [...this.model.__skeys__, 'create'];\n        const params = this.instance.exportValues();\n        return this.client.action(keys, params, false, this.model, false);\n    };\n\n    /**\n     * Refresh the data for the given object from the remote store.\n     */\n    refresh = () => {\n        const keys = [...this.model.__skeys__, 'read'];\n        const params = this.instance.exportValues();\n        return this.client.action(keys, params, false, this.model, false);\n    };\n\n    /**\n     * Persist the object's data to the remote store. This only works for\n     * existing objects.\n     *\n     * If a list of fields is provided, then only update those fields.\n     */\n    save = (fields=null, raw=false) => {\n        let method = 'update';\n        let params = this.instance.exportValues();\n\n        // Trim out unneeded fields if `fields` is provided and\n        // set the active method to use partial_update.\n        if (fields && fields.length > 0) {\n            method = 'partial_update';\n            for (key in params) {\n                if (!fields.contains(key)) {\n                    delete params[key];\n                }\n            }\n        }\n\n        const keys = [...this.model.__skeys__, method];\n        return this.client.action(keys, params, raw, this.model, false);\n    };\n\n    /**\n     * Tell the remote store to destroy the current object.\n     *\n     * WARNING: This does not remove the object from memory, only from\n     * the remote store.\n     */\n    delete = () => {\n        const keys = [...this.model.__skeys__, 'delete'];\n        const params = this.instance.exportValues();\n        return this.client.action(keys, params, true, this.model, false);\n    };\n}\n\n\n/**\n * A ModelToken, like an InstanceToken provides quick access to the Persistence\n * client methods without an active model instance to use. You can use an\n * object's Model Token to easily and clearly perform queries and updates to the\n * backing API using syntax bound to the Model class itself, rather than using\n * the normal Persistence API.\n *\n * Example\n * -------\n *\n * Let's say you want to search for all books in your collection. Using the\n * normal Persistence API you could perform a query for all books like this:\n *\n *      Persistence.client.list(Book).then(response => {\n *          const books = response.objects;\n *          // Do stuff with books...\n *      });\n *\n * But implementing the ModelToken API on a given Model would allow the\n * following shortcut syntax.\n *\n *      Book.ps.list().then(response => {\n *          const books = response.objects;\n *          // Do stuff with books...\n *      });\n *\n * For more information about what queries are available with this API, please\n * see the associated documentation below.\n *\n * For more information about performing queries on mapped Model instances\n * (i.e. your new book instances) please refer to the InstanceToken documentation.\n */\nexport class ModelToken {\n\n    constructor(model) {\n        this.model = model;\n        this.client = Hypnos.client;\n    }\n\n    /**\n     * Given a model type and an optional set of parameters, perform a list query\n     * against the backing API and return a promise of results in the form of a\n     * FetchResponse (see FetchResponse for more information).\n     *\n     * Example\n     * -------\n     *\n     *     Book.ps.list().then(response => {\n     *         const books = response.objects;\n     *         // Do stuff with books...\n     *     });\n     */\n    list = (params={}, raw=false) => {\n        const keys = [...this.model.__skeys__, 'list'];\n        return this.client.action(keys, params, raw, this.model, true);\n    };\n\n    /**\n     * Given a model type and an optional set of parameters, perform a retrieve\n     * query against the backing API and return a promise of results in the\n     * form of a FetchResponse (see FetchResponse for more information).\n     *\n     * Example\n     * -------\n     *\n     *     Book.ps.read({ id: '1234' }).then(response => {\n     *         const book = response.object;\n     *         // Do stuff with your book...\n     *     });\n     */\n    read = (params={}, raw=false) => {\n        const keys = [...this.model.__skeys__, 'read'];\n        return this.client.action(keys, params, raw, this.model, false);\n    };\n\n    /**\n     * Given a model type and an optional set of parameters, perform a create\n     * against the backing API and return a promise of results in the\n     * form of a FetchResponse (see FetchResponse for more information).\n     *\n     * Example\n     * -------\n     *\n     *     const data = { title: 'An Adventure', author: 'John Smith' };\n     *     Book.ps.create(data).then(response => {\n     *         const book = response.object;\n     *         // Do stuff with your new book...\n     *     });\n     */\n    create = (params={}, raw=false) => {\n        const keys = [...this.model.__skeys__, 'create'];\n        return this.client.action(keys, params, raw, this.model, false);\n    };\n\n    /**\n     * Given a model type and an optional set of parameters, perform an update\n     * against the backing API and return a promise of results in the\n     * form of a FetchResponse (see FetchResponse for more information).\n     *\n     * Example\n     * -------\n     *\n     *     const data = { id: '1234', title: 'An Adventure II', author: 'John Smith' };\n     *     Book.ps.update(data).then(response => {\n     *         const book = response.object;\n     *         // Do stuff with your updated book...\n     *     });\n     */\n    update = (params={}, raw=false) => {\n        const keys = [...this.model.__skeys__, 'update'];\n        return this.client.action(keys, params, raw, this.model, false);\n    };\n\n    /**\n     * Given a model type and an optional set of parameters, perform a destroy\n     * against the backing API and return a promise of results in the\n     * form of a FetchResponse (see FetchResponse for more information).\n     *\n     * Example\n     * -------\n     *\n     *     Book.ps.delete({ id: '1234' });\n     */\n    delete = (params={}, raw=false) => {\n        const keys = [...this.model.__skeys__, 'delete'];\n        return this.client.action(keys, params, raw, this.model, false);\n    };\n}\n",
     "static": true,
     "longname": "/Users/ifoundit/Projects/adventurers_codex/hypnos/src/tokens.js",
     "access": "public",
@@ -1571,8 +1571,8 @@
     "static": false,
     "longname": "src/tokens.js~InstanceToken#create",
     "access": "public",
-    "description": "This method allows the creation of model object data directly to the\nremote API.\n\nWARNING: Once you've used the original \"template\" instance to create an\nobject, you should not continue using that object in your code. Always\nuse the instance returned from the response since it has all of the required\ndata from the API to perform the rest of the expected functionality.\n\nExample\n-------\nLet's assume that you have a model you've created locally, you've\nfiled in the values, and now you want to tell your API to create that\nnew object.\n\n     const instance = new MyModel();\n     // ...fill in the values...\n     instance.ps.create().then(response => {\n         const persistedInstance = response.object;\n     });",
-    "lineNumber": 46,
+    "description": "This method allows the creation of model object data directly to the\nremote API.\n\nWARNING: Once you've used the original \"template\" instance to create an\nobject, you should not continue using that object in your code. Always\nuse the instance returned from the response since it has all of the required\ndata from the API to perform the rest of the expected functionality.\n\nExample\n-------\n\nLet's assume that you have a model you've created locally, you've\nfiled in the values, and now you want to tell your API to create that\nnew object.\n\n     const instance = new MyModel();\n     // ...fill in the values...\n     instance.ps.create().then(response => {\n         const persistedInstance = response.object;\n     });",
+    "lineNumber": 47,
     "type": {
       "types": [
         "*"
@@ -1588,7 +1588,7 @@
     "longname": "src/tokens.js~InstanceToken#refresh",
     "access": "public",
     "description": "Refresh the data for the given object from the remote store.",
-    "lineNumber": 55,
+    "lineNumber": 56,
     "type": {
       "types": [
         "*"
@@ -1604,7 +1604,7 @@
     "longname": "src/tokens.js~InstanceToken#save",
     "access": "public",
     "description": "Persist the object's data to the remote store. This only works for\nexisting objects.\n\nIf a list of fields is provided, then only update those fields.",
-    "lineNumber": 67,
+    "lineNumber": 68,
     "type": {
       "types": [
         "*"
@@ -1620,7 +1620,7 @@
     "longname": "src/tokens.js~InstanceToken#delete",
     "access": "public",
     "description": "Tell the remote store to destroy the current object.\n\nWARNING: This does not remove the object from memory, only from\nthe remote store.",
-    "lineNumber": 92,
+    "lineNumber": 93,
     "type": {
       "types": [
         "*"
@@ -1638,8 +1638,8 @@
     "export": true,
     "importPath": "hypnos/src/tokens.js",
     "importStyle": "{ModelToken}",
-    "description": "A ModelToken, like an InstanceToken provides quick access to the Persistence\nclient methods without an active model instance to use. You can use an\nobject's Model Token to easily and clearly perform queries and updates to the\nbacking API using syntax bound to the Model class itself, rather than using\nthe normal Persistence API.\n\nExample\n-------\nLet's say you want to search for all books in your collection. Using the\nnormal Persistence API you could perform a query for all books like this:\n\n     Persistence.client.list(Book).then(response => {\n         const books = response.objects;\n         // Do stuff with books...\n     });\n\nBut implementing the ModelToken API on a given Model would allow the\nfollowing shortcut syntax.\n\n     Book.ps.list().then(response => {\n         const books = response.objects;\n         // Do stuff with books...\n     });\n\nFor more information about what queries are available with this API, please\nsee the associated documentation below.\n\nFor more information about performing queries on mapped Model instances\n(i.e. your new book instances) please refer to the InstanceToken documentation.",
-    "lineNumber": 131,
+    "description": "A ModelToken, like an InstanceToken provides quick access to the Persistence\nclient methods without an active model instance to use. You can use an\nobject's Model Token to easily and clearly perform queries and updates to the\nbacking API using syntax bound to the Model class itself, rather than using\nthe normal Persistence API.\n\nExample\n-------\n\nLet's say you want to search for all books in your collection. Using the\nnormal Persistence API you could perform a query for all books like this:\n\n     Persistence.client.list(Book).then(response => {\n         const books = response.objects;\n         // Do stuff with books...\n     });\n\nBut implementing the ModelToken API on a given Model would allow the\nfollowing shortcut syntax.\n\n     Book.ps.list().then(response => {\n         const books = response.objects;\n         // Do stuff with books...\n     });\n\nFor more information about what queries are available with this API, please\nsee the associated documentation below.\n\nFor more information about performing queries on mapped Model instances\n(i.e. your new book instances) please refer to the InstanceToken documentation.",
+    "lineNumber": 133,
     "interface": false
   },
   {
@@ -1653,7 +1653,7 @@
     "longname": "src/tokens.js~ModelToken#constructor",
     "access": "public",
     "description": null,
-    "lineNumber": 133,
+    "lineNumber": 135,
     "undocument": true
   },
   {
@@ -1665,7 +1665,7 @@
     "longname": "src/tokens.js~ModelToken#model",
     "access": "public",
     "description": null,
-    "lineNumber": 134,
+    "lineNumber": 136,
     "undocument": true,
     "type": {
       "types": [
@@ -1682,7 +1682,7 @@
     "longname": "src/tokens.js~ModelToken#client",
     "access": "public",
     "description": null,
-    "lineNumber": 135,
+    "lineNumber": 137,
     "undocument": true,
     "type": {
       "types": [
@@ -1699,7 +1699,7 @@
     "longname": "src/tokens.js~ModelToken#list",
     "access": "public",
     "description": "Given a model type and an optional set of parameters, perform a list query\nagainst the backing API and return a promise of results in the form of a\nFetchResponse (see FetchResponse for more information).\n\nExample\n-------\n\n    Book.ps.list().then(response => {\n        const books = response.objects;\n        // Do stuff with books...\n    });",
-    "lineNumber": 151,
+    "lineNumber": 153,
     "type": {
       "types": [
         "*"
@@ -1715,7 +1715,7 @@
     "longname": "src/tokens.js~ModelToken#read",
     "access": "public",
     "description": "Given a model type and an optional set of parameters, perform a retrieve\nquery against the backing API and return a promise of results in the\nform of a FetchResponse (see FetchResponse for more information).\n\nExample\n-------\n\n    Book.ps.read({ id: '1234' }).then(response => {\n        const book = response.object;\n        // Do stuff with your book...\n    });",
-    "lineNumber": 169,
+    "lineNumber": 171,
     "type": {
       "types": [
         "*"
@@ -1731,7 +1731,7 @@
     "longname": "src/tokens.js~ModelToken#create",
     "access": "public",
     "description": "Given a model type and an optional set of parameters, perform a create\nagainst the backing API and return a promise of results in the\nform of a FetchResponse (see FetchResponse for more information).\n\nExample\n-------\n\n    const data = { title: 'An Adventure', author: 'John Smith' };\n    Book.ps.create(data).then(response => {\n        const book = response.object;\n        // Do stuff with your new book...\n    });",
-    "lineNumber": 188,
+    "lineNumber": 190,
     "type": {
       "types": [
         "*"
@@ -1747,7 +1747,7 @@
     "longname": "src/tokens.js~ModelToken#update",
     "access": "public",
     "description": "Given a model type and an optional set of parameters, perform an update\nagainst the backing API and return a promise of results in the\nform of a FetchResponse (see FetchResponse for more information).\n\nExample\n-------\n\n    const data = { id: '1234', title: 'An Adventure II', author: 'John Smith' };\n    Book.ps.update(data).then(response => {\n        const book = response.object;\n        // Do stuff with your updated book...\n    });",
-    "lineNumber": 207,
+    "lineNumber": 209,
     "type": {
       "types": [
         "*"
@@ -1763,7 +1763,7 @@
     "longname": "src/tokens.js~ModelToken#delete",
     "access": "public",
     "description": "Given a model type and an optional set of parameters, perform a destroy\nagainst the backing API and return a promise of results in the\nform of a FetchResponse (see FetchResponse for more information).\n\nExample\n-------\n\n    Book.ps.delete({ id: '1234' });",
-    "lineNumber": 222,
+    "lineNumber": 224,
     "type": {
       "types": [
         "*"

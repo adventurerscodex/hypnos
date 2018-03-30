@@ -59,6 +59,13 @@ export class KOModel extends BaseModel {
         if (!mapping) {
             throw new Error(`Model: &quot;${this.constructor.name}&quot; does not provide a mapping.`);
         }
+
+        const ignoreFields = [&apos;exportValues&apos;, &apos;importValues&apos;];
+        if (mapping.ignore) {
+            const combined = mapping.ignore.concat(ignoreFields);
+            mapping.ignore = [...new Set(combined)];
+        }
+
         return mapping;
     }
 

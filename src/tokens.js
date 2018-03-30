@@ -23,11 +23,37 @@ export class InstanceToken {
     }
 
     /**
+     * This method allows the creation of model object data directly to the
+     * remote API.
+     *
+     * WARNING: Once you've used the original "template" instance to create an
+     * object, you should not continue using that object in your code. Always
+     * use the instance returned from the response since it has all of the required
+     * data from the API to perform the rest of the expected functionality.
+     *
+     * Example
+     * -------
+     * Let's assume that you have a model you've created locally, you've
+     * filed in the values, and now you want to tell your API to create that
+     * new object.
+     *
+     *      const instance = new MyModel();
+     *      // ...fill in the values...
+     *      instance.ps.create().then(response => {
+     *          const persistedInstance = response.object;
+     *      });
+     */
+    create = () => {
+        const keys = [...this.model.__skeys__, 'create'];
+        const params = this.instance.exportValues();
+        return this.client.action(keys, params, false, this.model, false);
+    };
+
+    /**
      * Refresh the data for the given object from the remote store.
      */
     refresh = () => {
         const keys = [...this.model.__skeys__, 'read'];
-        // TODO: We don't know which fields to use as the ID to refresh.
         const params = this.instance.exportValues();
         return this.client.action(keys, params, false, this.model, false);
     };
@@ -40,7 +66,6 @@ export class InstanceToken {
      */
     save = (fields=null, raw=false) => {
         let method = 'update';
-        // TODO: We don't have snake_case variables here.
         let params = this.instance.exportValues();
 
         // Trim out unneeded fields if `fields` is provided and
@@ -66,7 +91,6 @@ export class InstanceToken {
      */
     delete = () => {
         const keys = [...this.model.__skeys__, 'delete'];
-        // TODO: We don't know which fields to use as the ID to delete.
         const params = this.instance.exportValues();
         return this.client.action(keys, params, true, this.model, false);
     };

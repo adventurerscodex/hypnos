@@ -38,12 +38,12 @@ export class BaseModel {
      *
      * Subclasses can override this method to provide custom clean behavior.
      */
-    clean = (values) => {
+    clean = (keys, values) => {
         // Get the link to the given action in the schema.
-        const path = this.constructor.__skeys__.join('.')
+        const path = keys.join('.')
         const link = get(schema.content, path, null);
         if (!link) {
-            throw new Error(`Field ${this.constructor.__skeys__.join(' ')} on type ${this.contructor.name} does not exit.`);
+            throw new Error(`Field ${keys.join(' ')} on type ${this.contructor.name} does not exit.`);
         }
 
         // Get the names for the fields in the given schema action.

@@ -40,10 +40,10 @@ export class BaseModel {
      */
     clean = (values) => {
         // Get the link to the given action in the schema.
-        const path = this.__skeys__.join('.')
+        const path = this.constructor.__skeys__.join('.')
         const link = get(schema.content, path, null);
         if (!link) {
-            throw new Error(`Field ${this.__skeys__.join(' ')} on type ${this.contructor.name} does not exit.`);
+            throw new Error(`Field ${this.constructor.__skeys__.join(' ')} on type ${this.contructor.name} does not exit.`);
         }
 
         // Get the names for the fields in the given schema action.

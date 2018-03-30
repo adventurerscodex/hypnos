@@ -993,7 +993,7 @@
     "__docId__": 77,
     "kind": "file",
     "name": "src/models/ko.js",
-    "content": "import ko from 'knockout';\nimport { BaseModel } from './base';\n\n/**\n * A subclass of the Base `Model` class which adds serialization and\n * deserialization via Knockout's built-in mapping functionality.\n */\nexport class KOModel extends BaseModel {\n\n    /**\n     * Check to see if the subclasses provide a mapping, if they do\n     * not, then raise an exception.\n     */\n    get _mapping() {\n        const mapping = this.constructor.mapping;\n        if (!mapping) {\n            throw new Error(`Model: \"${this.constructor.name}\" does not provide a mapping.`);\n        }\n\n        const ignoreFields = ['exportValues', 'importValues'];\n        if (mapping.ignore) {\n            const combined = mapping.ignore.concat(ignoreFields);\n            mapping.ignore = [...new Set(combined)];\n        }\n\n        return mapping;\n    }\n\n    /**\n     * A default implementation of object deserialization using Knockout autoignore\n     * mapping. For custom mapping, subclasses can override this method.\n     */\n    importValues = (values) => {\n        ko.mapping.fromJS(values, this._mapping, this);\n    }\n\n    /**\n     * A default implementation of object serialization using Knockout autoignore\n     * mapping. For custom mapping, subclasses can override this method.\n     */\n    exportValues = () => {\n        return ko.mapping.toJS(this, this._mapping);\n    };\n}\n",
+    "content": "import ko from 'knockout';\nimport { BaseModel } from './base';\n\n/**\n * A subclass of the Base `Model` class which adds serialization and\n * deserialization via Knockout's built-in mapping functionality.\n */\nexport class KOModel extends BaseModel {\n\n    /**\n     * Check to see if the subclasses provide a mapping, if they do\n     * not, then raise an exception.\n     */\n    get _mapping() {\n        const mapping = this.constructor.mapping;\n        if (!mapping) {\n            throw new Error(`Model: \"${this.constructor.name}\" does not provide a mapping.`);\n        }\n\n        return mapping;\n    }\n\n    /**\n     * A default implementation of object deserialization using Knockout autoignore\n     * mapping. For custom mapping, subclasses can override this method.\n     */\n    importValues = (values) => {\n        ko.mapping.fromJS(values, this._mapping, this);\n    }\n\n    /**\n     * A default implementation of object serialization using Knockout autoignore\n     * mapping. For custom mapping, subclasses can override this method.\n     */\n    exportValues = () => {\n        return ko.mapping.toJS(this, this._mapping);\n    };\n}\n",
     "static": true,
     "longname": "/Users/ifoundit/Projects/adventurers_codex/hypnos/src/models/ko.js",
     "access": "public",
@@ -1045,7 +1045,7 @@
     "longname": "src/models/ko.js~KOModel#importValues",
     "access": "public",
     "description": "A default implementation of object deserialization using Knockout autoignore\nmapping. For custom mapping, subclasses can override this method.",
-    "lineNumber": 33,
+    "lineNumber": 27,
     "type": {
       "types": [
         "*"
@@ -1061,7 +1061,7 @@
     "longname": "src/models/ko.js~KOModel#exportValues",
     "access": "public",
     "description": "A default implementation of object serialization using Knockout autoignore\nmapping. For custom mapping, subclasses can override this method.",
-    "lineNumber": 41,
+    "lineNumber": 35,
     "type": {
       "types": [
         "*"

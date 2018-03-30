@@ -33,6 +33,7 @@ export class InstanceToken {
      *
      * Example
      * -------
+     *
      * Let's assume that you have a model you've created locally, you've
      * filed in the values, and now you want to tell your API to create that
      * new object.
@@ -106,6 +107,7 @@ export class InstanceToken {
  *
  * Example
  * -------
+ *
  * Let's say you want to search for all books in your collection. Using the
  * normal Persistence API you could perform a query for all books like this:
  *

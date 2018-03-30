@@ -594,6 +594,12 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
+    "src/tokens.js~instancetoken#create",
+    "class/src/tokens.js~InstanceToken.html#instance-member-create",
+    "src/tokens.js~InstanceToken#create",
+    "member"
+  ],
+  [
     "src/tokens.js~instancetoken#delete",
     "class/src/tokens.js~InstanceToken.html#instance-member-delete",
     "src/tokens.js~InstanceToken#delete",

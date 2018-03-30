@@ -180,7 +180,7 @@ class _Hypnos {
      * Example
      * -------
      *
-     *     Hypnos.read(Book, { id: &apos;1234&apos; }).then(response =&gt; {
+     *     Hypnos.client.read(Book, { id: &apos;1234&apos; }).then(response =&gt; {
      *         const book = response.object;
      *         // Do stuff with your book...
      *     });
@@ -199,7 +199,7 @@ class _Hypnos {
      * -------
      *
      *     const data = { title: &apos;An Adventure&apos;, author: &apos;John Smith&apos; };
-     *     Hypnos.create(Book, data).then(response =&gt; {
+     *     Hypnos.client.create(Book, data).then(response =&gt; {
      *         const book = response.object;
      *         // Do stuff with your new book...
      *     });
@@ -218,7 +218,7 @@ class _Hypnos {
      * -------
      *
      *     const data = { id: &apos;1234&apos;, title: &apos;An Adventure II&apos;, author: &apos;John Smith&apos; };
-     *     Hypnos.update(Book, data).then(response =&gt; {
+     *     Hypnos.client.update(Book, data).then(response =&gt; {
      *         const book = response.object;
      *         // Do stuff with your updated book...
      *     });

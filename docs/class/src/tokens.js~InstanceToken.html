@@ -163,6 +163,36 @@
           
           
           
+          <span class="code" data-ice="name"><span><a href="class/src/tokens.js~InstanceToken.html#instance-member-create">create</a></span></span><span class="code" data-ice="signature">: <span>*</span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>This method allows the creation of model object data directly to the
+remote API.</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          
           <span class="code" data-ice="name"><span><a href="class/src/tokens.js~InstanceToken.html#instance-member-delete">delete</a></span></span><span class="code" data-ice="signature">: <span>*</span></span>
         </p>
       </div>
@@ -395,6 +425,63 @@ existing objects.</p>
   
 </div>
 <div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="instance-member-create">
+    <span class="access" data-ice="access">public</span>
+    
+    
+    
+    
+    
+    <span class="code" data-ice="name">create</span><span class="code" data-ice="signature">: <span>*</span></span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/src/tokens.js.html#lineNumber46">source</a></span></span>
+    </span>
+  </h3>
+
+  
+  
+  
+  <div data-ice="description"><p>This method allows the creation of model object data directly to the
+remote API.</p>
+<p>WARNING: Once you&apos;ve used the original &quot;template&quot; instance to create an
+object, you should not continue using that object in your code. Always
+use the instance returned from the response since it has all of the required
+data from the API to perform the rest of the expected functionality.</p>
+<h2 id="example">Example</h2><p>Let&apos;s assume that you have a model you&apos;ve created locally, you&apos;ve
+filed in the values, and now you want to tell your API to create that
+new object.</p>
+<pre><code><code class="source-code prettyprint"> const instance = new MyModel();
+ // ...fill in the values...
+ instance.ps.create().then(response =&gt; {
+     const persistedInstance = response.object;
+ });</code>
+</code></pre></div>
+
+  
+
+  <div data-ice="properties">
+</div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+</div>
+<div class="detail" data-ice="detail">
   <h3 data-ice="anchor" id="instance-member-delete">
     <span class="access" data-ice="access">public</span>
     
@@ -406,7 +493,7 @@ existing objects.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/tokens.js.html#lineNumber67">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/tokens.js.html#lineNumber92">source</a></span></span>
     </span>
   </h3>
 
@@ -538,7 +625,7 @@ the remote store.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/tokens.js.html#lineNumber28">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/tokens.js.html#lineNumber55">source</a></span></span>
     </span>
   </h3>
 
@@ -582,7 +669,7 @@ the remote store.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/tokens.js.html#lineNumber41">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/tokens.js.html#lineNumber67">source</a></span></span>
     </span>
   </h3>
 

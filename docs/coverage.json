@@ -1,7 +1,7 @@
 {
-  "coverage": "43.93%",
-  "expectCount": 66,
-  "actualCount": 29,
+  "coverage": "44.77%",
+  "expectCount": 67,
+  "actualCount": 30,
   "files": {
     "src/hypnos.js": {
       "expectCount": 16,
@@ -63,16 +63,16 @@
       ]
     },
     "src/tokens.js": {
-      "expectCount": 17,
-      "actualCount": 10,
+      "expectCount": 18,
+      "actualCount": 11,
       "undocumentLines": [
         19,
         20,
         21,
         22,
-        109,
-        110,
-        111
+        133,
+        134,
+        135
       ]
     }
   }

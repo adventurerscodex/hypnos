@@ -69,7 +69,6 @@ export class InstanceToken {
     save = (fields=null, raw=false) => {
         let method = 'update';
         const params = this.instance.exportValues();
-        const cleanedParams = this.instance.clean(keys, params);
 
         // Trim out unneeded fields if `fields` is provided and
         // set the active method to use partial_update.
@@ -83,6 +82,7 @@ export class InstanceToken {
         }
 
         const keys = [...this.model.__skeys__, method];
+        const cleanedParams = this.instance.clean(keys, params);
         return this.client.action(keys, params, raw, this.model, false);
     };
 

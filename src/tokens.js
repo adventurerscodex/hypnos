@@ -47,7 +47,7 @@ export class InstanceToken {
         const keys = [...this.model.__skeys__, 'create'];
         const params = this.instance.exportValues();
         const cleanedParams = this.instance.clean(keys, params);
-        return this.client.action(keys, params, false, this.model, false);
+        return this.client.action(keys, cleanedParams, false, this.model, false);
     };
 
     /**
@@ -57,7 +57,7 @@ export class InstanceToken {
         const keys = [...this.model.__skeys__, 'read'];
         const params = this.instance.exportValues();
         const cleanedParams = this.instance.clean(keys, params);
-        return this.client.action(keys, params, false, this.model, false);
+        return this.client.action(keys, cleanedParams, false, this.model, false);
     };
 
     /**
@@ -83,7 +83,7 @@ export class InstanceToken {
 
         const keys = [...this.model.__skeys__, method];
         const cleanedParams = this.instance.clean(keys, params);
-        return this.client.action(keys, params, raw, this.model, false);
+        return this.client.action(keys, cleanedParams, raw, this.model, false);
     };
 
     /**
@@ -96,7 +96,7 @@ export class InstanceToken {
         const keys = [...this.model.__skeys__, 'delete'];
         const params = this.instance.exportValues();
         const cleanedParams = this.instance.clean(keys, params);
-        return this.client.action(keys, params, true, this.model, false);
+        return this.client.action(keys, cleanedParams, true, this.model, false);
     };
 }
 

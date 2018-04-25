@@ -48,12 +48,14 @@ class APIResponse {
             if (many && data.results) {
                 this.objects = data.results.map(result => {
                     const instance = new model();
-                    instance.importValues(result);
+                    const schemaValues = instance.fromSchemaValues(result)
+                    instance.importValues(schemaValues);
                     return instance;
                 });
             } else {
                 const instance = new model();
-                instance.importValues(data);
+                const schemaValues = instance.fromSchemaValues(data)
+                instance.importValues(schemaValues);
                 this.object = instance;
             }
         }

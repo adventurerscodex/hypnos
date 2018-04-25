@@ -28,6 +28,16 @@ export class BaseModel {
         this.ps = new InstanceToken(this.constructor, this);
     }
 
+    /* Model Mapping Methods */
+
+    toSchemaValues = (values) => {
+        return values;
+    };
+
+    fromSchemaValues = (schemaValues) => {
+        return values
+    };
+
     /**
      * Given a set of values exported from the given model instance, clean
      * the fields and do any preparation before handing off the data to the

@@ -47,7 +47,8 @@ export class InstanceToken {
         const keys = [...this.model.__skeys__, 'create'];
         const params = this.instance.exportValues();
         const cleanedParams = this.instance.clean(keys, params);
-        return this.client.action(keys, cleanedParams, false, this.model, false);
+        const schemaValues = this.instance.toSchemaValues(cleanedParams);
+        return this.client.action(keys, schemaValues, false, this.model, false);
     };
 
     /**
@@ -57,7 +58,8 @@ export class InstanceToken {
         const keys = [...this.model.__skeys__, 'read'];
         const params = this.instance.exportValues();
         const cleanedParams = this.instance.clean(keys, params);
-        return this.client.action(keys, cleanedParams, false, this.model, false);
+        const schemaValues = this.instance.toSchemaValues(cleanedParams);
+        return this.client.action(keys, schemaValues, false, this.model, false);
     };
 
     /**
@@ -83,7 +85,8 @@ export class InstanceToken {
 
         const keys = [...this.model.__skeys__, method];
         const cleanedParams = this.instance.clean(keys, params);
-        return this.client.action(keys, cleanedParams, raw, this.model, false);
+        const schemaValues = this.instance.toSchemaValues(cleanedParams);
+        return this.client.action(keys, schemaValues, raw, this.model, false);
     };
 
     /**
@@ -96,7 +99,8 @@ export class InstanceToken {
         const keys = [...this.model.__skeys__, 'delete'];
         const params = this.instance.exportValues();
         const cleanedParams = this.instance.clean(keys, params);
-        return this.client.action(keys, cleanedParams, true, this.model, false);
+        const schemaValues = this.instance.toSchemaValues(cleanedParams);
+        return this.client.action(keys, schemaValues, true, this.model, false);
     };
 }
 

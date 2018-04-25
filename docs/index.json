@@ -883,7 +883,7 @@
     "__docId__": 70,
     "kind": "file",
     "name": "src/models/base.js",
-    "content": "import { get, pick } from 'lodash';\nimport { InstanceToken, ModelToken } from '../tokens';\nimport ko from 'knockout';\nimport schema from 'schema';\n\n\n/**\n * This class is the base definition of all ES6 style model objects.\n *\n * Models extending this class will gain the following benefits:\n * - Automatic Persistence Service Token registration.\n * - Automatic mapping via FetchResponses and mapped queries.\n *\n * This model provides no default implementation of serialization or\n * deserialization. Subclasses must implement this feature for their respective\n * use-cases. This framework provides a few default implementations of usable\n * model classes like: JSONModel and KOModel.\n */\nexport class BaseModel {\n\n    // Automatically register the given class to the persistence service.\n    static get ps() {\n        return new ModelToken(this);\n    }\n\n    constructor() {\n        // Automatically register the given object to the persistence service.\n        this.ps = new InstanceToken(this.constructor, this);\n    }\n\n    /**\n     * Given a set of values exported from the given model instance, clean\n     * the fields and do any preparation before handing off the data to the\n     * Hypnos API client.\n     *\n     * By default this method removes and fields in the values that are not\n     * listed in the schema fields for the action that the user is trying to take.\n     *\n     * Subclasses can override this method to provide custom clean behavior.\n     */\n    clean = (keys, values) => {\n        // Get the link to the given action in the schema.\n        const path = keys.join('.')\n        const link = get(schema.content, path, null);\n        if (!link) {\n            throw new Error(`Field ${keys.join(' ')} on type ${this.contructor.name} does not exit.`);\n        }\n\n        // Get the names for the fields in the given schema action.\n        const fieldNames = link.fields.map(({name}) => (name));\n\n        // Omit all of the fields that are not required in the schema for the\n        // action that the user specified.\n        return pick(values, fieldNames);\n    };\n\n    importValues = (values) => {\n        throw new Error(`Model: \"${this.constructor.name}\" must override importValues.`);\n    }\n\n    exportValues = () => {\n        throw new Error(`Model: \"${this.constructor.name}\" must override exportValues.`);\n    };\n}\n",
+    "content": "import { get, pick } from 'lodash';\nimport { InstanceToken, ModelToken } from '../tokens';\nimport ko from 'knockout';\nimport schema from 'schema';\n\n\n/**\n * This class is the base definition of all ES6 style model objects.\n *\n * Models extending this class will gain the following benefits:\n * - Automatic Persistence Service Token registration.\n * - Automatic mapping via FetchResponses and mapped queries.\n *\n * This model provides no default implementation of serialization or\n * deserialization. Subclasses must implement this feature for their respective\n * use-cases. This framework provides a few default implementations of usable\n * model classes like: JSONModel and KOModel.\n */\nexport class BaseModel {\n\n    // Automatically register the given class to the persistence service.\n    static get ps() {\n        return new ModelToken(this);\n    }\n\n    constructor() {\n        // Automatically register the given object to the persistence service.\n        this.ps = new InstanceToken(this.constructor, this);\n    }\n\n    /* Model Mapping Methods */\n\n    toSchemaValues = (values) => {\n        return values;\n    };\n\n    fromSchemaValues = (schemaValues) => {\n        return values\n    };\n\n    /**\n     * Given a set of values exported from the given model instance, clean\n     * the fields and do any preparation before handing off the data to the\n     * Hypnos API client.\n     *\n     * By default this method removes and fields in the values that are not\n     * listed in the schema fields for the action that the user is trying to take.\n     *\n     * Subclasses can override this method to provide custom clean behavior.\n     */\n    clean = (keys, values) => {\n        // Get the link to the given action in the schema.\n        const path = keys.join('.')\n        const link = get(schema.content, path, null);\n        if (!link) {\n            throw new Error(`Field ${keys.join(' ')} on type ${this.contructor.name} does not exit.`);\n        }\n\n        // Get the names for the fields in the given schema action.\n        const fieldNames = link.fields.map(({name}) => (name));\n\n        // Omit all of the fields that are not required in the schema for the\n        // action that the user specified.\n        return pick(values, fieldNames);\n    };\n\n    importValues = (values) => {\n        throw new Error(`Model: \"${this.constructor.name}\" must override importValues.`);\n    }\n\n    exportValues = () => {\n        throw new Error(`Model: \"${this.constructor.name}\" must override exportValues.`);\n    };\n}\n",
     "static": true,
     "longname": "/Users/ifoundit/Projects/adventurers_codex/hypnos/src/models/base.js",
     "access": "public",
@@ -958,13 +958,14 @@
   {
     "__docId__": 75,
     "kind": "member",
-    "name": "clean",
+    "name": "toSchemaValues",
     "memberof": "src/models/base.js~BaseModel",
     "static": false,
-    "longname": "src/models/base.js~BaseModel#clean",
+    "longname": "src/models/base.js~BaseModel#toSchemaValues",
     "access": "public",
-    "description": "Given a set of values exported from the given model instance, clean\nthe fields and do any preparation before handing off the data to the\nHypnos API client.\n\nBy default this method removes and fields in the values that are not\nlisted in the schema fields for the action that the user is trying to take.\n\nSubclasses can override this method to provide custom clean behavior.",
-    "lineNumber": 41,
+    "description": null,
+    "lineNumber": 33,
+    "undocument": true,
     "type": {
       "types": [
         "*"
@@ -974,13 +975,13 @@
   {
     "__docId__": 76,
     "kind": "member",
-    "name": "importValues",
+    "name": "fromSchemaValues",
     "memberof": "src/models/base.js~BaseModel",
     "static": false,
-    "longname": "src/models/base.js~BaseModel#importValues",
+    "longname": "src/models/base.js~BaseModel#fromSchemaValues",
     "access": "public",
     "description": null,
-    "lineNumber": 57,
+    "lineNumber": 37,
     "undocument": true,
     "type": {
       "types": [
@@ -991,14 +992,13 @@
   {
     "__docId__": 77,
     "kind": "member",
-    "name": "exportValues",
+    "name": "clean",
     "memberof": "src/models/base.js~BaseModel",
     "static": false,
-    "longname": "src/models/base.js~BaseModel#exportValues",
+    "longname": "src/models/base.js~BaseModel#clean",
     "access": "public",
-    "description": null,
-    "lineNumber": 61,
-    "undocument": true,
+    "description": "Given a set of values exported from the given model instance, clean\nthe fields and do any preparation before handing off the data to the\nHypnos API client.\n\nBy default this method removes and fields in the values that are not\nlisted in the schema fields for the action that the user is trying to take.\n\nSubclasses can override this method to provide custom clean behavior.",
+    "lineNumber": 51,
     "type": {
       "types": [
         "*"
@@ -1007,6 +1007,40 @@
   },
   {
     "__docId__": 78,
+    "kind": "member",
+    "name": "importValues",
+    "memberof": "src/models/base.js~BaseModel",
+    "static": false,
+    "longname": "src/models/base.js~BaseModel#importValues",
+    "access": "public",
+    "description": null,
+    "lineNumber": 67,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 79,
+    "kind": "member",
+    "name": "exportValues",
+    "memberof": "src/models/base.js~BaseModel",
+    "static": false,
+    "longname": "src/models/base.js~BaseModel#exportValues",
+    "access": "public",
+    "description": null,
+    "lineNumber": 71,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 80,
     "kind": "file",
     "name": "src/models/ko.js",
     "content": "import ko from 'knockout';\nimport { BaseModel } from './base';\n\n/**\n * A subclass of the Base `Model` class which adds serialization and\n * deserialization via Knockout's built-in mapping functionality.\n */\nexport class KOModel extends BaseModel {\n\n    /**\n     * Check to see if the subclasses provide a mapping, if they do\n     * not, then raise an exception.\n     */\n    get _mapping() {\n        const mapping = this.constructor.mapping;\n        if (!mapping) {\n            throw new Error(`Model: \"${this.constructor.name}\" does not provide a mapping.`);\n        }\n\n        return mapping;\n    }\n\n    /**\n     * A default implementation of object deserialization using Knockout autoignore\n     * mapping. For custom mapping, subclasses can override this method.\n     */\n    importValues = (values) => {\n        ko.mapping.fromJS(values, this._mapping, this);\n    }\n\n    /**\n     * A default implementation of object serialization using Knockout autoignore\n     * mapping. For custom mapping, subclasses can override this method.\n     */\n    exportValues = () => {\n        return ko.mapping.toJS(this, this._mapping);\n    };\n}\n",
@@ -1017,7 +1051,7 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 79,
+    "__docId__": 81,
     "kind": "class",
     "name": "KOModel",
     "memberof": "src/models/ko.js",
@@ -1035,7 +1069,7 @@
     ]
   },
   {
-    "__docId__": 80,
+    "__docId__": 82,
     "kind": "get",
     "name": "_mapping",
     "memberof": "src/models/ko.js~KOModel",
@@ -1053,7 +1087,7 @@
     }
   },
   {
-    "__docId__": 81,
+    "__docId__": 83,
     "kind": "member",
     "name": "importValues",
     "memberof": "src/models/ko.js~KOModel",
@@ -1069,7 +1103,7 @@
     }
   },
   {
-    "__docId__": 82,
+    "__docId__": 84,
     "kind": "member",
     "name": "exportValues",
     "memberof": "src/models/ko.js~KOModel",
@@ -1085,7 +1119,7 @@
     }
   },
   {
-    "__docId__": 83,
+    "__docId__": 85,
     "kind": "file",
     "name": "src/models/model.js",
     "content": "import { BaseModel } from './base';\n\n/**\n * A subclass of the Base `Model` class which provides serialization and\n * deserialization via a whitelist of fields to serialize/deserialize.\n */\nexport class Model extends BaseModel {\n\n    static FIELDS = [];\n\n    importValues = (values) => {\n        this.constructor.FIELDS.forEach(field => {\n            this[field] = values[field];\n        });\n    };\n\n    exportValues = () => {\n        let values = {};\n        this.constructor.FIELDS.forEach(field => {\n            values[field] = this[field];\n        });\n        return values;\n    };\n}\n",
@@ -1096,7 +1130,7 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 84,
+    "__docId__": 86,
     "kind": "class",
     "name": "Model",
     "memberof": "src/models/model.js",
@@ -1114,7 +1148,7 @@
     ]
   },
   {
-    "__docId__": 85,
+    "__docId__": 87,
     "kind": "member",
     "name": "FIELDS",
     "memberof": "src/models/model.js~Model",
@@ -1131,7 +1165,7 @@
     }
   },
   {
-    "__docId__": 86,
+    "__docId__": 88,
     "kind": "member",
     "name": "importValues",
     "memberof": "src/models/model.js~Model",
@@ -1148,7 +1182,7 @@
     }
   },
   {
-    "__docId__": 87,
+    "__docId__": 89,
     "kind": "member",
     "name": "[field]",
     "memberof": "src/models/model.js~Model",
@@ -1164,7 +1198,7 @@
     }
   },
   {
-    "__docId__": 88,
+    "__docId__": 90,
     "kind": "member",
     "name": "exportValues",
     "memberof": "src/models/model.js~Model",
@@ -1181,10 +1215,10 @@
     }
   },
   {
-    "__docId__": 89,
+    "__docId__": 91,
     "kind": "file",
     "name": "src/response.js",
-    "content": "import uuid from 'uuid';\n\n\n/**\n * An APIResponse is a convenience wrapper around the data received when doing\n * a mapped query to the API.\n *\n * If a model instance is provided, the APIResponse will map the response data\n * to the model (see Model Serialization for more information). The APIResponse\n * also remembers the original response data for reference.\n *\n * Accessing the Response Objects\n * ------------------------------\n * Depending on the type of query, responses are mapped to either the `object`\n * or `objects` (note the plural) property on the APIResponse. In the case of\n * a query that will return multiple objects (i.e. when the `many` flag is set)\n * the resulting objects will be mapped and set to the `objects` property.\n * Otherwise single objects are always mapped to the `object` property.\n *\n * Navigating Paginated Responses\n * ------------------------------\n * A APIResponse provides an easy way to navigate through paginated results.\n * When retrieving a result set that is paginated (i.e. with\n * `Persistence.service.list()`), APIResponse provides two convenience methods:\n *\n * - getNextPage: Will fetch the next page in a result set if there is one.\n * - getPreviousPage: Will fetch the previous page in a result set if there is one.\n *\n * Using these two methods you can navigate the results of the query you made\n * originally. Note that you cannot change the parameters or modify the state\n * of the query once it is made. To sort and filter based on different critera,\n * you'll need to make a new query from the Persistence.service.\n *\n */\nclass APIResponse {\n\n    constructor(data, keys, params, requestId, model=null, many=false) {\n        this.id = uuid.v4().toString();\n        this.fetchParams = params;\n        this.fetchKeys = keys;\n        this.data = data;\n        this.requestId = requestId;\n        this.many = many;\n        this.model = model;\n\n        // Map response to model object(s).\n        if (model && data) {\n            if (many && data.results) {\n                this.objects = data.results.map(result => {\n                    const instance = new model();\n                    instance.importValues(result);\n                    return instance;\n                });\n            } else {\n                const instance = new model();\n                instance.importValues(data);\n                this.object = instance;\n            }\n        }\n    }\n\n    /**\n     * Returns whether or not the given fetch response has a next page.\n     */\n    hasNextPage = () => (\n        this.many && this.data.next\n    );\n\n    /**\n     * Returns whether or not the given fetch response has a previous page.\n     */\n    hasPreviousPage = () => (\n        this.many && this.data.previous\n    );\n\n    /**\n     * Fetch the next page of results in a paginated result set.\n     *\n     * This method returns a promise to the APIResponse of the next page.\n     *\n     * WARNING: This method will throw an error when attempting to fetch a next\n     * page for a single object result set or if there is no next page.\n     * To avoid this, check if the APIResponse `hasNextPage` before calling.\n     */\n    getNextPage = () => (new Promise((resolve) => {\n        if (!this.many || !this.hasNextPage()) {\n            throw new Error(`Given APIResponse: ${this.id} does not have a next value.`);\n        }\n\n        const nextPageFetchParams = { ...this.fetchParams, page: this._getNextPageNumber() };\n        return Persistence.service.action(\n            this.fetchKeys,\n            nextPageFetchParams,\n            false,\n            this.model,\n            this.many\n        ).then(resolve);\n    }));\n\n    /**\n     * Fetch the previous page of results in a paginated result set.\n     *\n     * This method returns a promise to the APIResponse of the previous page.\n     *\n     * WARNING: This method will throw an error when attempting to fetch a previous\n     * page for a single object result set or if there is no previous page.\n     * To avoid this, check if the APIResponse `hasPreviousPage` before calling.\n     */\n    getPreviousPage = () => (new Promise((resolve) => {\n        if (!this.many || !this.hasPreviousPage()) {\n            throw new Error(`Given APIResponse: ${this.id} does not have a previous value.`);\n        }\n        const previousPageFetchParams = { ...this.fetchParams, page: this._getPreviousPageNumber() };\n        return Persistence.service.action(\n            this.fetchKeys,\n            previousPageFetchParams,\n            false,\n            this.model,\n            this.many\n        ).then(resolve);\n    }));\n\n    /* Private Methods */\n\n    _getCurrentPage = () => (\n        this.fetchParams.page ? this.fetchParams.page : 1\n    );\n\n    _getNextPageNumber = () => (\n        this._getCurrentPage() + 1\n    );\n\n    _getPreviousPageNumber = () => (\n        this._getCurrentPage() - 1\n    );\n}\n\n\nexport default APIResponse;\n",
+    "content": "import uuid from 'uuid';\n\n\n/**\n * An APIResponse is a convenience wrapper around the data received when doing\n * a mapped query to the API.\n *\n * If a model instance is provided, the APIResponse will map the response data\n * to the model (see Model Serialization for more information). The APIResponse\n * also remembers the original response data for reference.\n *\n * Accessing the Response Objects\n * ------------------------------\n * Depending on the type of query, responses are mapped to either the `object`\n * or `objects` (note the plural) property on the APIResponse. In the case of\n * a query that will return multiple objects (i.e. when the `many` flag is set)\n * the resulting objects will be mapped and set to the `objects` property.\n * Otherwise single objects are always mapped to the `object` property.\n *\n * Navigating Paginated Responses\n * ------------------------------\n * A APIResponse provides an easy way to navigate through paginated results.\n * When retrieving a result set that is paginated (i.e. with\n * `Persistence.service.list()`), APIResponse provides two convenience methods:\n *\n * - getNextPage: Will fetch the next page in a result set if there is one.\n * - getPreviousPage: Will fetch the previous page in a result set if there is one.\n *\n * Using these two methods you can navigate the results of the query you made\n * originally. Note that you cannot change the parameters or modify the state\n * of the query once it is made. To sort and filter based on different critera,\n * you'll need to make a new query from the Persistence.service.\n *\n */\nclass APIResponse {\n\n    constructor(data, keys, params, requestId, model=null, many=false) {\n        this.id = uuid.v4().toString();\n        this.fetchParams = params;\n        this.fetchKeys = keys;\n        this.data = data;\n        this.requestId = requestId;\n        this.many = many;\n        this.model = model;\n\n        // Map response to model object(s).\n        if (model && data) {\n            if (many && data.results) {\n                this.objects = data.results.map(result => {\n                    const instance = new model();\n                    const schemaValues = instance.fromSchemaValues(result)\n                    instance.importValues(schemaValues);\n                    return instance;\n                });\n            } else {\n                const instance = new model();\n                const schemaValues = instance.fromSchemaValues(data)\n                instance.importValues(schemaValues);\n                this.object = instance;\n            }\n        }\n    }\n\n    /**\n     * Returns whether or not the given fetch response has a next page.\n     */\n    hasNextPage = () => (\n        this.many && this.data.next\n    );\n\n    /**\n     * Returns whether or not the given fetch response has a previous page.\n     */\n    hasPreviousPage = () => (\n        this.many && this.data.previous\n    );\n\n    /**\n     * Fetch the next page of results in a paginated result set.\n     *\n     * This method returns a promise to the APIResponse of the next page.\n     *\n     * WARNING: This method will throw an error when attempting to fetch a next\n     * page for a single object result set or if there is no next page.\n     * To avoid this, check if the APIResponse `hasNextPage` before calling.\n     */\n    getNextPage = () => (new Promise((resolve) => {\n        if (!this.many || !this.hasNextPage()) {\n            throw new Error(`Given APIResponse: ${this.id} does not have a next value.`);\n        }\n\n        const nextPageFetchParams = { ...this.fetchParams, page: this._getNextPageNumber() };\n        return Persistence.service.action(\n            this.fetchKeys,\n            nextPageFetchParams,\n            false,\n            this.model,\n            this.many\n        ).then(resolve);\n    }));\n\n    /**\n     * Fetch the previous page of results in a paginated result set.\n     *\n     * This method returns a promise to the APIResponse of the previous page.\n     *\n     * WARNING: This method will throw an error when attempting to fetch a previous\n     * page for a single object result set or if there is no previous page.\n     * To avoid this, check if the APIResponse `hasPreviousPage` before calling.\n     */\n    getPreviousPage = () => (new Promise((resolve) => {\n        if (!this.many || !this.hasPreviousPage()) {\n            throw new Error(`Given APIResponse: ${this.id} does not have a previous value.`);\n        }\n        const previousPageFetchParams = { ...this.fetchParams, page: this._getPreviousPageNumber() };\n        return Persistence.service.action(\n            this.fetchKeys,\n            previousPageFetchParams,\n            false,\n            this.model,\n            this.many\n        ).then(resolve);\n    }));\n\n    /* Private Methods */\n\n    _getCurrentPage = () => (\n        this.fetchParams.page ? this.fetchParams.page : 1\n    );\n\n    _getNextPageNumber = () => (\n        this._getCurrentPage() + 1\n    );\n\n    _getPreviousPageNumber = () => (\n        this._getCurrentPage() - 1\n    );\n}\n\n\nexport default APIResponse;\n",
     "static": true,
     "longname": "/Users/ifoundit/Projects/adventurers_codex/hypnos/src/response.js",
     "access": "public",
@@ -1192,7 +1226,7 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 90,
+    "__docId__": 92,
     "kind": "class",
     "name": "APIResponse",
     "memberof": "src/response.js",
@@ -1207,7 +1241,7 @@
     "interface": false
   },
   {
-    "__docId__": 91,
+    "__docId__": 93,
     "kind": "constructor",
     "name": "constructor",
     "memberof": "src/response.js~APIResponse",
@@ -1221,7 +1255,7 @@
     "undocument": true
   },
   {
-    "__docId__": 92,
+    "__docId__": 94,
     "kind": "member",
     "name": "id",
     "memberof": "src/response.js~APIResponse",
@@ -1238,7 +1272,7 @@
     }
   },
   {
-    "__docId__": 93,
+    "__docId__": 95,
     "kind": "member",
     "name": "fetchParams",
     "memberof": "src/response.js~APIResponse",
@@ -1255,7 +1289,7 @@
     }
   },
   {
-    "__docId__": 94,
+    "__docId__": 96,
     "kind": "member",
     "name": "fetchKeys",
     "memberof": "src/response.js~APIResponse",
@@ -1272,7 +1306,7 @@
     }
   },
   {
-    "__docId__": 95,
+    "__docId__": 97,
     "kind": "member",
     "name": "data",
     "memberof": "src/response.js~APIResponse",
@@ -1289,7 +1323,7 @@
     }
   },
   {
-    "__docId__": 96,
+    "__docId__": 98,
     "kind": "member",
     "name": "requestId",
     "memberof": "src/response.js~APIResponse",
@@ -1306,7 +1340,7 @@
     }
   },
   {
-    "__docId__": 97,
+    "__docId__": 99,
     "kind": "member",
     "name": "many",
     "memberof": "src/response.js~APIResponse",
@@ -1323,7 +1357,7 @@
     }
   },
   {
-    "__docId__": 98,
+    "__docId__": 100,
     "kind": "member",
     "name": "model",
     "memberof": "src/response.js~APIResponse",
@@ -1340,7 +1374,7 @@
     }
   },
   {
-    "__docId__": 99,
+    "__docId__": 101,
     "kind": "member",
     "name": "objects",
     "memberof": "src/response.js~APIResponse",
@@ -1357,7 +1391,7 @@
     }
   },
   {
-    "__docId__": 100,
+    "__docId__": 102,
     "kind": "member",
     "name": "object",
     "memberof": "src/response.js~APIResponse",
@@ -1365,40 +1399,8 @@
     "longname": "src/response.js~APIResponse#object",
     "access": "public",
     "description": null,
-    "lineNumber": 57,
+    "lineNumber": 59,
     "undocument": true,
-    "type": {
-      "types": [
-        "*"
-      ]
-    }
-  },
-  {
-    "__docId__": 101,
-    "kind": "member",
-    "name": "hasNextPage",
-    "memberof": "src/response.js~APIResponse",
-    "static": false,
-    "longname": "src/response.js~APIResponse#hasNextPage",
-    "access": "public",
-    "description": "Returns whether or not the given fetch response has a next page.",
-    "lineNumber": 65,
-    "type": {
-      "types": [
-        "*"
-      ]
-    }
-  },
-  {
-    "__docId__": 102,
-    "kind": "member",
-    "name": "hasPreviousPage",
-    "memberof": "src/response.js~APIResponse",
-    "static": false,
-    "longname": "src/response.js~APIResponse#hasPreviousPage",
-    "access": "public",
-    "description": "Returns whether or not the given fetch response has a previous page.",
-    "lineNumber": 72,
     "type": {
       "types": [
         "*"
@@ -1408,13 +1410,13 @@
   {
     "__docId__": 103,
     "kind": "member",
-    "name": "getNextPage",
+    "name": "hasNextPage",
     "memberof": "src/response.js~APIResponse",
     "static": false,
-    "longname": "src/response.js~APIResponse#getNextPage",
+    "longname": "src/response.js~APIResponse#hasNextPage",
     "access": "public",
-    "description": "Fetch the next page of results in a paginated result set.\n\nThis method returns a promise to the APIResponse of the next page.\n\nWARNING: This method will throw an error when attempting to fetch a next\npage for a single object result set or if there is no next page.\nTo avoid this, check if the APIResponse `hasNextPage` before calling.",
-    "lineNumber": 85,
+    "description": "Returns whether or not the given fetch response has a next page.",
+    "lineNumber": 67,
     "type": {
       "types": [
         "*"
@@ -1424,13 +1426,13 @@
   {
     "__docId__": 104,
     "kind": "member",
-    "name": "getPreviousPage",
+    "name": "hasPreviousPage",
     "memberof": "src/response.js~APIResponse",
     "static": false,
-    "longname": "src/response.js~APIResponse#getPreviousPage",
+    "longname": "src/response.js~APIResponse#hasPreviousPage",
     "access": "public",
-    "description": "Fetch the previous page of results in a paginated result set.\n\nThis method returns a promise to the APIResponse of the previous page.\n\nWARNING: This method will throw an error when attempting to fetch a previous\npage for a single object result set or if there is no previous page.\nTo avoid this, check if the APIResponse `hasPreviousPage` before calling.",
-    "lineNumber": 109,
+    "description": "Returns whether or not the given fetch response has a previous page.",
+    "lineNumber": 74,
     "type": {
       "types": [
         "*"
@@ -1440,14 +1442,13 @@
   {
     "__docId__": 105,
     "kind": "member",
-    "name": "_getCurrentPage",
+    "name": "getNextPage",
     "memberof": "src/response.js~APIResponse",
     "static": false,
-    "longname": "src/response.js~APIResponse#_getCurrentPage",
-    "access": "private",
-    "description": null,
-    "lineNumber": 125,
-    "undocument": true,
+    "longname": "src/response.js~APIResponse#getNextPage",
+    "access": "public",
+    "description": "Fetch the next page of results in a paginated result set.\n\nThis method returns a promise to the APIResponse of the next page.\n\nWARNING: This method will throw an error when attempting to fetch a next\npage for a single object result set or if there is no next page.\nTo avoid this, check if the APIResponse `hasNextPage` before calling.",
+    "lineNumber": 87,
     "type": {
       "types": [
         "*"
@@ -1457,14 +1458,13 @@
   {
     "__docId__": 106,
     "kind": "member",
-    "name": "_getNextPageNumber",
+    "name": "getPreviousPage",
     "memberof": "src/response.js~APIResponse",
     "static": false,
-    "longname": "src/response.js~APIResponse#_getNextPageNumber",
-    "access": "private",
-    "description": null,
-    "lineNumber": 129,
-    "undocument": true,
+    "longname": "src/response.js~APIResponse#getPreviousPage",
+    "access": "public",
+    "description": "Fetch the previous page of results in a paginated result set.\n\nThis method returns a promise to the APIResponse of the previous page.\n\nWARNING: This method will throw an error when attempting to fetch a previous\npage for a single object result set or if there is no previous page.\nTo avoid this, check if the APIResponse `hasPreviousPage` before calling.",
+    "lineNumber": 111,
     "type": {
       "types": [
         "*"
@@ -1474,13 +1474,13 @@
   {
     "__docId__": 107,
     "kind": "member",
-    "name": "_getPreviousPageNumber",
+    "name": "_getCurrentPage",
     "memberof": "src/response.js~APIResponse",
     "static": false,
-    "longname": "src/response.js~APIResponse#_getPreviousPageNumber",
+    "longname": "src/response.js~APIResponse#_getCurrentPage",
     "access": "private",
     "description": null,
-    "lineNumber": 133,
+    "lineNumber": 127,
     "undocument": true,
     "type": {
       "types": [
@@ -1490,9 +1490,43 @@
   },
   {
     "__docId__": 108,
+    "kind": "member",
+    "name": "_getNextPageNumber",
+    "memberof": "src/response.js~APIResponse",
+    "static": false,
+    "longname": "src/response.js~APIResponse#_getNextPageNumber",
+    "access": "private",
+    "description": null,
+    "lineNumber": 131,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 109,
+    "kind": "member",
+    "name": "_getPreviousPageNumber",
+    "memberof": "src/response.js~APIResponse",
+    "static": false,
+    "longname": "src/response.js~APIResponse#_getPreviousPageNumber",
+    "access": "private",
+    "description": null,
+    "lineNumber": 135,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 110,
     "kind": "file",
     "name": "src/tokens.js",
-    "content": "import { Hypnos } from './hypnos';\n\n/**\n * TODO: Document\n *\n *\n *\n *\n *\n *\n *\n *\n *\n *\n */\nexport class InstanceToken {\n\n    constructor(model, instance) {\n        this.model = model;\n        this.instance = instance;\n        this.client = Hypnos.client;\n    }\n\n    /**\n     * This method allows the creation of model object data directly to the\n     * remote API.\n     *\n     * WARNING: Once you've used the original \"template\" instance to create an\n     * object, you should not continue using that object in your code. Always\n     * use the instance returned from the response since it has all of the required\n     * data from the API to perform the rest of the expected functionality.\n     *\n     * Example\n     * -------\n     *\n     * Let's assume that you have a model you've created locally, you've\n     * filed in the values, and now you want to tell your API to create that\n     * new object.\n     *\n     *      const instance = new MyModel();\n     *      // ...fill in the values...\n     *      instance.ps.create().then(response => {\n     *          const persistedInstance = response.object;\n     *      });\n     */\n    create = () => {\n        const keys = [...this.model.__skeys__, 'create'];\n        const params = this.instance.exportValues();\n        const cleanedParams = this.instance.clean(keys, params);\n        return this.client.action(keys, cleanedParams, false, this.model, false);\n    };\n\n    /**\n     * Refresh the data for the given object from the remote store.\n     */\n    refresh = () => {\n        const keys = [...this.model.__skeys__, 'read'];\n        const params = this.instance.exportValues();\n        const cleanedParams = this.instance.clean(keys, params);\n        return this.client.action(keys, cleanedParams, false, this.model, false);\n    };\n\n    /**\n     * Persist the object's data to the remote store. This only works for\n     * existing objects.\n     *\n     * If a list of fields is provided, then only update those fields.\n     */\n    save = (fields=null, raw=false) => {\n        let method = 'update';\n        const params = this.instance.exportValues();\n\n        // Trim out unneeded fields if `fields` is provided and\n        // set the active method to use partial_update.\n        if (fields && fields.length > 0) {\n            method = 'partial_update';\n            for (key in params) {\n                if (!fields.contains(key)) {\n                    delete params[key];\n                }\n            }\n        }\n\n        const keys = [...this.model.__skeys__, method];\n        const cleanedParams = this.instance.clean(keys, params);\n        return this.client.action(keys, cleanedParams, raw, this.model, false);\n    };\n\n    /**\n     * Tell the remote store to destroy the current object.\n     *\n     * WARNING: This does not remove the object from memory, only from\n     * the remote store.\n     */\n    delete = () => {\n        const keys = [...this.model.__skeys__, 'delete'];\n        const params = this.instance.exportValues();\n        const cleanedParams = this.instance.clean(keys, params);\n        return this.client.action(keys, cleanedParams, true, this.model, false);\n    };\n}\n\n\n/**\n * A ModelToken, like an InstanceToken provides quick access to the Persistence\n * client methods without an active model instance to use. You can use an\n * object's Model Token to easily and clearly perform queries and updates to the\n * backing API using syntax bound to the Model class itself, rather than using\n * the normal Persistence API.\n *\n * Example\n * -------\n *\n * Let's say you want to search for all books in your collection. Using the\n * normal Persistence API you could perform a query for all books like this:\n *\n *      Persistence.client.list(Book).then(response => {\n *          const books = response.objects;\n *          // Do stuff with books...\n *      });\n *\n * But implementing the ModelToken API on a given Model would allow the\n * following shortcut syntax.\n *\n *      Book.ps.list().then(response => {\n *          const books = response.objects;\n *          // Do stuff with books...\n *      });\n *\n * For more information about what queries are available with this API, please\n * see the associated documentation below.\n *\n * For more information about performing queries on mapped Model instances\n * (i.e. your new book instances) please refer to the InstanceToken documentation.\n */\nexport class ModelToken {\n\n    constructor(model) {\n        this.model = model;\n        this.client = Hypnos.client;\n    }\n\n    /**\n     * Given a model type and an optional set of parameters, perform a list query\n     * against the backing API and return a promise of results in the form of a\n     * FetchResponse (see FetchResponse for more information).\n     *\n     * Example\n     * -------\n     *\n     *     Book.ps.list().then(response => {\n     *         const books = response.objects;\n     *         // Do stuff with books...\n     *     });\n     */\n    list = (params={}, raw=false) => {\n        const keys = [...this.model.__skeys__, 'list'];\n        return this.client.action(keys, params, raw, this.model, true);\n    };\n\n    /**\n     * Given a model type and an optional set of parameters, perform a retrieve\n     * query against the backing API and return a promise of results in the\n     * form of a FetchResponse (see FetchResponse for more information).\n     *\n     * Example\n     * -------\n     *\n     *     Book.ps.read({ id: '1234' }).then(response => {\n     *         const book = response.object;\n     *         // Do stuff with your book...\n     *     });\n     */\n    read = (params={}, raw=false) => {\n        const keys = [...this.model.__skeys__, 'read'];\n        return this.client.action(keys, params, raw, this.model, false);\n    };\n\n    /**\n     * Given a model type and an optional set of parameters, perform a create\n     * against the backing API and return a promise of results in the\n     * form of a FetchResponse (see FetchResponse for more information).\n     *\n     * Example\n     * -------\n     *\n     *     const data = { title: 'An Adventure', author: 'John Smith' };\n     *     Book.ps.create(data).then(response => {\n     *         const book = response.object;\n     *         // Do stuff with your new book...\n     *     });\n     */\n    create = (params={}, raw=false) => {\n        const keys = [...this.model.__skeys__, 'create'];\n        return this.client.action(keys, params, raw, this.model, false);\n    };\n\n    /**\n     * Given a model type and an optional set of parameters, perform an update\n     * against the backing API and return a promise of results in the\n     * form of a FetchResponse (see FetchResponse for more information).\n     *\n     * Example\n     * -------\n     *\n     *     const data = { id: '1234', title: 'An Adventure II', author: 'John Smith' };\n     *     Book.ps.update(data).then(response => {\n     *         const book = response.object;\n     *         // Do stuff with your updated book...\n     *     });\n     */\n    update = (params={}, raw=false) => {\n        const keys = [...this.model.__skeys__, 'update'];\n        return this.client.action(keys, params, raw, this.model, false);\n    };\n\n    /**\n     * Given a model type and an optional set of parameters, perform a destroy\n     * against the backing API and return a promise of results in the\n     * form of a FetchResponse (see FetchResponse for more information).\n     *\n     * Example\n     * -------\n     *\n     *     Book.ps.delete({ id: '1234' });\n     */\n    delete = (params={}, raw=false) => {\n        const keys = [...this.model.__skeys__, 'delete'];\n        return this.client.action(keys, params, raw, this.model, false);\n    };\n}\n",
+    "content": "import { Hypnos } from './hypnos';\n\n/**\n * TODO: Document\n *\n *\n *\n *\n *\n *\n *\n *\n *\n *\n */\nexport class InstanceToken {\n\n    constructor(model, instance) {\n        this.model = model;\n        this.instance = instance;\n        this.client = Hypnos.client;\n    }\n\n    /**\n     * This method allows the creation of model object data directly to the\n     * remote API.\n     *\n     * WARNING: Once you've used the original \"template\" instance to create an\n     * object, you should not continue using that object in your code. Always\n     * use the instance returned from the response since it has all of the required\n     * data from the API to perform the rest of the expected functionality.\n     *\n     * Example\n     * -------\n     *\n     * Let's assume that you have a model you've created locally, you've\n     * filed in the values, and now you want to tell your API to create that\n     * new object.\n     *\n     *      const instance = new MyModel();\n     *      // ...fill in the values...\n     *      instance.ps.create().then(response => {\n     *          const persistedInstance = response.object;\n     *      });\n     */\n    create = () => {\n        const keys = [...this.model.__skeys__, 'create'];\n        const params = this.instance.exportValues();\n        const cleanedParams = this.instance.clean(keys, params);\n        const schemaValues = this.instance.toSchemaValues(cleanedParams);\n        return this.client.action(keys, schemaValues, false, this.model, false);\n    };\n\n    /**\n     * Refresh the data for the given object from the remote store.\n     */\n    refresh = () => {\n        const keys = [...this.model.__skeys__, 'read'];\n        const params = this.instance.exportValues();\n        const cleanedParams = this.instance.clean(keys, params);\n        const schemaValues = this.instance.toSchemaValues(cleanedParams);\n        return this.client.action(keys, schemaValues, false, this.model, false);\n    };\n\n    /**\n     * Persist the object's data to the remote store. This only works for\n     * existing objects.\n     *\n     * If a list of fields is provided, then only update those fields.\n     */\n    save = (fields=null, raw=false) => {\n        let method = 'update';\n        const params = this.instance.exportValues();\n\n        // Trim out unneeded fields if `fields` is provided and\n        // set the active method to use partial_update.\n        if (fields && fields.length > 0) {\n            method = 'partial_update';\n            for (key in params) {\n                if (!fields.contains(key)) {\n                    delete params[key];\n                }\n            }\n        }\n\n        const keys = [...this.model.__skeys__, method];\n        const cleanedParams = this.instance.clean(keys, params);\n        const schemaValues = this.instance.toSchemaValues(cleanedParams);\n        return this.client.action(keys, schemaValues, raw, this.model, false);\n    };\n\n    /**\n     * Tell the remote store to destroy the current object.\n     *\n     * WARNING: This does not remove the object from memory, only from\n     * the remote store.\n     */\n    delete = () => {\n        const keys = [...this.model.__skeys__, 'delete'];\n        const params = this.instance.exportValues();\n        const cleanedParams = this.instance.clean(keys, params);\n        const schemaValues = this.instance.toSchemaValues(cleanedParams);\n        return this.client.action(keys, schemaValues, true, this.model, false);\n    };\n}\n\n\n/**\n * A ModelToken, like an InstanceToken provides quick access to the Persistence\n * client methods without an active model instance to use. You can use an\n * object's Model Token to easily and clearly perform queries and updates to the\n * backing API using syntax bound to the Model class itself, rather than using\n * the normal Persistence API.\n *\n * Example\n * -------\n *\n * Let's say you want to search for all books in your collection. Using the\n * normal Persistence API you could perform a query for all books like this:\n *\n *      Persistence.client.list(Book).then(response => {\n *          const books = response.objects;\n *          // Do stuff with books...\n *      });\n *\n * But implementing the ModelToken API on a given Model would allow the\n * following shortcut syntax.\n *\n *      Book.ps.list().then(response => {\n *          const books = response.objects;\n *          // Do stuff with books...\n *      });\n *\n * For more information about what queries are available with this API, please\n * see the associated documentation below.\n *\n * For more information about performing queries on mapped Model instances\n * (i.e. your new book instances) please refer to the InstanceToken documentation.\n */\nexport class ModelToken {\n\n    constructor(model) {\n        this.model = model;\n        this.client = Hypnos.client;\n    }\n\n    /**\n     * Given a model type and an optional set of parameters, perform a list query\n     * against the backing API and return a promise of results in the form of a\n     * FetchResponse (see FetchResponse for more information).\n     *\n     * Example\n     * -------\n     *\n     *     Book.ps.list().then(response => {\n     *         const books = response.objects;\n     *         // Do stuff with books...\n     *     });\n     */\n    list = (params={}, raw=false) => {\n        const keys = [...this.model.__skeys__, 'list'];\n        return this.client.action(keys, params, raw, this.model, true);\n    };\n\n    /**\n     * Given a model type and an optional set of parameters, perform a retrieve\n     * query against the backing API and return a promise of results in the\n     * form of a FetchResponse (see FetchResponse for more information).\n     *\n     * Example\n     * -------\n     *\n     *     Book.ps.read({ id: '1234' }).then(response => {\n     *         const book = response.object;\n     *         // Do stuff with your book...\n     *     });\n     */\n    read = (params={}, raw=false) => {\n        const keys = [...this.model.__skeys__, 'read'];\n        return this.client.action(keys, params, raw, this.model, false);\n    };\n\n    /**\n     * Given a model type and an optional set of parameters, perform a create\n     * against the backing API and return a promise of results in the\n     * form of a FetchResponse (see FetchResponse for more information).\n     *\n     * Example\n     * -------\n     *\n     *     const data = { title: 'An Adventure', author: 'John Smith' };\n     *     Book.ps.create(data).then(response => {\n     *         const book = response.object;\n     *         // Do stuff with your new book...\n     *     });\n     */\n    create = (params={}, raw=false) => {\n        const keys = [...this.model.__skeys__, 'create'];\n        return this.client.action(keys, params, raw, this.model, false);\n    };\n\n    /**\n     * Given a model type and an optional set of parameters, perform an update\n     * against the backing API and return a promise of results in the\n     * form of a FetchResponse (see FetchResponse for more information).\n     *\n     * Example\n     * -------\n     *\n     *     const data = { id: '1234', title: 'An Adventure II', author: 'John Smith' };\n     *     Book.ps.update(data).then(response => {\n     *         const book = response.object;\n     *         // Do stuff with your updated book...\n     *     });\n     */\n    update = (params={}, raw=false) => {\n        const keys = [...this.model.__skeys__, 'update'];\n        return this.client.action(keys, params, raw, this.model, false);\n    };\n\n    /**\n     * Given a model type and an optional set of parameters, perform a destroy\n     * against the backing API and return a promise of results in the\n     * form of a FetchResponse (see FetchResponse for more information).\n     *\n     * Example\n     * -------\n     *\n     *     Book.ps.delete({ id: '1234' });\n     */\n    delete = (params={}, raw=false) => {\n        const keys = [...this.model.__skeys__, 'delete'];\n        return this.client.action(keys, params, raw, this.model, false);\n    };\n}\n",
     "static": true,
     "longname": "/Users/ifoundit/Projects/adventurers_codex/hypnos/src/tokens.js",
     "access": "public",
@@ -1500,7 +1534,7 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 109,
+    "__docId__": 111,
     "kind": "class",
     "name": "InstanceToken",
     "memberof": "src/tokens.js",
@@ -1515,7 +1549,7 @@
     "interface": false
   },
   {
-    "__docId__": 110,
+    "__docId__": 112,
     "kind": "constructor",
     "name": "constructor",
     "memberof": "src/tokens.js~InstanceToken",
@@ -1529,7 +1563,7 @@
     "undocument": true
   },
   {
-    "__docId__": 111,
+    "__docId__": 113,
     "kind": "member",
     "name": "model",
     "memberof": "src/tokens.js~InstanceToken",
@@ -1546,7 +1580,7 @@
     }
   },
   {
-    "__docId__": 112,
+    "__docId__": 114,
     "kind": "member",
     "name": "instance",
     "memberof": "src/tokens.js~InstanceToken",
@@ -1563,7 +1597,7 @@
     }
   },
   {
-    "__docId__": 113,
+    "__docId__": 115,
     "kind": "member",
     "name": "client",
     "memberof": "src/tokens.js~InstanceToken",
@@ -1580,7 +1614,7 @@
     }
   },
   {
-    "__docId__": 114,
+    "__docId__": 116,
     "kind": "member",
     "name": "create",
     "memberof": "src/tokens.js~InstanceToken",
@@ -1596,7 +1630,7 @@
     }
   },
   {
-    "__docId__": 115,
+    "__docId__": 117,
     "kind": "member",
     "name": "refresh",
     "memberof": "src/tokens.js~InstanceToken",
@@ -1604,39 +1638,7 @@
     "longname": "src/tokens.js~InstanceToken#refresh",
     "access": "public",
     "description": "Refresh the data for the given object from the remote store.",
-    "lineNumber": 56,
-    "type": {
-      "types": [
-        "*"
-      ]
-    }
-  },
-  {
-    "__docId__": 116,
-    "kind": "member",
-    "name": "save",
-    "memberof": "src/tokens.js~InstanceToken",
-    "static": false,
-    "longname": "src/tokens.js~InstanceToken#save",
-    "access": "public",
-    "description": "Persist the object's data to the remote store. This only works for\nexisting objects.\n\nIf a list of fields is provided, then only update those fields.",
-    "lineNumber": 69,
-    "type": {
-      "types": [
-        "*"
-      ]
-    }
-  },
-  {
-    "__docId__": 117,
-    "kind": "member",
-    "name": "delete",
-    "memberof": "src/tokens.js~InstanceToken",
-    "static": false,
-    "longname": "src/tokens.js~InstanceToken#delete",
-    "access": "public",
-    "description": "Tell the remote store to destroy the current object.\n\nWARNING: This does not remove the object from memory, only from\nthe remote store.",
-    "lineNumber": 95,
+    "lineNumber": 57,
     "type": {
       "types": [
         "*"
@@ -1645,6 +1647,38 @@
   },
   {
     "__docId__": 118,
+    "kind": "member",
+    "name": "save",
+    "memberof": "src/tokens.js~InstanceToken",
+    "static": false,
+    "longname": "src/tokens.js~InstanceToken#save",
+    "access": "public",
+    "description": "Persist the object's data to the remote store. This only works for\nexisting objects.\n\nIf a list of fields is provided, then only update those fields.",
+    "lineNumber": 71,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 119,
+    "kind": "member",
+    "name": "delete",
+    "memberof": "src/tokens.js~InstanceToken",
+    "static": false,
+    "longname": "src/tokens.js~InstanceToken#delete",
+    "access": "public",
+    "description": "Tell the remote store to destroy the current object.\n\nWARNING: This does not remove the object from memory, only from\nthe remote store.",
+    "lineNumber": 98,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 120,
     "kind": "class",
     "name": "ModelToken",
     "memberof": "src/tokens.js",
@@ -1655,11 +1689,11 @@
     "importPath": "hypnos/src/tokens.js",
     "importStyle": "{ModelToken}",
     "description": "A ModelToken, like an InstanceToken provides quick access to the Persistence\nclient methods without an active model instance to use. You can use an\nobject's Model Token to easily and clearly perform queries and updates to the\nbacking API using syntax bound to the Model class itself, rather than using\nthe normal Persistence API.\n\nExample\n-------\n\nLet's say you want to search for all books in your collection. Using the\nnormal Persistence API you could perform a query for all books like this:\n\n     Persistence.client.list(Book).then(response => {\n         const books = response.objects;\n         // Do stuff with books...\n     });\n\nBut implementing the ModelToken API on a given Model would allow the\nfollowing shortcut syntax.\n\n     Book.ps.list().then(response => {\n         const books = response.objects;\n         // Do stuff with books...\n     });\n\nFor more information about what queries are available with this API, please\nsee the associated documentation below.\n\nFor more information about performing queries on mapped Model instances\n(i.e. your new book instances) please refer to the InstanceToken documentation.",
-    "lineNumber": 136,
+    "lineNumber": 140,
     "interface": false
   },
   {
-    "__docId__": 119,
+    "__docId__": 121,
     "kind": "constructor",
     "name": "constructor",
     "memberof": "src/tokens.js~ModelToken",
@@ -1669,11 +1703,11 @@
     "longname": "src/tokens.js~ModelToken#constructor",
     "access": "public",
     "description": null,
-    "lineNumber": 138,
+    "lineNumber": 142,
     "undocument": true
   },
   {
-    "__docId__": 120,
+    "__docId__": 122,
     "kind": "member",
     "name": "model",
     "memberof": "src/tokens.js~ModelToken",
@@ -1681,41 +1715,8 @@
     "longname": "src/tokens.js~ModelToken#model",
     "access": "public",
     "description": null,
-    "lineNumber": 139,
+    "lineNumber": 143,
     "undocument": true,
-    "type": {
-      "types": [
-        "*"
-      ]
-    }
-  },
-  {
-    "__docId__": 121,
-    "kind": "member",
-    "name": "client",
-    "memberof": "src/tokens.js~ModelToken",
-    "static": false,
-    "longname": "src/tokens.js~ModelToken#client",
-    "access": "public",
-    "description": null,
-    "lineNumber": 140,
-    "undocument": true,
-    "type": {
-      "types": [
-        "*"
-      ]
-    }
-  },
-  {
-    "__docId__": 122,
-    "kind": "member",
-    "name": "list",
-    "memberof": "src/tokens.js~ModelToken",
-    "static": false,
-    "longname": "src/tokens.js~ModelToken#list",
-    "access": "public",
-    "description": "Given a model type and an optional set of parameters, perform a list query\nagainst the backing API and return a promise of results in the form of a\nFetchResponse (see FetchResponse for more information).\n\nExample\n-------\n\n    Book.ps.list().then(response => {\n        const books = response.objects;\n        // Do stuff with books...\n    });",
-    "lineNumber": 156,
     "type": {
       "types": [
         "*"
@@ -1725,13 +1726,14 @@
   {
     "__docId__": 123,
     "kind": "member",
-    "name": "read",
+    "name": "client",
     "memberof": "src/tokens.js~ModelToken",
     "static": false,
-    "longname": "src/tokens.js~ModelToken#read",
+    "longname": "src/tokens.js~ModelToken#client",
     "access": "public",
-    "description": "Given a model type and an optional set of parameters, perform a retrieve\nquery against the backing API and return a promise of results in the\nform of a FetchResponse (see FetchResponse for more information).\n\nExample\n-------\n\n    Book.ps.read({ id: '1234' }).then(response => {\n        const book = response.object;\n        // Do stuff with your book...\n    });",
-    "lineNumber": 174,
+    "description": null,
+    "lineNumber": 144,
+    "undocument": true,
     "type": {
       "types": [
         "*"
@@ -1741,13 +1743,13 @@
   {
     "__docId__": 124,
     "kind": "member",
-    "name": "create",
+    "name": "list",
     "memberof": "src/tokens.js~ModelToken",
     "static": false,
-    "longname": "src/tokens.js~ModelToken#create",
+    "longname": "src/tokens.js~ModelToken#list",
     "access": "public",
-    "description": "Given a model type and an optional set of parameters, perform a create\nagainst the backing API and return a promise of results in the\nform of a FetchResponse (see FetchResponse for more information).\n\nExample\n-------\n\n    const data = { title: 'An Adventure', author: 'John Smith' };\n    Book.ps.create(data).then(response => {\n        const book = response.object;\n        // Do stuff with your new book...\n    });",
-    "lineNumber": 193,
+    "description": "Given a model type and an optional set of parameters, perform a list query\nagainst the backing API and return a promise of results in the form of a\nFetchResponse (see FetchResponse for more information).\n\nExample\n-------\n\n    Book.ps.list().then(response => {\n        const books = response.objects;\n        // Do stuff with books...\n    });",
+    "lineNumber": 160,
     "type": {
       "types": [
         "*"
@@ -1757,13 +1759,13 @@
   {
     "__docId__": 125,
     "kind": "member",
-    "name": "update",
+    "name": "read",
     "memberof": "src/tokens.js~ModelToken",
     "static": false,
-    "longname": "src/tokens.js~ModelToken#update",
+    "longname": "src/tokens.js~ModelToken#read",
     "access": "public",
-    "description": "Given a model type and an optional set of parameters, perform an update\nagainst the backing API and return a promise of results in the\nform of a FetchResponse (see FetchResponse for more information).\n\nExample\n-------\n\n    const data = { id: '1234', title: 'An Adventure II', author: 'John Smith' };\n    Book.ps.update(data).then(response => {\n        const book = response.object;\n        // Do stuff with your updated book...\n    });",
-    "lineNumber": 212,
+    "description": "Given a model type and an optional set of parameters, perform a retrieve\nquery against the backing API and return a promise of results in the\nform of a FetchResponse (see FetchResponse for more information).\n\nExample\n-------\n\n    Book.ps.read({ id: '1234' }).then(response => {\n        const book = response.object;\n        // Do stuff with your book...\n    });",
+    "lineNumber": 178,
     "type": {
       "types": [
         "*"
@@ -1773,13 +1775,45 @@
   {
     "__docId__": 126,
     "kind": "member",
+    "name": "create",
+    "memberof": "src/tokens.js~ModelToken",
+    "static": false,
+    "longname": "src/tokens.js~ModelToken#create",
+    "access": "public",
+    "description": "Given a model type and an optional set of parameters, perform a create\nagainst the backing API and return a promise of results in the\nform of a FetchResponse (see FetchResponse for more information).\n\nExample\n-------\n\n    const data = { title: 'An Adventure', author: 'John Smith' };\n    Book.ps.create(data).then(response => {\n        const book = response.object;\n        // Do stuff with your new book...\n    });",
+    "lineNumber": 197,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 127,
+    "kind": "member",
+    "name": "update",
+    "memberof": "src/tokens.js~ModelToken",
+    "static": false,
+    "longname": "src/tokens.js~ModelToken#update",
+    "access": "public",
+    "description": "Given a model type and an optional set of parameters, perform an update\nagainst the backing API and return a promise of results in the\nform of a FetchResponse (see FetchResponse for more information).\n\nExample\n-------\n\n    const data = { id: '1234', title: 'An Adventure II', author: 'John Smith' };\n    Book.ps.update(data).then(response => {\n        const book = response.object;\n        // Do stuff with your updated book...\n    });",
+    "lineNumber": 216,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 128,
+    "kind": "member",
     "name": "delete",
     "memberof": "src/tokens.js~ModelToken",
     "static": false,
     "longname": "src/tokens.js~ModelToken#delete",
     "access": "public",
     "description": "Given a model type and an optional set of parameters, perform a destroy\nagainst the backing API and return a promise of results in the\nform of a FetchResponse (see FetchResponse for more information).\n\nExample\n-------\n\n    Book.ps.delete({ id: '1234' });",
-    "lineNumber": 227,
+    "lineNumber": 231,
     "type": {
       "types": [
         "*"

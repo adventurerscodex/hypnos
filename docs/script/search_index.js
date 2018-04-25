@@ -402,6 +402,12 @@ window.esdocSearchIndex = [
     "member"
   ],
   [
+    "src/models/base.js~basemodel#fromschemavalues",
+    "class/src/models/base.js~BaseModel.html#instance-member-fromSchemaValues",
+    "src/models/base.js~BaseModel#fromSchemaValues",
+    "member"
+  ],
+  [
     "src/models/base.js~basemodel#importvalues",
     "class/src/models/base.js~BaseModel.html#instance-member-importValues",
     "src/models/base.js~BaseModel#importValues",
@@ -411,6 +417,12 @@ window.esdocSearchIndex = [
     "src/models/base.js~basemodel#ps",
     "class/src/models/base.js~BaseModel.html#instance-member-ps",
     "src/models/base.js~BaseModel#ps",
+    "member"
+  ],
+  [
+    "src/models/base.js~basemodel#toschemavalues",
+    "class/src/models/base.js~BaseModel.html#instance-member-toSchemaValues",
+    "src/models/base.js~BaseModel#toSchemaValues",
     "member"
   ],
   [

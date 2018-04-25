@@ -35,7 +35,7 @@ export class BaseModel {
     };
 
     fromSchemaValues = (schemaValues) => {
-        return values
+        return schemaValues
     };
 
     /**

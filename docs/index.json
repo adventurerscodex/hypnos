@@ -883,7 +883,7 @@
     "__docId__": 70,
     "kind": "file",
     "name": "src/models/base.js",
-    "content": "import { get, pick } from 'lodash';\nimport { InstanceToken, ModelToken } from '../tokens';\nimport ko from 'knockout';\nimport schema from 'schema';\n\n\n/**\n * This class is the base definition of all ES6 style model objects.\n *\n * Models extending this class will gain the following benefits:\n * - Automatic Persistence Service Token registration.\n * - Automatic mapping via FetchResponses and mapped queries.\n *\n * This model provides no default implementation of serialization or\n * deserialization. Subclasses must implement this feature for their respective\n * use-cases. This framework provides a few default implementations of usable\n * model classes like: JSONModel and KOModel.\n */\nexport class BaseModel {\n\n    // Automatically register the given class to the persistence service.\n    static get ps() {\n        return new ModelToken(this);\n    }\n\n    constructor() {\n        // Automatically register the given object to the persistence service.\n        this.ps = new InstanceToken(this.constructor, this);\n    }\n\n    /* Model Mapping Methods */\n\n    toSchemaValues = (values) => {\n        return values;\n    };\n\n    fromSchemaValues = (schemaValues) => {\n        return schemaValues\n    };\n\n    /**\n     * Given a set of values exported from the given model instance, clean\n     * the fields and do any preparation before handing off the data to the\n     * Hypnos API client.\n     *\n     * By default this method removes and fields in the values that are not\n     * listed in the schema fields for the action that the user is trying to take.\n     *\n     * Subclasses can override this method to provide custom clean behavior.\n     */\n    clean = (keys, values) => {\n        // Get the link to the given action in the schema.\n        const path = keys.join('.')\n        const link = get(schema.content, path, null);\n        if (!link) {\n            throw new Error(`Field ${keys.join(' ')} on type ${this.contructor.name} does not exit.`);\n        }\n\n        // Get the names for the fields in the given schema action.\n        const fieldNames = link.fields.map(({name}) => (name));\n\n        // Omit all of the fields that are not required in the schema for the\n        // action that the user specified.\n        return pick(values, fieldNames);\n    };\n\n    importValues = (values) => {\n        throw new Error(`Model: \"${this.constructor.name}\" must override importValues.`);\n    }\n\n    exportValues = () => {\n        throw new Error(`Model: \"${this.constructor.name}\" must override exportValues.`);\n    };\n}\n",
+    "content": "import { get, pick } from 'lodash';\nimport { InstanceToken, ModelToken } from '../tokens';\nimport ko from 'knockout';\nimport schema from 'schema';\n\n\n/**\n * This class is the base definition of all ES6 style model objects.\n *\n * Models extending this class will gain the following benefits:\n * - Automatic Persistence Service Token registration.\n * - Automatic mapping via FetchResponses and mapped queries.\n *\n * This model provides no default implementation of serialization or\n * deserialization. Subclasses must implement this feature for their respective\n * use-cases. This framework provides a few default implementations of usable\n * model classes like: JSONModel and KOModel.\n */\nexport class BaseModel {\n\n    // Automatically register the given class to the persistence service.\n    static get ps() {\n        return new ModelToken(this);\n    }\n\n    constructor() {\n        // Automatically register the given object to the persistence service.\n        this.ps = new InstanceToken(this.constructor, this);\n    }\n\n    /* Model Mapping Methods */\n\n\n    /**\n     * An optional callback, useful for performing any transformations on the\n     * serialized data before it is sent to the API client. This method is invoked\n     * after the instance has exported its data, and after it is cleaned, but\n     * before it is sent to the API client and the schema.\n     *\n     * Note: The return values from this method must match the fields in the\n     * schema, or the schema will throw an error.\n     *\n     * This method is useful if a subclass contains nested data, but the server\n     * is expecting a simple UUID for association.\n     *\n     * Example\n     * -------\n     *      // Our data model\n     *      Book = {\n     *          author: {\n     *              name: \"\",\n     *              authorId: \"1234.434\"\n     *          }\n     *      }\n     *\n     *      // What the schema expects\n     *      Book = {\n     *          author: \"1234.434\"\n     *      }\n     *\n     *      class Book extends Model {\n     *          toSchemaValues = (values) => {\n     *              return { ...values, authorId: values.author.authorId }\n     *          }\n     *      }\n     *\n     */\n    toSchemaValues = (values) => {\n        return values;\n    };\n\n    /**\n     * An optional callback, useful for performing any transformations on the\n     * recieved data before it is sent to the model instance to be imported.\n     * This method is invoked after the new instance is created, and the API\n     * response is received, but before it is sent to the API client and the schema.\n     *\n     * This method is useful if the server sends nested data, but the data model\n     * is expecting a simple UUID for association.\n     *\n     * Example\n     * -------\n     *      // API response\n     *      Book = {\n     *          author: {\n     *              name: \"\",\n     *              authorId: \"1234.434\"\n     *          }\n     *      }\n     *\n     *      // What the Models require\n     *      Book = {\n     *          author: \"1234.434\"\n     *      }\n     *\n     *      class Book extends Model {\n     *          fromSchemaValues = (values) => {\n     *              return { ...values, authorId: values.author.authorId }\n     *          }\n     *      }\n     *\n     */\n    fromSchemaValues = (schemaValues) => {\n        return schemaValues\n    };\n\n    /**\n     * Given a set of values exported from the given model instance, clean\n     * the fields and do any preparation before handing off the data to the\n     * Hypnos API client.\n     *\n     * By default this method removes and fields in the values that are not\n     * listed in the schema fields for the action that the user is trying to take.\n     *\n     * Subclasses can override this method to provide custom clean behavior.\n     */\n    clean = (keys, values) => {\n        // Get the link to the given action in the schema.\n        const path = keys.join('.')\n        const link = get(schema.content, path, null);\n        if (!link) {\n            throw new Error(`Field ${keys.join(' ')} on type ${this.contructor.name} does not exit.`);\n        }\n\n        // Get the names for the fields in the given schema action.\n        const fieldNames = link.fields.map(({name}) => (name));\n\n        // Omit all of the fields that are not required in the schema for the\n        // action that the user specified.\n        return pick(values, fieldNames);\n    };\n\n    importValues = (values) => {\n        throw new Error(`Model: \"${this.constructor.name}\" must override importValues.`);\n    }\n\n    exportValues = () => {\n        throw new Error(`Model: \"${this.constructor.name}\" must override exportValues.`);\n    };\n}\n",
     "static": true,
     "longname": "/Users/ifoundit/Projects/adventurers_codex/hypnos/src/models/base.js",
     "access": "public",
@@ -963,9 +963,8 @@
     "static": false,
     "longname": "src/models/base.js~BaseModel#toSchemaValues",
     "access": "public",
-    "description": null,
-    "lineNumber": 33,
-    "undocument": true,
+    "description": "An optional callback, useful for performing any transformations on the\nserialized data before it is sent to the API client. This method is invoked\nafter the instance has exported its data, and after it is cleaned, but\nbefore it is sent to the API client and the schema.\n\nNote: The return values from this method must match the fields in the\nschema, or the schema will throw an error.\n\nThis method is useful if a subclass contains nested data, but the server\nis expecting a simple UUID for association.\n\nExample\n-------\n     // Our data model\n     Book = {\n         author: {\n             name: \"\",\n             authorId: \"1234.434\"\n         }\n     }\n\n     // What the schema expects\n     Book = {\n         author: \"1234.434\"\n     }\n\n     class Book extends Model {\n         toSchemaValues = (values) => {\n             return { ...values, authorId: values.author.authorId }\n         }\n     }",
+    "lineNumber": 68,
     "type": {
       "types": [
         "*"
@@ -980,9 +979,8 @@
     "static": false,
     "longname": "src/models/base.js~BaseModel#fromSchemaValues",
     "access": "public",
-    "description": null,
-    "lineNumber": 37,
-    "undocument": true,
+    "description": "An optional callback, useful for performing any transformations on the\nrecieved data before it is sent to the model instance to be imported.\nThis method is invoked after the new instance is created, and the API\nresponse is received, but before it is sent to the API client and the schema.\n\nThis method is useful if the server sends nested data, but the data model\nis expecting a simple UUID for association.\n\nExample\n-------\n     // API response\n     Book = {\n         author: {\n             name: \"\",\n             authorId: \"1234.434\"\n         }\n     }\n\n     // What the Models require\n     Book = {\n         author: \"1234.434\"\n     }\n\n     class Book extends Model {\n         fromSchemaValues = (values) => {\n             return { ...values, authorId: values.author.authorId }\n         }\n     }",
+    "lineNumber": 103,
     "type": {
       "types": [
         "*"
@@ -998,7 +996,7 @@
     "longname": "src/models/base.js~BaseModel#clean",
     "access": "public",
     "description": "Given a set of values exported from the given model instance, clean\nthe fields and do any preparation before handing off the data to the\nHypnos API client.\n\nBy default this method removes and fields in the values that are not\nlisted in the schema fields for the action that the user is trying to take.\n\nSubclasses can override this method to provide custom clean behavior.",
-    "lineNumber": 51,
+    "lineNumber": 117,
     "type": {
       "types": [
         "*"
@@ -1014,7 +1012,7 @@
     "longname": "src/models/base.js~BaseModel#importValues",
     "access": "public",
     "description": null,
-    "lineNumber": 67,
+    "lineNumber": 133,
     "undocument": true,
     "type": {
       "types": [
@@ -1031,7 +1029,7 @@
     "longname": "src/models/base.js~BaseModel#exportValues",
     "access": "public",
     "description": null,
-    "lineNumber": 71,
+    "lineNumber": 137,
     "undocument": true,
     "type": {
       "types": [

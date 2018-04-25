@@ -30,10 +30,76 @@ export class BaseModel {
 
     /* Model Mapping Methods */
 
+
+    /**
+     * An optional callback, useful for performing any transformations on the
+     * serialized data before it is sent to the API client. This method is invoked
+     * after the instance has exported its data, and after it is cleaned, but
+     * before it is sent to the API client and the schema.
+     *
+     * Note: The return values from this method must match the fields in the
+     * schema, or the schema will throw an error.
+     *
+     * This method is useful if a subclass contains nested data, but the server
+     * is expecting a simple UUID for association.
+     *
+     * Example
+     * -------
+     *      // Our data model
+     *      Book = {
+     *          author: {
+     *              name: "",
+     *              authorId: "1234.434"
+     *          }
+     *      }
+     *
+     *      // What the schema expects
+     *      Book = {
+     *          author: "1234.434"
+     *      }
+     *
+     *      class Book extends Model {
+     *          toSchemaValues = (values) => {
+     *              return { ...values, authorId: values.author.authorId }
+     *          }
+     *      }
+     *
+     */
     toSchemaValues = (values) => {
         return values;
     };
 
+    /**
+     * An optional callback, useful for performing any transformations on the
+     * recieved data before it is sent to the model instance to be imported.
+     * This method is invoked after the new instance is created, and the API
+     * response is received, but before it is sent to the API client and the schema.
+     *
+     * This method is useful if the server sends nested data, but the data model
+     * is expecting a simple UUID for association.
+     *
+     * Example
+     * -------
+     *      // API response
+     *      Book = {
+     *          author: {
+     *              name: "",
+     *              authorId: "1234.434"
+     *          }
+     *      }
+     *
+     *      // What the Models require
+     *      Book = {
+     *          author: "1234.434"
+     *      }
+     *
+     *      class Book extends Model {
+     *          fromSchemaValues = (values) => {
+     *              return { ...values, authorId: values.author.authorId }
+     *          }
+     *      }
+     *
+     */
     fromSchemaValues = (schemaValues) => {
         return schemaValues
     };

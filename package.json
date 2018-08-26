@@ -33,7 +33,7 @@
   "optionalDependencies": {
     "knockout": "^3.5.0-beta"
   },
-  "dependencies": {
+  "peerDependencies": {
     "babel": "^6.23.0",
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.0",

@@ -1,5 +1,7 @@
 # Hypnos - A Better Way to REST
 
+**This project is currently in development.**
+
 *An API client and ORM for CoreAPI powered REST APIs.*
 
 Hypnos is a light-weight ORM and API Client for Web apps. It provides a clean and concise way to interact with your API data **without any URLs or manual requests**. In a way, it is very similar to `Apollo` for GraphQL, but more inspired by projects like `Django ORM` and `SQLAlchemy`.

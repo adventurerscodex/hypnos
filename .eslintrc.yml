@@ -1,0 +1,35 @@
+env:
+  es6: true
+  browser: true
+parser: babel-eslint
+extends:
+  - eslint:recommended
+plugins:
+  - import
+rules:
+  no-undef:
+    - 0
+  no-unused-vars:
+    - 0
+  indent:
+    - error
+    - 4
+  import/extensions: [2, js: never]
+
+  linebreak-style:
+    - 0
+  quotes:
+    - error
+    - single
+  semi:
+    - error
+    - always
+  sort-imports:
+  - error
+  - ignoreCase: false
+    ignoreMemberSort: false
+    memberSyntaxSortOrder: ["none", "all", "multiple", "single"]
+parserOptions:
+  ecmaVersion: 6
+  sourceType: "module"
+

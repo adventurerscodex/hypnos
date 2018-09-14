@@ -1,5 +1,8 @@
 # Hypnos - A Better Way to REST
 
+[![Build Status](https://travis-ci.com/adventurerscodex/hypnos.svg?branch=master)](https://travis-ci.com/adventurerscodex/hypnos)
+[![Coverage Status](https://coveralls.io/repos/github/adventurerscodex/hypnos/badge.svg)](https://coveralls.io/github/adventurerscodex/hypnos)
+
 **This project is currently in development.**
 
 *An API client and ORM for CoreAPI powered REST APIs.*
@@ -21,6 +24,7 @@ Besides making your code easier to understand, Hypnos also has some really cool 
 
 - **Built-in pagination support** for things like infinite scrolling.
 - **Request caching** to prevent repeated, identical queries to your API.
+- **Cache Dependency Tracking** so that when a record gets updated, Hypnos won't serve any cached data for its dependents.
 - **Smart Requests**: Behind the scenes Hypnos will do the smart thing: if you tell Hypnos which fields to update, Hypnos will transform the request from `PUT` to `PATCH`.
 - **Need custom behavior?** Hypnos allows you to query your API directly in case you still need to do something we don't support.
 
@@ -28,8 +32,7 @@ Besides making your code easier to understand, Hypnos also has some really cool 
 [coreapi]: http://www.coreapi.org
 
 
-Example
--------
+### Example
 
     // book.js
 
@@ -71,3 +74,84 @@ Example
          // ...Or delete it easily.
          book.ps.delete();
     });
+
+    // OR use with async/await!
+    const response = await Book.ps.retrieve({ id: '1234' });
+
+
+Smart Caching
+-------------
+
+Hypnos is smart. If you specify which resources depend on each other, then Hypnos will automatically clear data from the cache when a record's dependencies are updated.
+
+### Example
+
+    /* book.js */
+
+    class Book extends Model {
+        __skeys__ = ['book'];
+        __dependents__ = [Author];
+        // ...
+    }
+
+    /* author.js */
+
+    class Author extends Model {
+        __skeys__ = ['book'];
+        __dependents__ = [Book];
+        // ...
+    }
+
+    /* service/component/view_controller.js */
+
+    // Listing and retrieving records (by default) doesn't invalidate the cache.
+
+    const { objects: books } = await Book.ps.list();        // From the network
+    const { objects: authors } = await Author.ps.list();    // From the network
+    const { objects: books } = await Book.ps.list();        // From the cache
+
+    // But write operations do!
+
+    const { object: book } = await Book.ps.update({         // Clear the Author and book cache!
+        id: '1234',
+        title: 'A new title!'
+    });
+    const { objects: books } = await Book.ps.list();        // From the network
+
+    // Of course, you can always override these defaults
+    const { objects: books } = await Book.ps.list(          // From the network
+        // Query parameters
+        { search: 'over the rainbow' },
+        // Don't map the result to a Book instance just return raw data.
+        true,
+        // Don't use the cache.
+        false,
+        // Force clear the dependents' cache.
+        true
+    );
+
+
+Configuring Hypnos
+------------------
+
+Hypnos must be configured before accessing the `.client` lazy property. Hypnos' configuration object takes 3 special parameters, each with their own formats, fed to Hypnos' dependencies.
+
+- `credentials`: Is the credentials configuration for the API. This takes the format of the CoreAPI credentials object.
+- `schema`: The CoreAPI schema document.
+- `cacheConfig`: The cache configuration which should take the format found in the `node-cache` documentation.
+
+**IMPORTANT:** Caching is disabled unless a `cacheConfig` is specified.
+
+
+    Hypnos.configuration = {
+        credentials: {
+            scheme: 'Bearer',
+            token: '--super-secret-token--',
+        },
+        schema: getSchema(),
+        cacheConfig: {
+            stdTTL: 120,
+            checkperiod: 10
+        }
+    };
+

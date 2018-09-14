@@ -41,13 +41,13 @@
 </nav>
 
 <div class="content" data-ice="content"><div class="header-notice">
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {InstanceToken} from &apos;<span><a href="file/src/tokens.js.html#lineNumber16">hypnos/src/tokens.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {InstanceToken} from &apos;<span><a href="file/src/tokens.js.html#lineNumber32">hypnos/src/tokens.js</a></span>&apos;</code></pre></div>
   <span data-ice="access">public</span>
   <span data-ice="kind">class</span>
   
   
   
-  <span data-ice="source">| <span><a href="file/src/tokens.js.html#lineNumber16">source</a></span></span>
+  <span data-ice="source">| <span><a href="file/src/tokens.js.html#lineNumber32">source</a></span></span>
 </div>
 
 <div class="self-detail detail">
@@ -67,7 +67,25 @@
 
   
   
-  <div class="description" data-ice="description"><p>TODO: Document</p>
+  <div class="description" data-ice="description"><p>An Instance Token provides quick access to the Hypnos
+client methods through a model instance. You can use an
+object&apos;s Instance Token to easily and clearly perform queries and updates to the
+backing API using syntax bound to the Instance itself, rather than using
+the normal Hypnos API.</p>
+<h2 id="example">Example</h2><p>Let&apos;s say you want to search for all books in your collection. Using the
+normal Hypnos API you could perform a query for all books like this:</p>
+<pre><code><code class="source-code prettyprint"> const { object: book } = await Hypnos.client.update(Book, {
+     id: &apos;123&apos;,
+     title: &apos;A new title&apos;
+ });
+ // Do stuff with the updated book...</code>
+</code></pre><p>But using the InstanceToken API on a given Model would allow the
+following shortcut syntax.</p>
+<pre><code><code class="source-code prettyprint"> const { object: book } = await Book.ps.read({ id: &apos;1234&apos; });
+ book.title = &apos;A new title&apos;;
+ book.ps.save();</code>
+</code></pre><p>For more information about what queries are available with this API, please
+see the associated documentation below.</p>
 </div>
   
 
@@ -347,7 +365,7 @@ existing objects.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/tokens.js.html#lineNumber18">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/tokens.js.html#lineNumber34">source</a></span></span>
     </span>
   </h3>
 
@@ -393,7 +411,7 @@ existing objects.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/tokens.js.html#lineNumber21">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/tokens.js.html#lineNumber37">source</a></span></span>
     </span>
   </h3>
 
@@ -436,7 +454,7 @@ existing objects.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/tokens.js.html#lineNumber46">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/tokens.js.html#lineNumber62">source</a></span></span>
     </span>
   </h3>
 
@@ -493,7 +511,7 @@ new object.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/tokens.js.html#lineNumber98">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/tokens.js.html#lineNumber132">source</a></span></span>
     </span>
   </h3>
 
@@ -539,7 +557,7 @@ the remote store.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/tokens.js.html#lineNumber20">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/tokens.js.html#lineNumber36">source</a></span></span>
     </span>
   </h3>
 
@@ -582,7 +600,7 @@ the remote store.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/tokens.js.html#lineNumber19">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/tokens.js.html#lineNumber35">source</a></span></span>
     </span>
   </h3>
 
@@ -625,7 +643,7 @@ the remote store.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/tokens.js.html#lineNumber57">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/tokens.js.html#lineNumber79">source</a></span></span>
     </span>
   </h3>
 
@@ -669,7 +687,7 @@ the remote store.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/tokens.js.html#lineNumber71">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/tokens.js.html#lineNumber99">source</a></span></span>
     </span>
   </h3>
 

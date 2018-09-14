@@ -1,31 +1,39 @@
 {
-  "coverage": "47.14%",
-  "expectCount": 70,
+  "coverage": "45.2%",
+  "expectCount": 73,
   "actualCount": 33,
   "files": {
     "src/hypnos.js": {
-      "expectCount": 16,
+      "expectCount": 17,
       "actualCount": 8,
       "undocumentLines": [
         39,
         41,
         43,
-        53,
-        58,
-        60,
-        61,
-        65
+        65,
+        67,
+        68,
+        71,
+        76,
+        128
+      ]
+    },
+    "src/hypnos.spec.js": {
+      "expectCount": 1,
+      "actualCount": 0,
+      "undocumentLines": [
+        8
       ]
     },
     "src/models/base.js": {
       "expectCount": 9,
       "actualCount": 4,
       "undocumentLines": [
-        22,
-        26,
-        28,
-        133,
-        137
+        51,
+        55,
+        57,
+        162,
+        166
       ]
     },
     "src/models/ko.js": {
@@ -66,13 +74,20 @@
       "expectCount": 18,
       "actualCount": 11,
       "undocumentLines": [
-        18,
-        19,
-        20,
-        21,
-        142,
-        143,
-        144
+        34,
+        35,
+        36,
+        37,
+        180,
+        181,
+        182
+      ]
+    },
+    "src/tokens.spec.js": {
+      "expectCount": 1,
+      "actualCount": 0,
+      "undocumentLines": [
+        7
       ]
     }
   }

@@ -324,18 +324,6 @@ window.esdocSearchIndex = [
     "external"
   ],
   [
-    "src/__mocks__/coreapi.js",
-    "file/src/__mocks__/coreapi.js.html",
-    "src/__mocks__/coreapi.js",
-    "file"
-  ],
-  [
-    "src/__mocks__/schema.js",
-    "file/src/__mocks__/schema.js.html",
-    "src/__mocks__/schema.js",
-    "file"
-  ],
-  [
     "src/hypnos.js",
     "file/src/hypnos.js.html",
     "src/hypnos.js",
@@ -364,6 +352,12 @@ window.esdocSearchIndex = [
     "class/src/hypnos.js~Hypnos.html#static-method-flush",
     "src/hypnos.js~Hypnos.flush",
     "method"
+  ],
+  [
+    "src/hypnos.spec.js",
+    "file/src/hypnos.spec.js.html",
+    "src/hypnos.spec.js",
+    "file"
   ],
   [
     "src/index.js",
@@ -534,6 +528,12 @@ window.esdocSearchIndex = [
     "member"
   ],
   [
+    "src/response.js~apiresponse#fromcache",
+    "class/src/response.js~APIResponse.html#instance-member-fromCache",
+    "src/response.js~APIResponse#fromCache",
+    "member"
+  ],
+  [
     "src/response.js~apiresponse#getnextpage",
     "class/src/response.js~APIResponse.html#instance-member-getNextPage",
     "src/response.js~APIResponse#getNextPage",
@@ -585,12 +585,6 @@ window.esdocSearchIndex = [
     "src/response.js~apiresponse#objects",
     "class/src/response.js~APIResponse.html#instance-member-objects",
     "src/response.js~APIResponse#objects",
-    "member"
-  ],
-  [
-    "src/response.js~apiresponse#requestid",
-    "class/src/response.js~APIResponse.html#instance-member-requestId",
-    "src/response.js~APIResponse#requestId",
     "member"
   ],
   [
@@ -694,5 +688,11 @@ window.esdocSearchIndex = [
     "class/src/tokens.js~ModelToken.html#instance-member-update",
     "src/tokens.js~ModelToken#update",
     "member"
+  ],
+  [
+    "src/tokens.spec.js",
+    "file/src/tokens.spec.js.html",
+    "src/tokens.spec.js",
+    "file"
   ]
 ]

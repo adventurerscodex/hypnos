@@ -33,6 +33,9 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/response.js~APIResponse.html">APIResponse</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/tokens.js~InstanceToken.html">InstanceToken</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/tokens.js~ModelToken.html">ModelToken</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#--helpers--">__helpers__</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-mockedFetch">mockedFetch</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#--mocks--">__mocks__</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/__mocks__/models.js~Author.html">Author</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/__mocks__/models.js~Book.html">Book</a></span></span></li>
 <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#models">models</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/models/base.js~BaseModel.html">BaseModel</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/models/ko.js~KOModel.html">KOModel</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/models/model.js~Model.html">Model</a></span></span></li>
@@ -41,8 +44,476 @@
 </nav>
 
 <div class="content" data-ice="content"><h1 data-ice="title">src/__mocks__/schema.js</h1>
-<pre class="source-code line-number raw-source-code"></pre>
-<p data-ice="emptySourceCode">Sorry, this documentation does not provide source code.</p>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import coreapi from &apos;coreapi&apos;;
+
+const codec = new coreapi.codecs.CoreJSONCodec();
+
+export default codec.decode(JSON.stringify({
+    &apos;_type&apos;: &apos;document&apos;,
+    &apos;_meta&apos;: {
+        &apos;url&apos;: &apos;http://localhost/api/docs/schema.js&apos;,
+        &apos;title&apos;: &apos;Testing API&apos;
+    },
+    &apos;authors&apos;: {
+        &apos;list&apos;: {
+            &apos;_type&apos;: &apos;link&apos;,
+            &apos;url&apos;: &apos;localhostapi/lastName/&apos;,
+            &apos;action&apos;: &apos;get&apos;,
+            &apos;description&apos;: &apos;&apos;,
+            &apos;fields&apos;: [
+                {
+                    &apos;name&apos;: &apos;page&apos;,
+                    &apos;location&apos;: &apos;query&apos;,
+                    &apos;schema&apos;: {
+                        &apos;_type&apos;: &apos;integer&apos;,
+                        &apos;firstName&apos;: &apos;Page&apos;,
+                        &apos;description&apos;: &apos;A page number within the paginated result set.&apos;
+                    }
+                },
+                {
+                    &apos;name&apos;: &apos;search&apos;,
+                    &apos;location&apos;: &apos;query&apos;,
+                    &apos;schema&apos;: {
+                        &apos;_type&apos;: &apos;string&apos;,
+                        &apos;firstName&apos;: &apos;Search&apos;,
+                        &apos;description&apos;: &apos;A search term.&apos;
+                    }
+                },
+                {
+                    &apos;name&apos;: &apos;ordering&apos;,
+                    &apos;location&apos;: &apos;query&apos;,
+                    &apos;schema&apos;: {
+                        &apos;_type&apos;: &apos;string&apos;,
+                        &apos;firstName&apos;: &apos;Ordering&apos;,
+                        &apos;description&apos;: &apos;Which field to use when ordering the results.&apos;
+                    }
+                },
+                {
+                    &apos;name&apos;: &apos;firstName&apos;,
+                    &apos;location&apos;: &apos;query&apos;,
+                    &apos;schema&apos;: {
+                        &apos;_type&apos;: &apos;string&apos;,
+                        &apos;firstName&apos;: &apos;&apos;,
+                        &apos;description&apos;: &apos;&apos;
+                    }
+                },
+            ]
+        },
+        &apos;create&apos;: {
+            &apos;_type&apos;: &apos;link&apos;,
+            &apos;url&apos;: &apos;/api/lastName/&apos;,
+            &apos;action&apos;: &apos;post&apos;,
+            &apos;encoding&apos;: &apos;application/json&apos;,
+            &apos;description&apos;: &apos;&apos;,
+            &apos;fields&apos;: [
+                {
+                    &apos;name&apos;: &apos;firstName&apos;,
+                    &apos;required&apos;: true,
+                    &apos;location&apos;: &apos;form&apos;,
+                    &apos;schema&apos;: {
+                        &apos;_type&apos;: &apos;string&apos;,
+                        &apos;firstName&apos;: &apos;Name&apos;,
+                        &apos;description&apos;: &apos;&apos;
+                    }
+                },
+                {
+                    &apos;name&apos;: &apos;lastName&apos;,
+                    &apos;location&apos;: &apos;form&apos;,
+                    &apos;schema&apos;: {
+                        &apos;_type&apos;: &apos;string&apos;,
+                        &apos;firstName&apos;: &apos;lastName&apos;,
+                        &apos;description&apos;: &apos;&apos;
+                    }
+                },
+            ]
+        },
+        &apos;read&apos;: {
+            &apos;_type&apos;: &apos;link&apos;,
+            &apos;url&apos;: &apos;/api/lastName/{uuid}/&apos;,
+            &apos;action&apos;: &apos;get&apos;,
+            &apos;description&apos;: &apos;&apos;,
+            &apos;fields&apos;: [
+                {
+                    &apos;name&apos;: &apos;uuid&apos;,
+                    &apos;required&apos;: true,
+                    &apos;location&apos;: &apos;path&apos;,
+                    &apos;schema&apos;: {
+                        &apos;_type&apos;: &apos;string&apos;,
+                        &apos;firstName&apos;: &apos;uuid&apos;,
+                        &apos;description&apos;: &apos;&apos;
+                    }
+                },
+                {
+                    &apos;name&apos;: &apos;search&apos;,
+                    &apos;location&apos;: &apos;query&apos;,
+                    &apos;schema&apos;: {
+                        &apos;_type&apos;: &apos;string&apos;,
+                        &apos;firstName&apos;: &apos;Search&apos;,
+                        &apos;description&apos;: &apos;A search term.&apos;
+                    }
+                },
+                {
+                    &apos;name&apos;: &apos;ordering&apos;,
+                    &apos;location&apos;: &apos;query&apos;,
+                    &apos;schema&apos;: {
+                        &apos;_type&apos;: &apos;string&apos;,
+                        &apos;firstName&apos;: &apos;Ordering&apos;,
+                        &apos;description&apos;: &apos;Which field to use when ordering the results.&apos;
+                    }
+                },
+                {
+                    &apos;name&apos;: &apos;firstName&apos;,
+                    &apos;location&apos;: &apos;query&apos;,
+                    &apos;schema&apos;: {
+                        &apos;_type&apos;: &apos;string&apos;,
+                        &apos;firstName&apos;: &apos;&apos;,
+                        &apos;description&apos;: &apos;&apos;
+                    }
+                },
+            ]
+        },
+        &apos;update&apos;: {
+            &apos;_type&apos;: &apos;link&apos;,
+            &apos;url&apos;: &apos;/api/lastName/{uuid}/&apos;,
+            &apos;action&apos;: &apos;put&apos;,
+            &apos;encoding&apos;: &apos;application/json&apos;,
+            &apos;description&apos;: &apos;&apos;,
+            &apos;fields&apos;: [
+                {
+                    &apos;name&apos;: &apos;uuid&apos;,
+                    &apos;required&apos;: true,
+                    &apos;location&apos;: &apos;path&apos;,
+                    &apos;schema&apos;: {
+                        &apos;_type&apos;: &apos;string&apos;,
+                        &apos;firstName&apos;: &apos;uuid&apos;,
+                        &apos;description&apos;: &apos;&apos;
+                    }
+                },
+                {
+                    &apos;name&apos;: &apos;firstName&apos;,
+                    &apos;required&apos;: true,
+                    &apos;location&apos;: &apos;form&apos;,
+                    &apos;schema&apos;: {
+                        &apos;_type&apos;: &apos;string&apos;,
+                        &apos;firstName&apos;: &apos;Name&apos;,
+                        &apos;description&apos;: &apos;&apos;
+                    }
+                },
+                {
+                    &apos;name&apos;: &apos;lastName&apos;,
+                    &apos;required&apos;: true,
+                    &apos;location&apos;: &apos;form&apos;,
+                    &apos;schema&apos;: {
+                        &apos;_type&apos;: &apos;string&apos;,
+                        &apos;firstName&apos;: &apos;lastName&apos;,
+                        &apos;description&apos;: &apos;&apos;
+                    }
+                },
+            ]
+        },
+        &apos;partialUpdate&apos;: {
+            &apos;_type&apos;: &apos;link&apos;,
+            &apos;url&apos;: &apos;/api/lastName/{uuid}/&apos;,
+            &apos;action&apos;: &apos;patch&apos;,
+            &apos;encoding&apos;: &apos;application/json&apos;,
+            &apos;description&apos;: &apos;&apos;,
+            &apos;fields&apos;: [
+                {
+                    &apos;name&apos;: &apos;uuid&apos;,
+                    &apos;required&apos;: true,
+                    &apos;location&apos;: &apos;path&apos;,
+                    &apos;schema&apos;: {
+                        &apos;_type&apos;: &apos;string&apos;,
+                        &apos;firstName&apos;: &apos;uuid&apos;,
+                        &apos;description&apos;: &apos;&apos;
+                    }
+                },
+                {
+                    &apos;name&apos;: &apos;firstName&apos;,
+                    &apos;required&apos;: true,
+                    &apos;location&apos;: &apos;form&apos;,
+                    &apos;schema&apos;: {
+                        &apos;_type&apos;: &apos;string&apos;,
+                        &apos;firstName&apos;: &apos;Name&apos;,
+                        &apos;description&apos;: &apos;&apos;
+                    }
+                },
+                {
+                    &apos;name&apos;: &apos;lastName&apos;,
+                    &apos;location&apos;: &apos;form&apos;,
+                    &apos;schema&apos;: {
+                        &apos;_type&apos;: &apos;string&apos;,
+                        &apos;firstName&apos;: &apos;lastName&apos;,
+                        &apos;description&apos;: &apos;&apos;
+                    }
+                },
+            ]
+        },
+        &apos;delete&apos;: {
+            &apos;_type&apos;: &apos;link&apos;,
+            &apos;url&apos;: &apos;/api/lastName/{uuid}/&apos;,
+            &apos;action&apos;: &apos;delete&apos;,
+            &apos;description&apos;: &apos;&apos;,
+            &apos;fields&apos;: [
+                {
+                    &apos;name&apos;: &apos;uuid&apos;,
+                    &apos;required&apos;: true,
+                    &apos;location&apos;: &apos;path&apos;,
+                    &apos;schema&apos;: {
+                        &apos;_type&apos;: &apos;string&apos;,
+                        &apos;firstName&apos;: &apos;uuid&apos;,
+                        &apos;description&apos;: &apos;&apos;
+                    }
+                },
+            ]
+        }
+    },
+    &apos;books&apos;: {
+        &apos;list&apos;: {
+            &apos;_type&apos;: &apos;link&apos;,
+            &apos;url&apos;: &apos;localhostapi/book/&apos;,
+            &apos;action&apos;: &apos;get&apos;,
+            &apos;description&apos;: &apos;&apos;,
+            &apos;fields&apos;: [
+                {
+                    &apos;name&apos;: &apos;page&apos;,
+                    &apos;location&apos;: &apos;query&apos;,
+                    &apos;schema&apos;: {
+                        &apos;_type&apos;: &apos;integer&apos;,
+                        &apos;title&apos;: &apos;Page&apos;,
+                        &apos;description&apos;: &apos;A page number within the paginated result set.&apos;
+                    }
+                },
+                {
+                    &apos;name&apos;: &apos;search&apos;,
+                    &apos;location&apos;: &apos;query&apos;,
+                    &apos;schema&apos;: {
+                        &apos;_type&apos;: &apos;string&apos;,
+                        &apos;title&apos;: &apos;Search&apos;,
+                        &apos;description&apos;: &apos;A search term.&apos;
+                    }
+                },
+                {
+                    &apos;name&apos;: &apos;ordering&apos;,
+                    &apos;location&apos;: &apos;query&apos;,
+                    &apos;schema&apos;: {
+                        &apos;_type&apos;: &apos;string&apos;,
+                        &apos;title&apos;: &apos;Ordering&apos;,
+                        &apos;description&apos;: &apos;Which field to use when ordering the results.&apos;
+                    }
+                },
+                {
+                    &apos;name&apos;: &apos;title&apos;,
+                    &apos;location&apos;: &apos;query&apos;,
+                    &apos;schema&apos;: {
+                        &apos;_type&apos;: &apos;string&apos;,
+                        &apos;title&apos;: &apos;&apos;,
+                        &apos;description&apos;: &apos;&apos;
+                    }
+                },
+            ]
+        },
+        &apos;create&apos;: {
+            &apos;_type&apos;: &apos;link&apos;,
+            &apos;url&apos;: &apos;/api/book/&apos;,
+            &apos;action&apos;: &apos;post&apos;,
+            &apos;encoding&apos;: &apos;application/json&apos;,
+            &apos;description&apos;: &apos;&apos;,
+            &apos;fields&apos;: [
+                {
+                    &apos;name&apos;: &apos;title&apos;,
+                    &apos;required&apos;: true,
+                    &apos;location&apos;: &apos;form&apos;,
+                    &apos;schema&apos;: {
+                        &apos;_type&apos;: &apos;string&apos;,
+                        &apos;title&apos;: &apos;Name&apos;,
+                        &apos;description&apos;: &apos;&apos;
+                    }
+                },
+                {
+                    &apos;name&apos;: &apos;author&apos;,
+                    &apos;location&apos;: &apos;form&apos;,
+                    &apos;schema&apos;: {
+                        &apos;_type&apos;: &apos;string&apos;,
+                        &apos;title&apos;: &apos;Author&apos;,
+                        &apos;description&apos;: &apos;&apos;
+                    }
+                },
+                {
+                    &apos;name&apos;: &apos;isBestseller&apos;,
+                    &apos;required&apos;: true,
+                    &apos;location&apos;: &apos;form&apos;,
+                    &apos;schema&apos;: {
+                        &apos;_type&apos;: &apos;boolean&apos;,
+                        &apos;title&apos;: &apos;Bestselling?&apos;,
+                        &apos;description&apos;: &apos;&apos;
+                    }
+                }
+            ]
+        },
+        &apos;read&apos;: {
+            &apos;_type&apos;: &apos;link&apos;,
+            &apos;url&apos;: &apos;/api/book/{uuid}/&apos;,
+            &apos;action&apos;: &apos;get&apos;,
+            &apos;description&apos;: &apos;&apos;,
+            &apos;fields&apos;: [
+                {
+                    &apos;name&apos;: &apos;uuid&apos;,
+                    &apos;required&apos;: true,
+                    &apos;location&apos;: &apos;path&apos;,
+                    &apos;schema&apos;: {
+                        &apos;_type&apos;: &apos;string&apos;,
+                        &apos;title&apos;: &apos;uuid&apos;,
+                        &apos;description&apos;: &apos;&apos;
+                    }
+                },
+                {
+                    &apos;name&apos;: &apos;search&apos;,
+                    &apos;location&apos;: &apos;query&apos;,
+                    &apos;schema&apos;: {
+                        &apos;_type&apos;: &apos;string&apos;,
+                        &apos;title&apos;: &apos;Search&apos;,
+                        &apos;description&apos;: &apos;A search term.&apos;
+                    }
+                },
+                {
+                    &apos;name&apos;: &apos;ordering&apos;,
+                    &apos;location&apos;: &apos;query&apos;,
+                    &apos;schema&apos;: {
+                        &apos;_type&apos;: &apos;string&apos;,
+                        &apos;title&apos;: &apos;Ordering&apos;,
+                        &apos;description&apos;: &apos;Which field to use when ordering the results.&apos;
+                    }
+                },
+                {
+                    &apos;name&apos;: &apos;title&apos;,
+                    &apos;location&apos;: &apos;query&apos;,
+                    &apos;schema&apos;: {
+                        &apos;_type&apos;: &apos;string&apos;,
+                        &apos;title&apos;: &apos;&apos;,
+                        &apos;description&apos;: &apos;&apos;
+                    }
+                },
+            ]
+        },
+        &apos;update&apos;: {
+            &apos;_type&apos;: &apos;link&apos;,
+            &apos;url&apos;: &apos;/api/book/{uuid}/&apos;,
+            &apos;action&apos;: &apos;put&apos;,
+            &apos;encoding&apos;: &apos;application/json&apos;,
+            &apos;description&apos;: &apos;&apos;,
+            &apos;fields&apos;: [
+                {
+                    &apos;name&apos;: &apos;uuid&apos;,
+                    &apos;required&apos;: true,
+                    &apos;location&apos;: &apos;path&apos;,
+                    &apos;schema&apos;: {
+                        &apos;_type&apos;: &apos;string&apos;,
+                        &apos;title&apos;: &apos;uuid&apos;,
+                        &apos;description&apos;: &apos;&apos;
+                    }
+                },
+                {
+                    &apos;name&apos;: &apos;title&apos;,
+                    &apos;required&apos;: true,
+                    &apos;location&apos;: &apos;form&apos;,
+                    &apos;schema&apos;: {
+                        &apos;_type&apos;: &apos;string&apos;,
+                        &apos;title&apos;: &apos;Name&apos;,
+                        &apos;description&apos;: &apos;&apos;
+                    }
+                },
+                {
+                    &apos;name&apos;: &apos;author&apos;,
+                    &apos;required&apos;: true,
+                    &apos;location&apos;: &apos;form&apos;,
+                    &apos;schema&apos;: {
+                        &apos;_type&apos;: &apos;string&apos;,
+                        &apos;title&apos;: &apos;Author&apos;,
+                        &apos;description&apos;: &apos;&apos;
+                    }
+                },
+                {
+                    &apos;name&apos;: &apos;isBestseller&apos;,
+                    &apos;required&apos;: true,
+                    &apos;location&apos;: &apos;form&apos;,
+                    &apos;schema&apos;: {
+                        &apos;_type&apos;: &apos;boolean&apos;,
+                        &apos;title&apos;: &apos;Bestselling?&apos;,
+                        &apos;description&apos;: &apos;&apos;
+                    }
+                }
+            ]
+        },
+        &apos;partialUpdate&apos;: {
+            &apos;_type&apos;: &apos;link&apos;,
+            &apos;url&apos;: &apos;/api/book/{uuid}/&apos;,
+            &apos;action&apos;: &apos;patch&apos;,
+            &apos;encoding&apos;: &apos;application/json&apos;,
+            &apos;description&apos;: &apos;&apos;,
+            &apos;fields&apos;: [
+                {
+                    &apos;name&apos;: &apos;uuid&apos;,
+                    &apos;required&apos;: true,
+                    &apos;location&apos;: &apos;path&apos;,
+                    &apos;schema&apos;: {
+                        &apos;_type&apos;: &apos;string&apos;,
+                        &apos;title&apos;: &apos;uuid&apos;,
+                        &apos;description&apos;: &apos;&apos;
+                    }
+                },
+                {
+                    &apos;name&apos;: &apos;title&apos;,
+                    &apos;required&apos;: true,
+                    &apos;location&apos;: &apos;form&apos;,
+                    &apos;schema&apos;: {
+                        &apos;_type&apos;: &apos;string&apos;,
+                        &apos;title&apos;: &apos;Name&apos;,
+                        &apos;description&apos;: &apos;&apos;
+                    }
+                },
+                {
+                    &apos;name&apos;: &apos;author&apos;,
+                    &apos;location&apos;: &apos;form&apos;,
+                    &apos;schema&apos;: {
+                        &apos;_type&apos;: &apos;string&apos;,
+                        &apos;title&apos;: &apos;Author&apos;,
+                        &apos;description&apos;: &apos;&apos;
+                    }
+                },
+                {
+                    &apos;name&apos;: &apos;isBestseller&apos;,
+                    &apos;location&apos;: &apos;form&apos;,
+                    &apos;schema&apos;: {
+                        &apos;_type&apos;: &apos;boolean&apos;,
+                        &apos;title&apos;: &apos;Bestselling?&apos;,
+                        &apos;description&apos;: &apos;&apos;
+                    }
+                }
+            ]
+        },
+        &apos;delete&apos;: {
+            &apos;_type&apos;: &apos;link&apos;,
+            &apos;url&apos;: &apos;/api/book/{uuid}/&apos;,
+            &apos;action&apos;: &apos;delete&apos;,
+            &apos;description&apos;: &apos;&apos;,
+            &apos;fields&apos;: [
+                {
+                    &apos;name&apos;: &apos;uuid&apos;,
+                    &apos;required&apos;: true,
+                    &apos;location&apos;: &apos;path&apos;,
+                    &apos;schema&apos;: {
+                        &apos;_type&apos;: &apos;string&apos;,
+                        &apos;title&apos;: &apos;uuid&apos;,
+                        &apos;description&apos;: &apos;&apos;
+                    }
+                },
+            ]
+        }
+    }
+}));
+</code></pre>
+
 </div>
 
 <footer class="footer">

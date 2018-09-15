@@ -41,13 +41,13 @@
 </nav>
 
 <div class="content" data-ice="content"><div class="header-notice">
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {ModelToken} from &apos;<span><a href="file/src/tokens.js.html#lineNumber140">hypnos/src/tokens.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {ModelToken} from &apos;<span><a href="file/src/tokens.js.html#lineNumber178">hypnos/src/tokens.js</a></span>&apos;</code></pre></div>
   <span data-ice="access">public</span>
   <span data-ice="kind">class</span>
   
   
   
-  <span data-ice="source">| <span><a href="file/src/tokens.js.html#lineNumber140">source</a></span></span>
+  <span data-ice="source">| <span><a href="file/src/tokens.js.html#lineNumber178">source</a></span></span>
 </div>
 
 <div class="self-detail detail">
@@ -67,23 +67,21 @@
 
   
   
-  <div class="description" data-ice="description"><p>A ModelToken, like an InstanceToken provides quick access to the Persistence
+  <div class="description" data-ice="description"><p>A ModelToken, like an InstanceToken provides quick access to the Hypnos
 client methods without an active model instance to use. You can use an
 object&apos;s Model Token to easily and clearly perform queries and updates to the
 backing API using syntax bound to the Model class itself, rather than using
-the normal Persistence API.</p>
+the normal Hypnos API.</p>
 <h2 id="example">Example</h2><p>Let&apos;s say you want to search for all books in your collection. Using the
-normal Persistence API you could perform a query for all books like this:</p>
-<pre><code><code class="source-code prettyprint"> Persistence.client.list(Book).then(response =&gt; {
-     const books = response.objects;
-     // Do stuff with books...
- });</code>
+normal Hypnos API you could perform a query for all books like this:</p>
+<pre><code><code class="source-code prettyprint"> const response = await Hypnos.client.list(Book);
+ const books = response.objects;
+ // Do stuff with books...</code>
 </code></pre><p>But implementing the ModelToken API on a given Model would allow the
 following shortcut syntax.</p>
-<pre><code><code class="source-code prettyprint"> Book.ps.list().then(response =&gt; {
-     const books = response.objects;
-     // Do stuff with books...
- });</code>
+<pre><code><code class="source-code prettyprint"> const response = await Book.ps.list();
+ const books = response.objects;
+ // Do stuff with books...</code>
 </code></pre><p>For more information about what queries are available with this API, please
 see the associated documentation below.</p>
 <p>For more information about performing queries on mapped Model instances
@@ -375,7 +373,7 @@ form of a FetchResponse (see FetchResponse for more information).</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/tokens.js.html#lineNumber142">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/tokens.js.html#lineNumber180">source</a></span></span>
     </span>
   </h3>
 
@@ -421,7 +419,7 @@ form of a FetchResponse (see FetchResponse for more information).</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/tokens.js.html#lineNumber144">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/tokens.js.html#lineNumber182">source</a></span></span>
     </span>
   </h3>
 
@@ -464,7 +462,7 @@ form of a FetchResponse (see FetchResponse for more information).</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/tokens.js.html#lineNumber197">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/tokens.js.html#lineNumber251">source</a></span></span>
     </span>
   </h3>
 
@@ -515,7 +513,7 @@ Book.ps.create(data).then(response =&gt; {
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/tokens.js.html#lineNumber231">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/tokens.js.html#lineNumber297">source</a></span></span>
     </span>
   </h3>
 
@@ -562,7 +560,7 @@ form of a FetchResponse (see FetchResponse for more information).</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/tokens.js.html#lineNumber160">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/tokens.js.html#lineNumber198">source</a></span></span>
     </span>
   </h3>
 
@@ -612,7 +610,7 @@ FetchResponse (see FetchResponse for more information).</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/tokens.js.html#lineNumber143">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/tokens.js.html#lineNumber181">source</a></span></span>
     </span>
   </h3>
 
@@ -655,7 +653,7 @@ FetchResponse (see FetchResponse for more information).</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/tokens.js.html#lineNumber178">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/tokens.js.html#lineNumber224">source</a></span></span>
     </span>
   </h3>
 
@@ -705,7 +703,7 @@ form of a FetchResponse (see FetchResponse for more information).</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/tokens.js.html#lineNumber216">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/tokens.js.html#lineNumber276">source</a></span></span>
     </span>
   </h3>
 

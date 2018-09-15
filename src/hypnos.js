@@ -1,8 +1,8 @@
-/*eslint no-console:0*/
-import coreapi from 'coreapi';
-import schema from 'schema';
-
 import APIResponse from './response';
+import Cache from 'node-cache';
+import coreapi from 'coreapi';
+import hash from 'object-hash';
+import schema from 'schema';
 
 /**
  * Hypnos is a light-weight ORM and API Client for Javascript Web Clients.
@@ -20,7 +20,7 @@ import APIResponse from './response';
  * Example
  * -------
  *
- *     Hypnos.retrieve(Book, { id: '1234' }).then(response => {
+ *     Hypnos.client.retrieve(Book, { id: '1234' }).then(response => {
  *         const book = response.object;
  *         // Update the local properties of the book object.
  *         book.title('My new favorite book');
@@ -44,50 +44,92 @@ export class Hypnos {
         if (!Hypnos._client) {
             Hypnos._client = new _Hypnos(
                 Hypnos.configuration.credentials,
-                Hypnos.configuration.schema
+                Hypnos.configuration.schema,
+                Hypnos.configuration.cacheConfig
             );
         }
         return Hypnos._client;
     }
 
+    /**
+     * Flush the cache and destroy the current Hypnos client.
+     */
     static flush() {
+        if (this.client.cache) {
+            this.client.cache.flushAll();
+        }
         this._client = null;
     }
 }
 
 class _Hypnos {
 
-    constructor(credentials, schema) {
+    constructor(credentials, schema, cacheConfig) {
         this.schema = schema;
+
+        if (cacheConfig) {
+            this.cache = new Cache(cacheConfig);
+        }
 
         // Initialize the CoreAPI Client
         const auth = new coreapi.auth.TokenAuthentication(credentials);
         this.client = new coreapi.Client({ auth: auth });
     }
 
-    // TODO: Implement Caching
-
     /**
      * TODO: Document
      */
-    hash = (keys, params) => {
-        // TODO: Implement hashing for caching purposes.
-        return '';
+    action = async ({ keys, params, raw, useCache=false, flushDepsCache=true, model=null, many=false }) => {
+        // If we can and should, prefer the cache.
+        if (this.cache && useCache) {
+            const key = this.cacheKey(model, keys, params, raw);
+            const cachedValue = this.cache.get(key);
+
+            if (cachedValue !== undefined) {
+                return raw ? cachedValue : new APIResponse({
+                    data: cachedValue,
+                    keys,
+                    params,
+                    model,
+                    fromCache: true,
+                    many,
+                });
+            }
+        }
+
+        const data = await this.client.action(this.schema, keys, params);
+
+        // If we should, store the new value in the cache.
+        if (this.cache && useCache) {
+            const key = this.cacheKey(model, keys, params, raw);
+            this.cache.set(key, data);
+        }
+
+        // If this is a model-based request and we should clear the dep cache, do so.
+        if (this.cache && model && flushDepsCache) {
+            const dependents = model.__dependents__ || [];
+            const dependentKeys = this.cache.keys().filter(key => (
+                dependents.some(dependent => {
+                    if (typeof dependent === 'string') {
+                        // The dependent was specified as a string.
+                        return key.indexOf(dependent) == 0;
+                    } else {
+                        // The dependent was specified as a model.
+                        return key.indexOf(dependent.name) == 0;
+                    }
+                })
+            ));
+            this.cache.del(dependentKeys);
+        }
+
+        return raw ? data : new APIResponse({ data, keys, params, model, many });
     };
 
-    /**
-     * TODO: Document
-     */
-    action = (keys, params, raw, ...rest) => (new Promise((resolve) => {
-        this.client.action(this.schema, keys, params).then(response => {
-            if (raw) {
-                resolve(response);
-            } else {
-                const hash = this.hash(keys, params);
-                resolve(new APIResponse(response, keys, params, hash, ...rest));
-            }
-        });
-    }));
+    cacheKey = (model, ...keys) => {
+        let key = (model && model.name) ? `${model.name}__` : '';
+        key += hash(keys);
+        return key;
+    };
 
     /**
      * API Operations Methods
@@ -124,9 +166,9 @@ class _Hypnos {
      *         // Do stuff with books...
      *     });
      */
-    list = (model, params={}, raw=false) => {
+    list = async (model, params={}, raw=false, useCache=true, flushDepsCache=false) => {
         const keys = [...model.__skeys__, 'list'];
-        return this.action(keys, params, raw, model, true);
+        return await this.action({ keys, params, raw, model, many: true, useCache, flushDepsCache });
     };
 
     /**
@@ -142,9 +184,9 @@ class _Hypnos {
      *         // Do stuff with your book...
      *     });
      */
-    read = (model, params={}, raw=false) => {
+    read = async (model, params={}, raw=false, useCache=true, flushDepsCache=false) => {
         const keys = [...model.__skeys__, 'read'];
-        return this.action(keys, params, raw, model, false);
+        return await this.action({ keys, params, raw, model, many: false, useCache, flushDepsCache });
     };
 
     /**
@@ -161,9 +203,9 @@ class _Hypnos {
      *         // Do stuff with your new book...
      *     });
      */
-    create = (model, params={}, raw=false) => {
+    create = async (model, params={}, raw=false) => {
         const keys = [...model.__skeys__, 'create'];
-        return this.action(keys, params, raw, model, false);
+        return await this.action({ keys, params, raw, model, many: false });
     };
 
     /**
@@ -180,9 +222,9 @@ class _Hypnos {
      *         // Do stuff with your updated book...
      *     });
      */
-    update = (model, params={}, raw=false) => {
+    update = async (model, params={}, raw=false) => {
         const keys = [...model.__skeys__, 'update'];
-        return this.action(keys, params, raw, model, false);
+        return await this.action({ keys, params, raw, model, many: false });
     };
 
     /**
@@ -195,8 +237,8 @@ class _Hypnos {
      *
      *     Hypnos.delete(Book, { id: '1234' });
      */
-    delete = (model, params={}, raw=false) => {
+    delete = async (model, params={}, raw=false) => {
         const keys = [...model.__skeys__, 'delete'];
-        return this.action(keys, params, raw, model, false);
+        return await this.action({ keys, params, raw, model, many: false });
     };
-};
+}

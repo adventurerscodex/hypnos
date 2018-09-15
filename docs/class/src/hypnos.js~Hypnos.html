@@ -75,7 +75,7 @@ which allows for easy navigation through paginated responses as well as automati
 mapping to custom Models (see <code>Model</code> and <code>APIResponse</code> for more information).</p>
 <p>Once a Model is mapped from a response, it is also registered with
 Hypnos and has access to shortcut methods via it&apos;s <code>ps</code> property.</p>
-<h2 id="example">Example</h2><pre><code><code class="source-code prettyprint">Hypnos.retrieve(Book, { id: &apos;1234&apos; }).then(response =&gt; {
+<h2 id="example">Example</h2><pre><code><code class="source-code prettyprint">Hypnos.client.retrieve(Book, { id: &apos;1234&apos; }).then(response =&gt; {
     const book = response.object;
     // Update the local properties of the book object.
     book.title(&apos;My new favorite book&apos;);
@@ -222,7 +222,8 @@ Hypnos and has access to shortcut methods via it&apos;s <code>ps</code> property
       <div>
         
         
-        
+        <div data-ice="description"><p>Flush the cache and destroy the current Hypnos client.</p>
+</div>
       </div>
     </td>
     <td>
@@ -387,14 +388,15 @@ Hypnos and has access to shortcut methods via it&apos;s <code>ps</code> property
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/hypnos.js.html#lineNumber53">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/hypnos.js.html#lineNumber57">source</a></span></span>
     </span>
   </h3>
 
   
   
   
-  
+  <div data-ice="description"><p>Flush the cache and destroy the current Hypnos client.</p>
+</div>
 
   
 

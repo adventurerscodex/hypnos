@@ -1,5 +1,5 @@
-import { get, pick } from 'lodash';
 import { InstanceToken, ModelToken } from '../tokens';
+import { get, pick } from 'lodash';
 import ko from 'knockout';
 import schema from 'schema';
 
@@ -14,7 +14,36 @@ import schema from 'schema';
  * This model provides no default implementation of serialization or
  * deserialization. Subclasses must implement this feature for their respective
  * use-cases. This framework provides a few default implementations of usable
- * model classes like: JSONModel and KOModel.
+ * model classes like: Model and KOModel.
+ *
+ * ## Mapping Models to the API Schema
+ *
+ * Once you have an API schema you'll need to specify how your model classes
+ * map to the schema definition. You do this by specifying the path in the
+ * model's `__skeys__` static attribute.
+ *
+ *      class Book extends Model {
+ *          static __skeys__ = ['resources', 'books'];
+ *      }
+ *
+ * ## Specifying Dependents
+ *
+ * Hypnos automatically takes care of caching and re-serving cached responses for
+ * identical queries. If your API has situations where model data is altered by
+ * changes to other referenced models in your API (i.e. if updating an Author's name
+ * should invalidate the cached Book objects so that their new Author information
+ * is immediately visible), then you should specify these relations in your models
+ * using the `__dependents__` key.
+ *
+ * NOTE: The values in `__dependents__` can be either classes or strings, but the
+ * string should be of the same form as the class name `(Author == 'Author' != 'author')`.
+ *
+ *      class Book extends Model {
+ *          static __dependents__ = [Author];
+ *      }
+ *
+ * If your API contains cases where updating either an Author, or a Book should
+ * invalidate the other, then you must specify the dependents in both models.
  */
 export class BaseModel {
 
@@ -101,7 +130,7 @@ export class BaseModel {
      *
      */
     fromSchemaValues = (schemaValues) => {
-        return schemaValues
+        return schemaValues;
     };
 
     /**
@@ -116,10 +145,10 @@ export class BaseModel {
      */
     clean = (keys, values) => {
         // Get the link to the given action in the schema.
-        const path = keys.join('.')
+        const path = keys.join('.');
         const link = get(schema.content, path, null);
         if (!link) {
-            throw new Error(`Field ${keys.join(' ')} on type ${this.contructor.name} does not exit.`);
+            throw new Error(`Field ${keys.join(' ')} on type ${this.constructor.name} does not exit.`);
         }
 
         // Get the names for the fields in the given schema action.

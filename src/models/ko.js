@@ -1,5 +1,5 @@
-import ko from 'knockout';
 import { BaseModel } from './base';
+import ko from 'knockout';
 
 /**
  * A subclass of the Base `Model` class which adds serialization and

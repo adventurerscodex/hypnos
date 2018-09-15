@@ -34,27 +34,27 @@ import uuid from 'uuid';
  */
 class APIResponse {
 
-    constructor(data, keys, params, requestId, model=null, many=false) {
+    constructor({ data, keys, params, model=null, many=false, fromCache=false }) {
         this.id = uuid.v4().toString();
         this.fetchParams = params;
         this.fetchKeys = keys;
         this.data = data;
-        this.requestId = requestId;
         this.many = many;
         this.model = model;
+        this.fromCache = fromCache;
 
         // Map response to model object(s).
         if (model && data) {
             if (many && data.results) {
                 this.objects = data.results.map(result => {
                     const instance = new model();
-                    const schemaValues = instance.fromSchemaValues(result)
+                    const schemaValues = instance.fromSchemaValues(result);
                     instance.importValues(schemaValues);
                     return instance;
                 });
             } else {
                 const instance = new model();
-                const schemaValues = instance.fromSchemaValues(data)
+                const schemaValues = instance.fromSchemaValues(data);
                 instance.importValues(schemaValues);
                 this.object = instance;
             }

@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../">
+  <title data-ice="title">src/tokens.spec.js | hypnos</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  <script src="script/manual.js"></script>
+<meta name="description" content="An API client and ORM for CoreAPI powered REST APIs."><meta property="twitter:card" content="summary"><meta property="twitter:title" content="hypnos"><meta property="twitter:description" content="An API client and ORM for CoreAPI powered REST APIs."></head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+<a style="position:relative; top:3px;" href="https://github.com/adventurerscodex/hypnos"><img width="20px" src="./image/github.png"></a></header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/hypnos.js~Hypnos.html">Hypnos</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/response.js~APIResponse.html">APIResponse</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/tokens.js~InstanceToken.html">InstanceToken</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/tokens.js~ModelToken.html">ModelToken</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#models">models</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/models/base.js~BaseModel.html">BaseModel</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/models/ko.js~KOModel.html">KOModel</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/models/model.js~Model.html">Model</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">src/tokens.spec.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import { Author, Book } from &apos;./__mocks__/models&apos;;
+import { Hypnos } from &apos;./index&apos;;
+import coreapi from &apos;coreapi&apos;;
+import { mockedFetch } from &apos;./__helpers__/utils&apos;;
+import schema from &apos;./__mocks__/schema&apos;;
+
+const defaultConfiguration = {
+    schema,
+    credentials: {},
+    cacheConfig: {},
+};
+
+describe(&apos;Tokens&apos;, () =&gt; {
+    beforeEach(() =&gt; {
+        Hypnos.flush();
+
+        Hypnos.configuration = { ...defaultConfiguration };
+    });
+
+    describe(&apos;Model Tokens&apos;, () =&gt; {
+        it(&apos;should attempt to create a book model&apos;, async () =&gt; {
+            const bookFixture = {
+                title: &apos;A Title&apos;,
+                author: &apos;Me&apos;,
+                isBestseller: false,
+            };
+
+            const transport = new coreapi.transports.HTTPTransport({
+                fetch: mockedFetch(JSON.stringify({ ...bookFixture }), &apos;application/json&apos;)
+            });
+            Hypnos.client.client = new coreapi.Client({ transports: [transport] });
+
+            const response = await Book.ps.create({ ...bookFixture });
+
+            expect(response.fromCache).toBe(false);
+            expect(response.fetchParams).toEqual(bookFixture);
+            expect(response.many).toEqual(false);
+
+            const book = response.object;
+
+            expect(book.title).toEqual(bookFixture.title);
+            expect(book.author).toEqual(bookFixture.author);
+            expect(book.isBestseller).toEqual(bookFixture.isBestseller);
+        });
+
+        it(&apos;should attempt to list all book models -- uncached&apos;, async () =&gt; {
+            const bookFixtures = [
+                {
+                    title: &apos;A Title&apos;,
+                    author: &apos;Me&apos;,
+                    isBestseller: false,
+                },
+                {
+                    title: &apos;Another Title&apos;,
+                    author: &apos;You&apos;,
+                    isBestseller: true,
+                },
+            ];
+
+            const transport = new coreapi.transports.HTTPTransport({
+                fetch: mockedFetch(JSON.stringify({ results: [...bookFixtures] }), &apos;application/json&apos;)
+            });
+            Hypnos.client.client = new coreapi.Client({ transports: [transport] });
+
+            const response = await Book.ps.list();
+
+            expect(response.fromCache).toBe(false);
+            expect(response.fetchParams).toEqual({});
+            expect(response.many).toEqual(true);
+
+            const books = response.objects;
+
+            expect(books[0].title).toEqual(bookFixtures[0].title);
+            expect(books[0].author).toEqual(bookFixtures[0].author);
+            expect(books[0].isBestseller).toEqual(bookFixtures[0].isBestseller);
+        });
+
+        it(&apos;should attempt to retrieve a book model -- uncached&apos;, async () =&gt; {
+            const bookFixture = {
+                uuid: &apos;12345-123-4352-1234&apos;,
+                title: &apos;A Title&apos;,
+                author: &apos;Me&apos;,
+                isBestseller: false,
+            };
+
+            const transport = new coreapi.transports.HTTPTransport({
+                fetch: mockedFetch(JSON.stringify({ ...bookFixture }), &apos;application/json&apos;)
+            });
+            Hypnos.client.client = new coreapi.Client({ transports: [transport] });
+
+            const response = await Book.ps.read({ uuid: bookFixture.uuid });
+
+            expect(response.fromCache).toBe(false);
+            expect(response.fetchParams).toEqual({ uuid: bookFixture.uuid });
+            expect(response.many).toEqual(false);
+
+            const book = response.object;
+
+            expect(book.title).toEqual(bookFixture.title);
+            expect(book.author).toEqual(bookFixture.author);
+            expect(book.isBestseller).toEqual(bookFixture.isBestseller);
+        });
+
+        it(&apos;should attempt to update a book model&apos;, async () =&gt; {
+            const bookFixture = {
+                uuid: &apos;12345-123-4352-1234&apos;,
+                title: &apos;A Title&apos;,
+                author: &apos;Me&apos;,
+                isBestseller: false,
+            };
+
+            const transport = new coreapi.transports.HTTPTransport({
+                fetch: mockedFetch(JSON.stringify({ ...bookFixture }), &apos;application/json&apos;)
+            });
+            Hypnos.client.client = new coreapi.Client({ transports: [transport] });
+
+            const response = await Book.ps.update(bookFixture);
+
+            expect(response.fromCache).toBe(false);
+            expect(response.fetchParams).toEqual(bookFixture);
+            expect(response.many).toEqual(false);
+
+            const book = response.object;
+
+            expect(book.title).toEqual(bookFixture.title);
+            expect(book.author).toEqual(bookFixture.author);
+            expect(book.isBestseller).toEqual(bookFixture.isBestseller);
+        });
+    });
+
+    describe(&apos;Instance Tokens&apos;, () =&gt; {
+        it(&apos;should attempt to create a book instance&apos;, async () =&gt; {
+            const bookFixture = {
+                title: &apos;A Title&apos;,
+                author: &apos;Me&apos;,
+                isBestseller: false,
+            };
+
+            const transport = new coreapi.transports.HTTPTransport({
+                fetch: mockedFetch(JSON.stringify({ ...bookFixture }), &apos;application/json&apos;)
+            });
+            Hypnos.client.client = new coreapi.Client({ transports: [transport] });
+
+            const book = new Book(
+                bookFixture.title,
+                bookFixture.author,
+                bookFixture.isBestseller
+            );
+            const response = await book.ps.create();
+
+            expect(response.fromCache).toBe(false);
+            expect(response.fetchParams).toEqual(bookFixture);
+            expect(response.many).toEqual(false);
+
+            expect(book.title).toEqual(bookFixture.title);
+            expect(book.author).toEqual(bookFixture.author);
+            expect(book.isBestseller).toEqual(bookFixture.isBestseller);
+        });
+
+        it(&apos;should attempt to refresh a book instance that changed remotely&apos;, async () =&gt; {
+            const bookFixture = {
+                title: &apos;A Title&apos;,
+                author: &apos;Me&apos;,
+                isBestseller: false,
+            };
+
+            const transport = new coreapi.transports.HTTPTransport({
+                fetch: mockedFetch(JSON.stringify({ ...bookFixture }), &apos;application/json&apos;)
+            });
+            Hypnos.client.client = new coreapi.Client({ transports: [transport] });
+
+            const book = new Book(
+                &apos;Some first draft title&apos;,
+                &apos;N/A&apos;,
+                false
+            );
+            book.uuid = &apos;09876543&apos;;
+            const response = await book.ps.refresh();
+
+            expect(response.fromCache).toBe(false);
+            expect(response.fetchParams.uuid).toEqual(book.uuid);
+            expect(response.many).toEqual(false);
+
+            expect(response.object.title).toEqual(bookFixture.title);
+            expect(response.object.author).toEqual(bookFixture.author);
+            expect(response.object.isBestseller).toEqual(bookFixture.isBestseller);
+        });
+
+        it(&apos;should attempt to save a book instance&apos;, async () =&gt; {
+            const bookFixture = {
+                title: &apos;A Title&apos;,
+                author: &apos;Me&apos;,
+                isBestseller: false,
+            };
+
+            const transport = new coreapi.transports.HTTPTransport({
+                fetch: mockedFetch(JSON.stringify({ ...bookFixture }), &apos;application/json&apos;)
+            });
+            Hypnos.client.client = new coreapi.Client({ transports: [transport] });
+
+            const book = new Book(
+                bookFixture.title,
+                bookFixture.author,
+                bookFixture.isBestseller
+            );
+            const response = await book.ps.create();
+
+            expect(response.fromCache).toBe(false);
+            expect(response.fetchParams).toEqual(bookFixture);
+            expect(response.many).toEqual(false);
+
+            expect(book.title).toEqual(bookFixture.title);
+            expect(book.author).toEqual(bookFixture.author);
+            expect(book.isBestseller).toEqual(bookFixture.isBestseller);
+
+            // Alter and save
+            book.title = &apos;This new value&apos;;
+            const saveResponse = await book.ps.save();
+
+            expect(saveResponse.fromCache).toBe(false);
+            expect(saveResponse.fetchParams.uuid).toEqual(book.uuid);
+            expect(saveResponse.fetchParams.title).toEqual(&apos;This new value&apos;);
+            expect(saveResponse.many).toEqual(false);
+        });
+
+        it(&apos;should attempt to partially update a book instance&apos;, async () =&gt; {
+            const bookFixture = {
+                uuid: &apos;12345-123-4352-1234&apos;,
+                title: &apos;A Title&apos;,
+                author: &apos;Me&apos;,
+                isBestseller: false,
+            };
+
+            const transport = new coreapi.transports.HTTPTransport({
+                fetch: mockedFetch(JSON.stringify({ ...bookFixture }), &apos;application/json&apos;)
+            });
+            Hypnos.client.client = new coreapi.Client({ transports: [transport] });
+
+            const book = new Book(
+                bookFixture.title,
+                bookFixture.author,
+                bookFixture.isBestseller
+            );
+            book.uuid = bookFixture.uuid;
+            const response = await book.ps.create();
+
+            expect(book.title).toEqual(bookFixture.title);
+
+            // Alter and save
+            book.title = &apos;This new value&apos;;
+            const saveResponse = await book.ps.save([&apos;title&apos;, &apos;uuid&apos;]);
+
+            expect(saveResponse.fromCache).toBe(false);
+            expect(saveResponse.fetchParams.uuid).toEqual(book.uuid);
+            expect(saveResponse.fetchParams.title).toEqual(&apos;This new value&apos;);
+            expect(saveResponse.fetchKeys[1]).toEqual(&apos;partialUpdate&apos;);
+            expect(saveResponse.many).toEqual(false);
+        });
+
+        describe(&apos;Cache Dependencies&apos;, () =&gt; {
+            it(&apos;should attempt to create an author instance and flush the cached books&apos;, async () =&gt; {
+                const bookFixtures = [
+                    {
+                        title: &apos;A Title&apos;,
+                        author: &apos;Me&apos;,
+                        isBestseller: false,
+                    },
+                    {
+                        title: &apos;Another Title&apos;,
+                        author: &apos;You&apos;,
+                        isBestseller: true,
+                    },
+                ];
+
+                const transport = new coreapi.transports.HTTPTransport({
+                    fetch: mockedFetch(JSON.stringify({ ...bookFixtures }), &apos;application/json&apos;)
+                });
+                Hypnos.client.client = new coreapi.Client({ transports: [transport] });
+
+                // Fetch all books.
+                const response1 = await Book.ps.list();
+                expect(response1.fromCache).toBe(false);
+
+                // Fetch again, this time from the cache.
+                const response2 = await Book.ps.list();
+                expect(response2.fromCache).toBe(true);
+
+                // List the authors, which SHOULD NOT clear the book cache.
+                const response3 = await Author.ps.list();
+
+                const response4 = await Book.ps.list();
+                expect(response4.fromCache).toBe(true);
+
+                // Update an author, which SHOULD clear the book cache.
+                const response5 = await Author.ps.create({
+                    firstName: &apos;test&apos;,
+                    lastName: &apos;testersson&apos;
+                });
+
+                const response6 = await Book.ps.list();
+                expect(response6.fromCache).toBe(false);
+
+                // And if we were to request the book list agin, it SHOULD be cached.
+                const response7 = await Book.ps.list();
+                expect(response7.fromCache).toBe(true);
+            });
+        });
+    });
+});
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(1.0.4)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

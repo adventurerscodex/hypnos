@@ -41,8 +41,8 @@
 </nav>
 
 <div class="content" data-ice="content"><h1 data-ice="title">src/models/base.js</h1>
-<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import { get, pick } from &apos;lodash&apos;;
-import { InstanceToken, ModelToken } from &apos;../tokens&apos;;
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import { InstanceToken, ModelToken } from &apos;../tokens&apos;;
+import { get, pick } from &apos;lodash&apos;;
 import ko from &apos;knockout&apos;;
 import schema from &apos;schema&apos;;
 
@@ -57,7 +57,36 @@ import schema from &apos;schema&apos;;
  * This model provides no default implementation of serialization or
  * deserialization. Subclasses must implement this feature for their respective
  * use-cases. This framework provides a few default implementations of usable
- * model classes like: JSONModel and KOModel.
+ * model classes like: Model and KOModel.
+ *
+ * ## Mapping Models to the API Schema
+ *
+ * Once you have an API schema you&apos;ll need to specify how your model classes
+ * map to the schema definition. You do this by specifying the path in the
+ * model&apos;s `__skeys__` static attribute.
+ *
+ *      class Book extends Model {
+ *          static __skeys__ = [&apos;resources&apos;, &apos;books&apos;];
+ *      }
+ *
+ * ## Specifying Dependents
+ *
+ * Hypnos automatically takes care of caching and re-serving cached responses for
+ * identical queries. If your API has situations where model data is altered by
+ * changes to other referenced models in your API (i.e. if updating an Author&apos;s name
+ * should invalidate the cached Book objects so that their new Author information
+ * is immediately visible), then you should specify these relations in your models
+ * using the `__dependents__` key.
+ *
+ * NOTE: The values in `__dependents__` can be either classes or strings, but the
+ * string should be of the same form as the class name `(Author == &apos;Author&apos; != &apos;author&apos;)`.
+ *
+ *      class Book extends Model {
+ *          static __dependents__ = [Author];
+ *      }
+ *
+ * If your API contains cases where updating either an Author, or a Book should
+ * invalidate the other, then you must specify the dependents in both models.
  */
 export class BaseModel {
 
@@ -144,7 +173,7 @@ export class BaseModel {
      *
      */
     fromSchemaValues = (schemaValues) =&gt; {
-        return schemaValues
+        return schemaValues;
     };
 
     /**
@@ -159,10 +188,10 @@ export class BaseModel {
      */
     clean = (keys, values) =&gt; {
         // Get the link to the given action in the schema.
-        const path = keys.join(&apos;.&apos;)
+        const path = keys.join(&apos;.&apos;);
         const link = get(schema.content, path, null);
         if (!link) {
-            throw new Error(`Field ${keys.join(&apos; &apos;)} on type ${this.contructor.name} does not exit.`);
+            throw new Error(`Field ${keys.join(&apos; &apos;)} on type ${this.constructor.name} does not exit.`);
         }
 
         // Get the names for the fields in the given schema action.

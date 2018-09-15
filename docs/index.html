@@ -40,7 +40,9 @@
 </div>
 </nav>
 
-<div class="content" data-ice="content"><div data-ice="index" class="github-markdown"><h1 id="hypnos---a-better-way-to-rest">Hypnos - A Better Way to REST</h1><p><strong>This project is currently in development.</strong></p>
+<div class="content" data-ice="content"><div data-ice="index" class="github-markdown"><h1 id="hypnos---a-better-way-to-rest">Hypnos - A Better Way to REST</h1><p><a href="https://travis-ci.com/adventurerscodex/hypnos"><img src="https://travis-ci.com/adventurerscodex/hypnos.svg?branch=master" alt="Build Status"></a>
+<a href="https://coveralls.io/github/adventurerscodex/hypnos"><img src="https://coveralls.io/repos/github/adventurerscodex/hypnos/badge.svg" alt="Coverage Status"></a></p>
+<p><strong>This project is currently in development.</strong></p>
 <p><em>An API client and ORM for CoreAPI powered REST APIs.</em></p>
 <p>Hypnos is a light-weight ORM and API Client for Web apps. It provides a clean and concise way to interact with your API data <strong>without any URLs or manual requests</strong>. In a way, it is very similar to <code>Apollo</code> for GraphQL, but more inspired by projects like <code>Django ORM</code> and <code>SQLAlchemy</code>.</p>
 <p>Finally, web apps can have a real model layer.</p>
@@ -49,10 +51,11 @@
 <ul>
 <li><strong>Built-in pagination support</strong> for things like infinite scrolling.</li>
 <li><strong>Request caching</strong> to prevent repeated, identical queries to your API.</li>
+<li><strong>Cache Dependency Tracking</strong> so that when a record gets updated, Hypnos won&apos;t serve any cached data for its dependents.</li>
 <li><strong>Smart Requests</strong>: Behind the scenes Hypnos will do the smart thing: if you tell Hypnos which fields to update, Hypnos will transform the request from <code>PUT</code> to <code>PATCH</code>.</li>
 <li><strong>Need custom behavior?</strong> Hypnos allows you to query your API directly in case you still need to do something we don&apos;t support.</li>
 </ul>
-<h2 id="example">Example</h2><pre><code><code class="source-code prettyprint">// book.js
+<h3 id="example">Example</h3><pre><code><code class="source-code prettyprint">// book.js
 
 import { Model } from &apos;hypnos&apos;;
 
@@ -91,7 +94,72 @@ Book.ps.retrieve({ id: &apos;1234&apos; }).then(response =&gt; {
 
      // ...Or delete it easily.
      book.ps.delete();
-});</code>
+});
+
+// OR use with async/await!
+const response = await Book.ps.retrieve({ id: &apos;1234&apos; });</code>
+</code></pre><h2 id="smart-caching">Smart Caching</h2><p>Hypnos is smart. If you specify which resources depend on each other, then Hypnos will automatically clear data from the cache when a record&apos;s dependencies are updated.</p>
+<h3 id="example">Example</h3><pre><code><code class="source-code prettyprint">/* book.js */
+
+class Book extends Model {
+    __skeys__ = [&apos;book&apos;];
+    __dependents__ = [Author];
+    // ...
+}
+
+/* author.js */
+
+class Author extends Model {
+    __skeys__ = [&apos;book&apos;];
+    __dependents__ = [Book];
+    // ...
+}
+
+/* service/component/view_controller.js */
+
+// Listing and retrieving records (by default) doesn&apos;t invalidate the cache.
+
+const { objects: books } = await Book.ps.list();        // From the network
+const { objects: authors } = await Author.ps.list();    // From the network
+const { objects: books } = await Book.ps.list();        // From the cache
+
+// But write operations do!
+
+const { object: book } = await Book.ps.update({         // Clear the Author and book cache!
+    id: &apos;1234&apos;,
+    title: &apos;A new title!&apos;
+});
+const { objects: books } = await Book.ps.list();        // From the network
+
+// Of course, you can always override these defaults
+const { objects: books } = await Book.ps.list(          // From the network
+    // Query parameters
+    { search: &apos;over the rainbow&apos; },
+    // Don&apos;t map the result to a Book instance just return raw data.
+    true,
+    // Don&apos;t use the cache.
+    false,
+    // Force clear the dependents&apos; cache.
+    true
+);</code>
+</code></pre><h2 id="configuring-hypnos">Configuring Hypnos</h2><p>Hypnos must be configured before accessing the <code>.client</code> lazy property. Hypnos&apos; configuration object takes 3 special parameters, each with their own formats, fed to Hypnos&apos; dependencies.</p>
+<ul>
+<li><code>credentials</code>: Is the credentials configuration for the API. This takes the format of the CoreAPI credentials object.</li>
+<li><code>schema</code>: The CoreAPI schema document.</li>
+<li><code>cacheConfig</code>: The cache configuration which should take the format found in the <code>node-cache</code> documentation.</li>
+</ul>
+<p><strong>IMPORTANT:</strong> Caching is disabled unless a <code>cacheConfig</code> is specified.</p>
+<pre><code><code class="source-code prettyprint">Hypnos.configuration = {
+    credentials: {
+        scheme: &apos;Bearer&apos;,
+        token: &apos;--super-secret-token--&apos;,
+    },
+    schema: getSchema(),
+    cacheConfig: {
+        stdTTL: 120,
+        checkperiod: 10
+    }
+};</code>
 </code></pre></div>
 </div>
 

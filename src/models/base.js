@@ -57,6 +57,13 @@ export class BaseModel {
         this.ps = new InstanceToken(this.constructor, this);
     }
 
+    static getDependents() {
+        return [
+            this.name,
+            ...(this.__dependents__ || []),
+        ];
+    }
+
     /* Model Mapping Methods */
 
 

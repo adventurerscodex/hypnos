@@ -567,7 +567,7 @@
     "__docId__": 48,
     "kind": "file",
     "name": "src/hypnos.js",
-    "content": "import APIResponse from './response';\nimport Cache from 'node-cache';\nimport coreapi from 'coreapi';\nimport hash from 'object-hash';\nimport schema from 'schema';\n\n/**\n * Hypnos is a light-weight ORM and API Client for Javascript Web Clients.\n *\n * It uses a CoreAPI client and a given API schema to allow clients easy access\n * to both raw response data and mapped custom Model objects.\n *\n * Hypnos returns all normal responses in the form of a APIResponse\n * which allows for easy navigation through paginated responses as well as automatic\n * mapping to custom Models (see `Model` and `APIResponse` for more information).\n *\n * Once a Model is mapped from a response, it is also registered with\n * Hypnos and has access to shortcut methods via it's `ps` property.\n *\n * Example\n * -------\n *\n *     Hypnos.client.retrieve(Book, { id: '1234' }).then(response => {\n *         const book = response.object;\n *         // Update the local properties of the book object.\n *         book.title('My new favorite book');\n *\n *         // Persist your changes back to the API.\n *         book.ps.save();\n *\n *         // ...You can even refresh your local object from the API.\n *         book.ps.refresh();\n *\n *         // ...Or delete it easily.\n *         book.ps.delete();\n *     });\n */\nexport class Hypnos {\n    static configuration = {};\n\n    static _client = null;\n\n    static get client() {\n        if (!Hypnos._client) {\n            Hypnos._client = new _Hypnos(\n                Hypnos.configuration.credentials,\n                Hypnos.configuration.schema,\n                Hypnos.configuration.cacheConfig\n            );\n        }\n        return Hypnos._client;\n    }\n\n    /**\n     * Flush the cache and destroy the current Hypnos client.\n     */\n    static flush() {\n        if (this.client.cache) {\n            this.client.cache.flushAll();\n        }\n        this._client = null;\n    }\n}\n\nclass _Hypnos {\n\n    constructor(credentials, schema, cacheConfig) {\n        this.schema = schema;\n\n        if (cacheConfig) {\n            this.cache = new Cache(cacheConfig);\n        }\n\n        // Initialize the CoreAPI Client\n        const auth = new coreapi.auth.TokenAuthentication(credentials);\n        this.client = new coreapi.Client({ auth: auth });\n    }\n\n    /**\n     * TODO: Document\n     */\n    action = async ({ keys, params, raw, useCache=false, flushDepsCache=true, model=null, many=false }) => {\n        // If we can and should, prefer the cache.\n        if (this.cache && useCache) {\n            const key = this.cacheKey(model, keys, params, raw);\n            const cachedValue = this.cache.get(key);\n\n            if (cachedValue !== undefined) {\n                return raw ? cachedValue : new APIResponse({\n                    data: cachedValue,\n                    keys,\n                    params,\n                    model,\n                    fromCache: true,\n                    many,\n                });\n            }\n        }\n\n        const data = await this.client.action(this.schema, keys, params);\n\n        // If we should, store the new value in the cache.\n        if (this.cache && useCache) {\n            const key = this.cacheKey(model, keys, params, raw);\n            this.cache.set(key, data);\n        }\n\n        // If this is a model-based request and we should clear the dep cache, do so.\n        if (this.cache && model && flushDepsCache) {\n            const dependents = model.__dependents__ || [];\n            const dependentKeys = this.cache.keys().filter(key => (\n                dependents.some(dependent => {\n                    if (typeof dependent === 'string') {\n                        // The dependent was specified as a string.\n                        return key.indexOf(dependent) == 0;\n                    } else {\n                        // The dependent was specified as a model.\n                        return key.indexOf(dependent.name) == 0;\n                    }\n                })\n            ));\n            this.cache.del(dependentKeys);\n        }\n\n        return raw ? data : new APIResponse({ data, keys, params, model, many });\n    };\n\n    cacheKey = (model, ...keys) => {\n        let key = (model && model.name) ? `${model.name}__` : '';\n        key += hash(keys);\n        return key;\n    };\n\n    /**\n     * API Operations Methods\n     * ======================\n     * The following methods allow for easy interaction with the backing API\n     * using the provided API Schema.\n     * If you need functionality beyond the scope of these methods, refer to\n     * the lower-level `action` API which simply wraps the coreapi.Client and\n     * returns a APIResponse.\n     *\n     * Unmapped Responses\n     * ------------------\n     * To perform the query without mapping the results to a APIResponse set\n     * `raw` to true. This will return the JSON results of the query directly.\n     *\n     * Using Custom Models\n     * -------------------\n     * Most times it is easiest to use subclasses of the base `Model` type\n     * (see Model for more information), and if you need to provide a custom\n     * object, you can refer to the `Model` documentation to see what fields\n     * are required in order to conform with the Hypnos API.\n     */\n\n    /**\n     * Given a model type and an optional set of parameters, perform a list query\n     * against the backing API and return a promise of results in the form of a\n     * APIResponse (see APIResponse for more information).\n     *\n     * Example\n     * -------\n     *\n     *     Hypnos.list(Book).then(response => {\n     *         const books = response.objects;\n     *         // Do stuff with books...\n     *     });\n     */\n    list = async (model, params={}, raw=false, useCache=true, flushDepsCache=false) => {\n        const keys = [...model.__skeys__, 'list'];\n        return await this.action({ keys, params, raw, model, many: true, useCache, flushDepsCache });\n    };\n\n    /**\n     * Given a model type and an optional set of parameters, perform a retrieve\n     * query against the backing API and return a promise of results in the\n     * form of a APIResponse (see APIResponse for more information).\n     *\n     * Example\n     * -------\n     *\n     *     Hypnos.client.read(Book, { id: '1234' }).then(response => {\n     *         const book = response.object;\n     *         // Do stuff with your book...\n     *     });\n     */\n    read = async (model, params={}, raw=false, useCache=true, flushDepsCache=false) => {\n        const keys = [...model.__skeys__, 'read'];\n        return await this.action({ keys, params, raw, model, many: false, useCache, flushDepsCache });\n    };\n\n    /**\n     * Given a model type and an optional set of parameters, perform a create\n     * against the backing API and return a promise of results in the\n     * form of a APIResponse (see APIResponse for more information).\n     *\n     * Example\n     * -------\n     *\n     *     const data = { title: 'An Adventure', author: 'John Smith' };\n     *     Hypnos.client.create(Book, data).then(response => {\n     *         const book = response.object;\n     *         // Do stuff with your new book...\n     *     });\n     */\n    create = async (model, params={}, raw=false) => {\n        const keys = [...model.__skeys__, 'create'];\n        return await this.action({ keys, params, raw, model, many: false });\n    };\n\n    /**\n     * Given a model type and an optional set of parameters, perform an update\n     * against the backing API and return a promise of results in the\n     * form of a APIResponse (see APIResponse for more information).\n     *\n     * Example\n     * -------\n     *\n     *     const data = { id: '1234', title: 'An Adventure II', author: 'John Smith' };\n     *     Hypnos.client.update(Book, data).then(response => {\n     *         const book = response.object;\n     *         // Do stuff with your updated book...\n     *     });\n     */\n    update = async (model, params={}, raw=false) => {\n        const keys = [...model.__skeys__, 'update'];\n        return await this.action({ keys, params, raw, model, many: false });\n    };\n\n    /**\n     * Given a model type and an optional set of parameters, perform a destroy\n     * against the backing API and return a promise of results in the\n     * form of a APIResponse (see APIResponse for more information).\n     *\n     * Example\n     * -------\n     *\n     *     Hypnos.delete(Book, { id: '1234' });\n     */\n    delete = async (model, params={}, raw=false) => {\n        const keys = [...model.__skeys__, 'delete'];\n        return await this.action({ keys, params, raw, model, many: false });\n    };\n}\n",
+    "content": "import APIResponse from './response';\nimport Cache from 'node-cache';\nimport coreapi from 'coreapi';\nimport hash from 'object-hash';\nimport schema from 'schema';\n\n/**\n * Hypnos is a light-weight ORM and API Client for Javascript Web Clients.\n *\n * It uses a CoreAPI client and a given API schema to allow clients easy access\n * to both raw response data and mapped custom Model objects.\n *\n * Hypnos returns all normal responses in the form of a APIResponse\n * which allows for easy navigation through paginated responses as well as automatic\n * mapping to custom Models (see `Model` and `APIResponse` for more information).\n *\n * Once a Model is mapped from a response, it is also registered with\n * Hypnos and has access to shortcut methods via it's `ps` property.\n *\n * Example\n * -------\n *\n *     Hypnos.client.retrieve(Book, { id: '1234' }).then(response => {\n *         const book = response.object;\n *         // Update the local properties of the book object.\n *         book.title('My new favorite book');\n *\n *         // Persist your changes back to the API.\n *         book.ps.save();\n *\n *         // ...You can even refresh your local object from the API.\n *         book.ps.refresh();\n *\n *         // ...Or delete it easily.\n *         book.ps.delete();\n *     });\n */\nexport class Hypnos {\n    static configuration = {};\n\n    static _client = null;\n\n    static get client() {\n        if (!Hypnos._client) {\n            Hypnos._client = new _Hypnos(\n                Hypnos.configuration.credentials,\n                Hypnos.configuration.schema,\n                Hypnos.configuration.cacheConfig\n            );\n        }\n        return Hypnos._client;\n    }\n\n    /**\n     * Flush the cache and destroy the current Hypnos client.\n     */\n    static flush() {\n        if (this.client.cache) {\n            this.client.cache.flushAll();\n        }\n        this._client = null;\n    }\n}\n\nclass _Hypnos {\n\n    constructor(credentials, schema, cacheConfig) {\n        this.schema = schema;\n\n        if (cacheConfig) {\n            this.cache = new Cache(cacheConfig);\n        }\n\n        // Initialize the CoreAPI Client\n        const auth = new coreapi.auth.TokenAuthentication(credentials);\n        this.client = new coreapi.Client({ auth: auth });\n    }\n\n    /**\n     * TODO: Document\n     */\n    action = async ({ keys, params, raw, useCache=false, flushDepsCache=true, model=null, many=false }) => {\n        // If we can and should, prefer the cache.\n        if (this.cache && useCache) {\n            const key = this.cacheKey(model, keys, params, raw);\n            const cachedValue = this.cache.get(key);\n\n            if (cachedValue !== undefined) {\n                return raw ? cachedValue : new APIResponse({\n                    data: cachedValue,\n                    keys,\n                    params,\n                    model,\n                    fromCache: true,\n                    many,\n                });\n            }\n        }\n\n        const data = await this.client.action(this.schema, keys, params);\n\n        // If we should, store the new value in the cache.\n        if (this.cache && useCache) {\n            const key = this.cacheKey(model, keys, params, raw);\n            this.cache.set(key, data);\n        }\n\n        // If this is a model-based request and we should clear the dep cache, do so.\n        if (this.cache && model && flushDepsCache) {\n            const dependents = model.getDependents();\n            const dependentKeys = this.cache.keys().filter(key => (\n                dependents.some(dependent => {\n                    if (typeof dependent === 'string') {\n                        // The dependent was specified as a string.\n                        return key.indexOf(dependent) == 0;\n                    } else {\n                        // The dependent was specified as a model.\n                        return key.indexOf(dependent.name) == 0;\n                    }\n                })\n            ));\n            this.cache.del(dependentKeys);\n        }\n\n        return raw ? data : new APIResponse({ data, keys, params, model, many });\n    };\n\n    cacheKey = (model, ...keys) => {\n        let key = (model && model.name) ? `${model.name}__` : '';\n        key += hash(keys);\n        return key;\n    };\n\n    /**\n     * API Operations Methods\n     * ======================\n     * The following methods allow for easy interaction with the backing API\n     * using the provided API Schema.\n     * If you need functionality beyond the scope of these methods, refer to\n     * the lower-level `action` API which simply wraps the coreapi.Client and\n     * returns a APIResponse.\n     *\n     * Unmapped Responses\n     * ------------------\n     * To perform the query without mapping the results to a APIResponse set\n     * `raw` to true. This will return the JSON results of the query directly.\n     *\n     * Using Custom Models\n     * -------------------\n     * Most times it is easiest to use subclasses of the base `Model` type\n     * (see Model for more information), and if you need to provide a custom\n     * object, you can refer to the `Model` documentation to see what fields\n     * are required in order to conform with the Hypnos API.\n     */\n\n    /**\n     * Given a model type and an optional set of parameters, perform a list query\n     * against the backing API and return a promise of results in the form of a\n     * APIResponse (see APIResponse for more information).\n     *\n     * Example\n     * -------\n     *\n     *     Hypnos.list(Book).then(response => {\n     *         const books = response.objects;\n     *         // Do stuff with books...\n     *     });\n     */\n    list = async (model, params={}, raw=false, useCache=true, flushDepsCache=false) => {\n        const keys = [...model.__skeys__, 'list'];\n        return await this.action({ keys, params, raw, model, many: true, useCache, flushDepsCache });\n    };\n\n    /**\n     * Given a model type and an optional set of parameters, perform a retrieve\n     * query against the backing API and return a promise of results in the\n     * form of a APIResponse (see APIResponse for more information).\n     *\n     * Example\n     * -------\n     *\n     *     Hypnos.client.read(Book, { id: '1234' }).then(response => {\n     *         const book = response.object;\n     *         // Do stuff with your book...\n     *     });\n     */\n    read = async (model, params={}, raw=false, useCache=true, flushDepsCache=false) => {\n        const keys = [...model.__skeys__, 'read'];\n        return await this.action({ keys, params, raw, model, many: false, useCache, flushDepsCache });\n    };\n\n    /**\n     * Given a model type and an optional set of parameters, perform a create\n     * against the backing API and return a promise of results in the\n     * form of a APIResponse (see APIResponse for more information).\n     *\n     * Example\n     * -------\n     *\n     *     const data = { title: 'An Adventure', author: 'John Smith' };\n     *     Hypnos.client.create(Book, data).then(response => {\n     *         const book = response.object;\n     *         // Do stuff with your new book...\n     *     });\n     */\n    create = async (model, params={}, raw=false) => {\n        const keys = [...model.__skeys__, 'create'];\n        return await this.action({ keys, params, raw, model, many: false });\n    };\n\n    /**\n     * Given a model type and an optional set of parameters, perform an update\n     * against the backing API and return a promise of results in the\n     * form of a APIResponse (see APIResponse for more information).\n     *\n     * Example\n     * -------\n     *\n     *     const data = { id: '1234', title: 'An Adventure II', author: 'John Smith' };\n     *     Hypnos.client.update(Book, data).then(response => {\n     *         const book = response.object;\n     *         // Do stuff with your updated book...\n     *     });\n     */\n    update = async (model, params={}, raw=false) => {\n        const keys = [...model.__skeys__, 'update'];\n        return await this.action({ keys, params, raw, model, many: false });\n    };\n\n    /**\n     * Given a model type and an optional set of parameters, perform a destroy\n     * against the backing API and return a promise of results in the\n     * form of a APIResponse (see APIResponse for more information).\n     *\n     * Example\n     * -------\n     *\n     *     Hypnos.delete(Book, { id: '1234' });\n     */\n    delete = async (model, params={}, raw=false) => {\n        const keys = [...model.__skeys__, 'delete'];\n        return await this.action({ keys, params, raw, model, many: false });\n    };\n}\n",
     "static": true,
     "longname": "/Users/ifoundit/Projects/adventurers_codex/hypnos/src/hypnos.js",
     "access": "public",
@@ -910,7 +910,7 @@
     "__docId__": 71,
     "kind": "file",
     "name": "src/models/base.js",
-    "content": "import { InstanceToken, ModelToken } from '../tokens';\nimport { get, pick } from 'lodash';\nimport ko from 'knockout';\nimport schema from 'schema';\n\n\n/**\n * This class is the base definition of all ES6 style model objects.\n *\n * Models extending this class will gain the following benefits:\n * - Automatic Persistence Service Token registration.\n * - Automatic mapping via FetchResponses and mapped queries.\n *\n * This model provides no default implementation of serialization or\n * deserialization. Subclasses must implement this feature for their respective\n * use-cases. This framework provides a few default implementations of usable\n * model classes like: Model and KOModel.\n *\n * ## Mapping Models to the API Schema\n *\n * Once you have an API schema you'll need to specify how your model classes\n * map to the schema definition. You do this by specifying the path in the\n * model's `__skeys__` static attribute.\n *\n *      class Book extends Model {\n *          static __skeys__ = ['resources', 'books'];\n *      }\n *\n * ## Specifying Dependents\n *\n * Hypnos automatically takes care of caching and re-serving cached responses for\n * identical queries. If your API has situations where model data is altered by\n * changes to other referenced models in your API (i.e. if updating an Author's name\n * should invalidate the cached Book objects so that their new Author information\n * is immediately visible), then you should specify these relations in your models\n * using the `__dependents__` key.\n *\n * NOTE: The values in `__dependents__` can be either classes or strings, but the\n * string should be of the same form as the class name `(Author == 'Author' != 'author')`.\n *\n *      class Book extends Model {\n *          static __dependents__ = [Author];\n *      }\n *\n * If your API contains cases where updating either an Author, or a Book should\n * invalidate the other, then you must specify the dependents in both models.\n */\nexport class BaseModel {\n\n    // Automatically register the given class to the persistence service.\n    static get ps() {\n        return new ModelToken(this);\n    }\n\n    constructor() {\n        // Automatically register the given object to the persistence service.\n        this.ps = new InstanceToken(this.constructor, this);\n    }\n\n    /* Model Mapping Methods */\n\n\n    /**\n     * An optional callback, useful for performing any transformations on the\n     * serialized data before it is sent to the API client. This method is invoked\n     * after the instance has exported its data, and after it is cleaned, but\n     * before it is sent to the API client and the schema.\n     *\n     * Note: The return values from this method must match the fields in the\n     * schema, or the schema will throw an error.\n     *\n     * This method is useful if a subclass contains nested data, but the server\n     * is expecting a simple UUID for association.\n     *\n     * Example\n     * -------\n     *      // Our data model\n     *      Book = {\n     *          author: {\n     *              name: \"\",\n     *              authorId: \"1234.434\"\n     *          }\n     *      }\n     *\n     *      // What the schema expects\n     *      Book = {\n     *          author: \"1234.434\"\n     *      }\n     *\n     *      class Book extends Model {\n     *          toSchemaValues = (values) => {\n     *              return { ...values, authorId: values.author.authorId }\n     *          }\n     *      }\n     *\n     */\n    toSchemaValues = (values) => {\n        return values;\n    };\n\n    /**\n     * An optional callback, useful for performing any transformations on the\n     * recieved data before it is sent to the model instance to be imported.\n     * This method is invoked after the new instance is created, and the API\n     * response is received, but before it is sent to the API client and the schema.\n     *\n     * This method is useful if the server sends nested data, but the data model\n     * is expecting a simple UUID for association.\n     *\n     * Example\n     * -------\n     *      // API response\n     *      Book = {\n     *          author: {\n     *              name: \"\",\n     *              authorId: \"1234.434\"\n     *          }\n     *      }\n     *\n     *      // What the Models require\n     *      Book = {\n     *          author: \"1234.434\"\n     *      }\n     *\n     *      class Book extends Model {\n     *          fromSchemaValues = (values) => {\n     *              return { ...values, authorId: values.author.authorId }\n     *          }\n     *      }\n     *\n     */\n    fromSchemaValues = (schemaValues) => {\n        return schemaValues;\n    };\n\n    /**\n     * Given a set of values exported from the given model instance, clean\n     * the fields and do any preparation before handing off the data to the\n     * Hypnos API client.\n     *\n     * By default this method removes and fields in the values that are not\n     * listed in the schema fields for the action that the user is trying to take.\n     *\n     * Subclasses can override this method to provide custom clean behavior.\n     */\n    clean = (keys, values) => {\n        // Get the link to the given action in the schema.\n        const path = keys.join('.');\n        const link = get(schema.content, path, null);\n        if (!link) {\n            throw new Error(`Field ${keys.join(' ')} on type ${this.constructor.name} does not exit.`);\n        }\n\n        // Get the names for the fields in the given schema action.\n        const fieldNames = link.fields.map(({name}) => (name));\n\n        // Omit all of the fields that are not required in the schema for the\n        // action that the user specified.\n        return pick(values, fieldNames);\n    };\n\n    importValues = (values) => {\n        throw new Error(`Model: \"${this.constructor.name}\" must override importValues.`);\n    }\n\n    exportValues = () => {\n        throw new Error(`Model: \"${this.constructor.name}\" must override exportValues.`);\n    };\n}\n",
+    "content": "import { InstanceToken, ModelToken } from '../tokens';\nimport { get, pick } from 'lodash';\nimport ko from 'knockout';\nimport schema from 'schema';\n\n\n/**\n * This class is the base definition of all ES6 style model objects.\n *\n * Models extending this class will gain the following benefits:\n * - Automatic Persistence Service Token registration.\n * - Automatic mapping via FetchResponses and mapped queries.\n *\n * This model provides no default implementation of serialization or\n * deserialization. Subclasses must implement this feature for their respective\n * use-cases. This framework provides a few default implementations of usable\n * model classes like: Model and KOModel.\n *\n * ## Mapping Models to the API Schema\n *\n * Once you have an API schema you'll need to specify how your model classes\n * map to the schema definition. You do this by specifying the path in the\n * model's `__skeys__` static attribute.\n *\n *      class Book extends Model {\n *          static __skeys__ = ['resources', 'books'];\n *      }\n *\n * ## Specifying Dependents\n *\n * Hypnos automatically takes care of caching and re-serving cached responses for\n * identical queries. If your API has situations where model data is altered by\n * changes to other referenced models in your API (i.e. if updating an Author's name\n * should invalidate the cached Book objects so that their new Author information\n * is immediately visible), then you should specify these relations in your models\n * using the `__dependents__` key.\n *\n * NOTE: The values in `__dependents__` can be either classes or strings, but the\n * string should be of the same form as the class name `(Author == 'Author' != 'author')`.\n *\n *      class Book extends Model {\n *          static __dependents__ = [Author];\n *      }\n *\n * If your API contains cases where updating either an Author, or a Book should\n * invalidate the other, then you must specify the dependents in both models.\n */\nexport class BaseModel {\n\n    // Automatically register the given class to the persistence service.\n    static get ps() {\n        return new ModelToken(this);\n    }\n\n    constructor() {\n        // Automatically register the given object to the persistence service.\n        this.ps = new InstanceToken(this.constructor, this);\n    }\n\n    static getDependents() {\n        return [\n            this.name,\n            ...(this.__dependents__ || []),\n        ];\n    }\n\n    /* Model Mapping Methods */\n\n\n    /**\n     * An optional callback, useful for performing any transformations on the\n     * serialized data before it is sent to the API client. This method is invoked\n     * after the instance has exported its data, and after it is cleaned, but\n     * before it is sent to the API client and the schema.\n     *\n     * Note: The return values from this method must match the fields in the\n     * schema, or the schema will throw an error.\n     *\n     * This method is useful if a subclass contains nested data, but the server\n     * is expecting a simple UUID for association.\n     *\n     * Example\n     * -------\n     *      // Our data model\n     *      Book = {\n     *          author: {\n     *              name: \"\",\n     *              authorId: \"1234.434\"\n     *          }\n     *      }\n     *\n     *      // What the schema expects\n     *      Book = {\n     *          author: \"1234.434\"\n     *      }\n     *\n     *      class Book extends Model {\n     *          toSchemaValues = (values) => {\n     *              return { ...values, authorId: values.author.authorId }\n     *          }\n     *      }\n     *\n     */\n    toSchemaValues = (values) => {\n        return values;\n    };\n\n    /**\n     * An optional callback, useful for performing any transformations on the\n     * recieved data before it is sent to the model instance to be imported.\n     * This method is invoked after the new instance is created, and the API\n     * response is received, but before it is sent to the API client and the schema.\n     *\n     * This method is useful if the server sends nested data, but the data model\n     * is expecting a simple UUID for association.\n     *\n     * Example\n     * -------\n     *      // API response\n     *      Book = {\n     *          author: {\n     *              name: \"\",\n     *              authorId: \"1234.434\"\n     *          }\n     *      }\n     *\n     *      // What the Models require\n     *      Book = {\n     *          author: \"1234.434\"\n     *      }\n     *\n     *      class Book extends Model {\n     *          fromSchemaValues = (values) => {\n     *              return { ...values, authorId: values.author.authorId }\n     *          }\n     *      }\n     *\n     */\n    fromSchemaValues = (schemaValues) => {\n        return schemaValues;\n    };\n\n    /**\n     * Given a set of values exported from the given model instance, clean\n     * the fields and do any preparation before handing off the data to the\n     * Hypnos API client.\n     *\n     * By default this method removes and fields in the values that are not\n     * listed in the schema fields for the action that the user is trying to take.\n     *\n     * Subclasses can override this method to provide custom clean behavior.\n     */\n    clean = (keys, values) => {\n        // Get the link to the given action in the schema.\n        const path = keys.join('.');\n        const link = get(schema.content, path, null);\n        if (!link) {\n            throw new Error(`Field ${keys.join(' ')} on type ${this.constructor.name} does not exit.`);\n        }\n\n        // Get the names for the fields in the given schema action.\n        const fieldNames = link.fields.map(({name}) => (name));\n\n        // Omit all of the fields that are not required in the schema for the\n        // action that the user specified.\n        return pick(values, fieldNames);\n    };\n\n    importValues = (values) => {\n        throw new Error(`Model: \"${this.constructor.name}\" must override importValues.`);\n    }\n\n    exportValues = () => {\n        throw new Error(`Model: \"${this.constructor.name}\" must override exportValues.`);\n    };\n}\n",
     "static": true,
     "longname": "/Users/ifoundit/Projects/adventurers_codex/hypnos/src/models/base.js",
     "access": "public",
@@ -984,6 +984,26 @@
   },
   {
     "__docId__": 76,
+    "kind": "method",
+    "name": "getDependents",
+    "memberof": "src/models/base.js~BaseModel",
+    "generator": false,
+    "async": false,
+    "static": true,
+    "longname": "src/models/base.js~BaseModel.getDependents",
+    "access": "public",
+    "description": null,
+    "lineNumber": 60,
+    "undocument": true,
+    "params": [],
+    "return": {
+      "types": [
+        "undefined[]"
+      ]
+    }
+  },
+  {
+    "__docId__": 77,
     "kind": "member",
     "name": "toSchemaValues",
     "memberof": "src/models/base.js~BaseModel",
@@ -991,23 +1011,7 @@
     "longname": "src/models/base.js~BaseModel#toSchemaValues",
     "access": "public",
     "description": "An optional callback, useful for performing any transformations on the\nserialized data before it is sent to the API client. This method is invoked\nafter the instance has exported its data, and after it is cleaned, but\nbefore it is sent to the API client and the schema.\n\nNote: The return values from this method must match the fields in the\nschema, or the schema will throw an error.\n\nThis method is useful if a subclass contains nested data, but the server\nis expecting a simple UUID for association.\n\nExample\n-------\n     // Our data model\n     Book = {\n         author: {\n             name: \"\",\n             authorId: \"1234.434\"\n         }\n     }\n\n     // What the schema expects\n     Book = {\n         author: \"1234.434\"\n     }\n\n     class Book extends Model {\n         toSchemaValues = (values) => {\n             return { ...values, authorId: values.author.authorId }\n         }\n     }",
-    "lineNumber": 97,
-    "type": {
-      "types": [
-        "*"
-      ]
-    }
-  },
-  {
-    "__docId__": 77,
-    "kind": "member",
-    "name": "fromSchemaValues",
-    "memberof": "src/models/base.js~BaseModel",
-    "static": false,
-    "longname": "src/models/base.js~BaseModel#fromSchemaValues",
-    "access": "public",
-    "description": "An optional callback, useful for performing any transformations on the\nrecieved data before it is sent to the model instance to be imported.\nThis method is invoked after the new instance is created, and the API\nresponse is received, but before it is sent to the API client and the schema.\n\nThis method is useful if the server sends nested data, but the data model\nis expecting a simple UUID for association.\n\nExample\n-------\n     // API response\n     Book = {\n         author: {\n             name: \"\",\n             authorId: \"1234.434\"\n         }\n     }\n\n     // What the Models require\n     Book = {\n         author: \"1234.434\"\n     }\n\n     class Book extends Model {\n         fromSchemaValues = (values) => {\n             return { ...values, authorId: values.author.authorId }\n         }\n     }",
-    "lineNumber": 132,
+    "lineNumber": 104,
     "type": {
       "types": [
         "*"
@@ -1017,13 +1021,13 @@
   {
     "__docId__": 78,
     "kind": "member",
-    "name": "clean",
+    "name": "fromSchemaValues",
     "memberof": "src/models/base.js~BaseModel",
     "static": false,
-    "longname": "src/models/base.js~BaseModel#clean",
+    "longname": "src/models/base.js~BaseModel#fromSchemaValues",
     "access": "public",
-    "description": "Given a set of values exported from the given model instance, clean\nthe fields and do any preparation before handing off the data to the\nHypnos API client.\n\nBy default this method removes and fields in the values that are not\nlisted in the schema fields for the action that the user is trying to take.\n\nSubclasses can override this method to provide custom clean behavior.",
-    "lineNumber": 146,
+    "description": "An optional callback, useful for performing any transformations on the\nrecieved data before it is sent to the model instance to be imported.\nThis method is invoked after the new instance is created, and the API\nresponse is received, but before it is sent to the API client and the schema.\n\nThis method is useful if the server sends nested data, but the data model\nis expecting a simple UUID for association.\n\nExample\n-------\n     // API response\n     Book = {\n         author: {\n             name: \"\",\n             authorId: \"1234.434\"\n         }\n     }\n\n     // What the Models require\n     Book = {\n         author: \"1234.434\"\n     }\n\n     class Book extends Model {\n         fromSchemaValues = (values) => {\n             return { ...values, authorId: values.author.authorId }\n         }\n     }",
+    "lineNumber": 139,
     "type": {
       "types": [
         "*"
@@ -1033,14 +1037,13 @@
   {
     "__docId__": 79,
     "kind": "member",
-    "name": "importValues",
+    "name": "clean",
     "memberof": "src/models/base.js~BaseModel",
     "static": false,
-    "longname": "src/models/base.js~BaseModel#importValues",
+    "longname": "src/models/base.js~BaseModel#clean",
     "access": "public",
-    "description": null,
-    "lineNumber": 162,
-    "undocument": true,
+    "description": "Given a set of values exported from the given model instance, clean\nthe fields and do any preparation before handing off the data to the\nHypnos API client.\n\nBy default this method removes and fields in the values that are not\nlisted in the schema fields for the action that the user is trying to take.\n\nSubclasses can override this method to provide custom clean behavior.",
+    "lineNumber": 153,
     "type": {
       "types": [
         "*"
@@ -1050,13 +1053,13 @@
   {
     "__docId__": 80,
     "kind": "member",
-    "name": "exportValues",
+    "name": "importValues",
     "memberof": "src/models/base.js~BaseModel",
     "static": false,
-    "longname": "src/models/base.js~BaseModel#exportValues",
+    "longname": "src/models/base.js~BaseModel#importValues",
     "access": "public",
     "description": null,
-    "lineNumber": 166,
+    "lineNumber": 169,
     "undocument": true,
     "type": {
       "types": [
@@ -1066,6 +1069,23 @@
   },
   {
     "__docId__": 81,
+    "kind": "member",
+    "name": "exportValues",
+    "memberof": "src/models/base.js~BaseModel",
+    "static": false,
+    "longname": "src/models/base.js~BaseModel#exportValues",
+    "access": "public",
+    "description": null,
+    "lineNumber": 173,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 82,
     "kind": "file",
     "name": "src/models/ko.js",
     "content": "import { BaseModel } from './base';\nimport ko from 'knockout';\n\n/**\n * A subclass of the Base `Model` class which adds serialization and\n * deserialization via Knockout's built-in mapping functionality.\n */\nexport class KOModel extends BaseModel {\n\n    /**\n     * Check to see if the subclasses provide a mapping, if they do\n     * not, then raise an exception.\n     */\n    get _mapping() {\n        const mapping = this.constructor.mapping;\n        if (!mapping) {\n            throw new Error(`Model: \"${this.constructor.name}\" does not provide a mapping.`);\n        }\n\n        return mapping;\n    }\n\n    /**\n     * A default implementation of object deserialization using Knockout autoignore\n     * mapping. For custom mapping, subclasses can override this method.\n     */\n    importValues = (values) => {\n        ko.mapping.fromJS(values, this._mapping, this);\n    }\n\n    /**\n     * A default implementation of object serialization using Knockout autoignore\n     * mapping. For custom mapping, subclasses can override this method.\n     */\n    exportValues = () => {\n        return ko.mapping.toJS(this, this._mapping);\n    };\n}\n",
@@ -1076,7 +1096,7 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 82,
+    "__docId__": 83,
     "kind": "class",
     "name": "KOModel",
     "memberof": "src/models/ko.js",
@@ -1094,7 +1114,7 @@
     ]
   },
   {
-    "__docId__": 83,
+    "__docId__": 84,
     "kind": "get",
     "name": "_mapping",
     "memberof": "src/models/ko.js~KOModel",
@@ -1112,7 +1132,7 @@
     }
   },
   {
-    "__docId__": 84,
+    "__docId__": 85,
     "kind": "member",
     "name": "importValues",
     "memberof": "src/models/ko.js~KOModel",
@@ -1128,7 +1148,7 @@
     }
   },
   {
-    "__docId__": 85,
+    "__docId__": 86,
     "kind": "member",
     "name": "exportValues",
     "memberof": "src/models/ko.js~KOModel",
@@ -1144,7 +1164,7 @@
     }
   },
   {
-    "__docId__": 86,
+    "__docId__": 87,
     "kind": "file",
     "name": "src/models/model.js",
     "content": "import { BaseModel } from './base';\n\n/**\n * A subclass of the Base `Model` class which provides serialization and\n * deserialization via a whitelist of fields to serialize/deserialize.\n */\nexport class Model extends BaseModel {\n\n    static FIELDS = [];\n\n    importValues = (values) => {\n        this.constructor.FIELDS.forEach(field => {\n            this[field] = values[field];\n        });\n    };\n\n    exportValues = () => {\n        let values = {};\n        this.constructor.FIELDS.forEach(field => {\n            values[field] = this[field];\n        });\n        return values;\n    };\n}\n",
@@ -1155,7 +1175,7 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 87,
+    "__docId__": 88,
     "kind": "class",
     "name": "Model",
     "memberof": "src/models/model.js",
@@ -1173,7 +1193,7 @@
     ]
   },
   {
-    "__docId__": 88,
+    "__docId__": 89,
     "kind": "member",
     "name": "FIELDS",
     "memberof": "src/models/model.js~Model",
@@ -1190,7 +1210,7 @@
     }
   },
   {
-    "__docId__": 89,
+    "__docId__": 90,
     "kind": "member",
     "name": "importValues",
     "memberof": "src/models/model.js~Model",
@@ -1207,7 +1227,7 @@
     }
   },
   {
-    "__docId__": 90,
+    "__docId__": 91,
     "kind": "member",
     "name": "[field]",
     "memberof": "src/models/model.js~Model",
@@ -1223,7 +1243,7 @@
     }
   },
   {
-    "__docId__": 91,
+    "__docId__": 92,
     "kind": "member",
     "name": "exportValues",
     "memberof": "src/models/model.js~Model",
@@ -1240,7 +1260,7 @@
     }
   },
   {
-    "__docId__": 92,
+    "__docId__": 93,
     "kind": "file",
     "name": "src/response.js",
     "content": "import uuid from 'uuid';\n\n\n/**\n * An APIResponse is a convenience wrapper around the data received when doing\n * a mapped query to the API.\n *\n * If a model instance is provided, the APIResponse will map the response data\n * to the model (see Model Serialization for more information). The APIResponse\n * also remembers the original response data for reference.\n *\n * Accessing the Response Objects\n * ------------------------------\n * Depending on the type of query, responses are mapped to either the `object`\n * or `objects` (note the plural) property on the APIResponse. In the case of\n * a query that will return multiple objects (i.e. when the `many` flag is set)\n * the resulting objects will be mapped and set to the `objects` property.\n * Otherwise single objects are always mapped to the `object` property.\n *\n * Navigating Paginated Responses\n * ------------------------------\n * A APIResponse provides an easy way to navigate through paginated results.\n * When retrieving a result set that is paginated (i.e. with\n * `Persistence.service.list()`), APIResponse provides two convenience methods:\n *\n * - getNextPage: Will fetch the next page in a result set if there is one.\n * - getPreviousPage: Will fetch the previous page in a result set if there is one.\n *\n * Using these two methods you can navigate the results of the query you made\n * originally. Note that you cannot change the parameters or modify the state\n * of the query once it is made. To sort and filter based on different critera,\n * you'll need to make a new query from the Persistence.service.\n *\n */\nclass APIResponse {\n\n    constructor({ data, keys, params, model=null, many=false, fromCache=false }) {\n        this.id = uuid.v4().toString();\n        this.fetchParams = params;\n        this.fetchKeys = keys;\n        this.data = data;\n        this.many = many;\n        this.model = model;\n        this.fromCache = fromCache;\n\n        // Map response to model object(s).\n        if (model && data) {\n            if (many && data.results) {\n                this.objects = data.results.map(result => {\n                    const instance = new model();\n                    const schemaValues = instance.fromSchemaValues(result);\n                    instance.importValues(schemaValues);\n                    return instance;\n                });\n            } else {\n                const instance = new model();\n                const schemaValues = instance.fromSchemaValues(data);\n                instance.importValues(schemaValues);\n                this.object = instance;\n            }\n        }\n    }\n\n    /**\n     * Returns whether or not the given fetch response has a next page.\n     */\n    hasNextPage = () => (\n        this.many && this.data.next\n    );\n\n    /**\n     * Returns whether or not the given fetch response has a previous page.\n     */\n    hasPreviousPage = () => (\n        this.many && this.data.previous\n    );\n\n    /**\n     * Fetch the next page of results in a paginated result set.\n     *\n     * This method returns a promise to the APIResponse of the next page.\n     *\n     * WARNING: This method will throw an error when attempting to fetch a next\n     * page for a single object result set or if there is no next page.\n     * To avoid this, check if the APIResponse `hasNextPage` before calling.\n     */\n    getNextPage = () => (new Promise((resolve) => {\n        if (!this.many || !this.hasNextPage()) {\n            throw new Error(`Given APIResponse: ${this.id} does not have a next value.`);\n        }\n\n        const nextPageFetchParams = { ...this.fetchParams, page: this._getNextPageNumber() };\n        return Persistence.service.action(\n            this.fetchKeys,\n            nextPageFetchParams,\n            false,\n            this.model,\n            this.many\n        ).then(resolve);\n    }));\n\n    /**\n     * Fetch the previous page of results in a paginated result set.\n     *\n     * This method returns a promise to the APIResponse of the previous page.\n     *\n     * WARNING: This method will throw an error when attempting to fetch a previous\n     * page for a single object result set or if there is no previous page.\n     * To avoid this, check if the APIResponse `hasPreviousPage` before calling.\n     */\n    getPreviousPage = () => (new Promise((resolve) => {\n        if (!this.many || !this.hasPreviousPage()) {\n            throw new Error(`Given APIResponse: ${this.id} does not have a previous value.`);\n        }\n        const previousPageFetchParams = { ...this.fetchParams, page: this._getPreviousPageNumber() };\n        return Persistence.service.action(\n            this.fetchKeys,\n            previousPageFetchParams,\n            false,\n            this.model,\n            this.many\n        ).then(resolve);\n    }));\n\n    /* Private Methods */\n\n    _getCurrentPage = () => (\n        this.fetchParams.page ? this.fetchParams.page : 1\n    );\n\n    _getNextPageNumber = () => (\n        this._getCurrentPage() + 1\n    );\n\n    _getPreviousPageNumber = () => (\n        this._getCurrentPage() - 1\n    );\n}\n\n\nexport default APIResponse;\n",
@@ -1251,7 +1271,7 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 93,
+    "__docId__": 94,
     "kind": "class",
     "name": "APIResponse",
     "memberof": "src/response.js",
@@ -1266,7 +1286,7 @@
     "interface": false
   },
   {
-    "__docId__": 94,
+    "__docId__": 95,
     "kind": "constructor",
     "name": "constructor",
     "memberof": "src/response.js~APIResponse",
@@ -1280,7 +1300,7 @@
     "undocument": true
   },
   {
-    "__docId__": 95,
+    "__docId__": 96,
     "kind": "member",
     "name": "id",
     "memberof": "src/response.js~APIResponse",
@@ -1297,7 +1317,7 @@
     }
   },
   {
-    "__docId__": 96,
+    "__docId__": 97,
     "kind": "member",
     "name": "fetchParams",
     "memberof": "src/response.js~APIResponse",
@@ -1314,7 +1334,7 @@
     }
   },
   {
-    "__docId__": 97,
+    "__docId__": 98,
     "kind": "member",
     "name": "fetchKeys",
     "memberof": "src/response.js~APIResponse",
@@ -1331,7 +1351,7 @@
     }
   },
   {
-    "__docId__": 98,
+    "__docId__": 99,
     "kind": "member",
     "name": "data",
     "memberof": "src/response.js~APIResponse",
@@ -1348,7 +1368,7 @@
     }
   },
   {
-    "__docId__": 99,
+    "__docId__": 100,
     "kind": "member",
     "name": "many",
     "memberof": "src/response.js~APIResponse",
@@ -1365,7 +1385,7 @@
     }
   },
   {
-    "__docId__": 100,
+    "__docId__": 101,
     "kind": "member",
     "name": "model",
     "memberof": "src/response.js~APIResponse",
@@ -1382,7 +1402,7 @@
     }
   },
   {
-    "__docId__": 101,
+    "__docId__": 102,
     "kind": "member",
     "name": "fromCache",
     "memberof": "src/response.js~APIResponse",
@@ -1399,7 +1419,7 @@
     }
   },
   {
-    "__docId__": 102,
+    "__docId__": 103,
     "kind": "member",
     "name": "objects",
     "memberof": "src/response.js~APIResponse",
@@ -1416,7 +1436,7 @@
     }
   },
   {
-    "__docId__": 103,
+    "__docId__": 104,
     "kind": "member",
     "name": "object",
     "memberof": "src/response.js~APIResponse",
@@ -1433,7 +1453,7 @@
     }
   },
   {
-    "__docId__": 104,
+    "__docId__": 105,
     "kind": "member",
     "name": "hasNextPage",
     "memberof": "src/response.js~APIResponse",
@@ -1449,7 +1469,7 @@
     }
   },
   {
-    "__docId__": 105,
+    "__docId__": 106,
     "kind": "member",
     "name": "hasPreviousPage",
     "memberof": "src/response.js~APIResponse",
@@ -1465,7 +1485,7 @@
     }
   },
   {
-    "__docId__": 106,
+    "__docId__": 107,
     "kind": "member",
     "name": "getNextPage",
     "memberof": "src/response.js~APIResponse",
@@ -1481,7 +1501,7 @@
     }
   },
   {
-    "__docId__": 107,
+    "__docId__": 108,
     "kind": "member",
     "name": "getPreviousPage",
     "memberof": "src/response.js~APIResponse",
@@ -1497,7 +1517,7 @@
     }
   },
   {
-    "__docId__": 108,
+    "__docId__": 109,
     "kind": "member",
     "name": "_getCurrentPage",
     "memberof": "src/response.js~APIResponse",
@@ -1514,7 +1534,7 @@
     }
   },
   {
-    "__docId__": 109,
+    "__docId__": 110,
     "kind": "member",
     "name": "_getNextPageNumber",
     "memberof": "src/response.js~APIResponse",
@@ -1531,7 +1551,7 @@
     }
   },
   {
-    "__docId__": 110,
+    "__docId__": 111,
     "kind": "member",
     "name": "_getPreviousPageNumber",
     "memberof": "src/response.js~APIResponse",
@@ -1548,7 +1568,7 @@
     }
   },
   {
-    "__docId__": 111,
+    "__docId__": 112,
     "kind": "file",
     "name": "src/tokens.js",
     "content": "import { Hypnos } from './hypnos';\n\n/**\n * An Instance Token provides quick access to the Hypnos\n * client methods through a model instance. You can use an\n * object's Instance Token to easily and clearly perform queries and updates to the\n * backing API using syntax bound to the Instance itself, rather than using\n * the normal Hypnos API.\n *\n * Example\n * -------\n *\n * Let's say you want to search for all books in your collection. Using the\n * normal Hypnos API you could perform a query for all books like this:\n *\n *      const { object: book } = await Hypnos.client.update(Book, {\n *          id: '123',\n *          title: 'A new title'\n *      });\n *      // Do stuff with the updated book...\n *\n * But using the InstanceToken API on a given Model would allow the\n * following shortcut syntax.\n *\n *      const { object: book } = await Book.ps.read({ id: '1234' });\n *      book.title = 'A new title';\n *      book.ps.save();\n *\n * For more information about what queries are available with this API, please\n * see the associated documentation below.\n */\nexport class InstanceToken {\n\n    constructor(model, instance) {\n        this.model = model;\n        this.instance = instance;\n        this.client = Hypnos.client;\n    }\n\n    /**\n     * This method allows the creation of model object data directly to the\n     * remote API.\n     *\n     * WARNING: Once you've used the original \"template\" instance to create an\n     * object, you should not continue using that object in your code. Always\n     * use the instance returned from the response since it has all of the required\n     * data from the API to perform the rest of the expected functionality.\n     *\n     * Example\n     * -------\n     *\n     * Let's assume that you have a model you've created locally, you've\n     * filed in the values, and now you want to tell your API to create that\n     * new object.\n     *\n     *      const instance = new MyModel();\n     *      // ...fill in the values...\n     *      instance.ps.create().then(response => {\n     *          const persistedInstance = response.object;\n     *      });\n     */\n    create = async () => {\n        const keys = [...this.model.__skeys__, 'create'];\n        const params = this.instance.exportValues();\n        const cleanedParams = this.instance.clean(keys, params);\n        const schemaValues = this.instance.toSchemaValues(cleanedParams);\n        return await this.client.action({\n            keys,\n            params: schemaValues,\n            raw: false,\n            model: this.model,\n            many: false,\n        });\n    };\n\n    /**\n     * Refresh the data for the given object from the remote store.\n     */\n    refresh = async () => {\n        const keys = [...this.model.__skeys__, 'read'];\n        const params = this.instance.exportValues();\n        const cleanedParams = this.instance.clean(keys, params);\n        const schemaValues = this.instance.toSchemaValues(cleanedParams);\n        return await this.client.action({\n            keys,\n            params: schemaValues,\n            raw: false,\n            model: this.model,\n            many: false,\n        });\n    };\n\n    /**\n     * Persist the object's data to the remote store. This only works for\n     * existing objects.\n     *\n     * If a list of fields is provided, then only update those fields.\n     */\n    save = async (fields=null, raw=false) => {\n        let method = 'update';\n        const params = this.instance.exportValues();\n\n        // Trim out unneeded fields if `fields` is provided and\n        // set the active method to use partial_update.\n        if (fields && fields.length > 0) {\n            method = 'partialUpdate';\n            Object.keys(params).forEach(key => {\n                if (fields.indexOf(key) == -1) {\n                    delete params[key];\n                }\n            });\n        }\n\n        const keys = [...this.model.__skeys__, method];\n        const cleanedParams = this.instance.clean(keys, params);\n        const schemaValues = this.instance.toSchemaValues(cleanedParams);\n        return await this.client.action({\n            keys,\n            params: schemaValues,\n            raw,\n            model: this.model,\n            many: false,\n        });\n    };\n\n    /**\n     * Tell the remote store to destroy the current object.\n     *\n     * WARNING: This does not remove the object from memory, only from\n     * the remote store.\n     */\n    delete = async () => {\n        const keys = [...this.model.__skeys__, 'delete'];\n        const params = this.instance.exportValues();\n        const cleanedParams = this.instance.clean(keys, params);\n        const schemaValues = this.instance.toSchemaValues(cleanedParams);\n        return await this.client.action({\n            keys,\n            params: schemaValues,\n            raw: true,\n            model: this.model,\n            many: false,\n        });\n    };\n}\n\n\n/**\n * A ModelToken, like an InstanceToken provides quick access to the Hypnos\n * client methods without an active model instance to use. You can use an\n * object's Model Token to easily and clearly perform queries and updates to the\n * backing API using syntax bound to the Model class itself, rather than using\n * the normal Hypnos API.\n *\n * Example\n * -------\n *\n * Let's say you want to search for all books in your collection. Using the\n * normal Hypnos API you could perform a query for all books like this:\n *\n *      const response = await Hypnos.client.list(Book);\n *      const books = response.objects;\n *      // Do stuff with books...\n *\n * But implementing the ModelToken API on a given Model would allow the\n * following shortcut syntax.\n *\n *      const response = await Book.ps.list();\n *      const books = response.objects;\n *      // Do stuff with books...\n *\n * For more information about what queries are available with this API, please\n * see the associated documentation below.\n *\n * For more information about performing queries on mapped Model instances\n * (i.e. your new book instances) please refer to the InstanceToken documentation.\n */\nexport class ModelToken {\n\n    constructor(model) {\n        this.model = model;\n        this.client = Hypnos.client;\n    }\n\n    /**\n     * Given a model type and an optional set of parameters, perform a list query\n     * against the backing API and return a promise of results in the form of a\n     * FetchResponse (see FetchResponse for more information).\n     *\n     * Example\n     * -------\n     *\n     *     Book.ps.list().then(response => {\n     *         const books = response.objects;\n     *         // Do stuff with books...\n     *     });\n     */\n    list = async (params={}, raw=false, useCache=true, flushDepsCache=false) => {\n        const keys = [...this.model.__skeys__, 'list'];\n        return await this.client.action({\n            keys,\n            params,\n            raw,\n            model: this.model,\n            many: true,\n            useCache,\n            flushDepsCache,\n        });\n    };\n\n    /**\n     * Given a model type and an optional set of parameters, perform a retrieve\n     * query against the backing API and return a promise of results in the\n     * form of a FetchResponse (see FetchResponse for more information).\n     *\n     * Example\n     * -------\n     *\n     *     Book.ps.read({ id: '1234' }).then(response => {\n     *         const book = response.object;\n     *         // Do stuff with your book...\n     *     });\n     */\n    read = async (params={}, raw=false, useCache=true, flushDepsCache=false) => {\n        const keys = [...this.model.__skeys__, 'read'];\n        return await this.client.action({\n            keys,\n            params,\n            raw,\n            model: this.model,\n            many: false,\n            useCache,\n            flushDepsCache,\n        });\n    };\n\n    /**\n     * Given a model type and an optional set of parameters, perform a create\n     * against the backing API and return a promise of results in the\n     * form of a FetchResponse (see FetchResponse for more information).\n     *\n     * Example\n     * -------\n     *\n     *     const data = { title: 'An Adventure', author: 'John Smith' };\n     *     Book.ps.create(data).then(response => {\n     *         const book = response.object;\n     *         // Do stuff with your new book...\n     *     });\n     */\n    create = async (params={}, raw=false) => {\n        const keys = [...this.model.__skeys__, 'create'];\n        return await this.client.action({\n            keys,\n            params,\n            raw,\n            model: this.model,\n            many: false,\n        });\n    };\n\n    /**\n     * Given a model type and an optional set of parameters, perform an update\n     * against the backing API and return a promise of results in the\n     * form of a FetchResponse (see FetchResponse for more information).\n     *\n     * Example\n     * -------\n     *\n     *     const data = { id: '1234', title: 'An Adventure II', author: 'John Smith' };\n     *     Book.ps.update(data).then(response => {\n     *         const book = response.object;\n     *         // Do stuff with your updated book...\n     *     });\n     */\n    update = async (params={}, raw=false) => {\n        const keys = [...this.model.__skeys__, 'update'];\n        return await this.client.action({\n            keys,\n            params,\n            raw,\n            model: this.model,\n            many: false,\n        });\n    };\n\n    /**\n     * Given a model type and an optional set of parameters, perform a destroy\n     * against the backing API and return a promise of results in the\n     * form of a FetchResponse (see FetchResponse for more information).\n     *\n     * Example\n     * -------\n     *\n     *     Book.ps.delete({ id: '1234' });\n     */\n    delete = async (params={}, raw=false) => {\n        const keys = [...this.model.__skeys__, 'delete'];\n        return await this.client.action({\n            keys,\n            params,\n            raw,\n            model: this.model,\n            many: false,\n        });\n    };\n}\n",
@@ -1559,7 +1579,7 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 112,
+    "__docId__": 113,
     "kind": "class",
     "name": "InstanceToken",
     "memberof": "src/tokens.js",
@@ -1574,7 +1594,7 @@
     "interface": false
   },
   {
-    "__docId__": 113,
+    "__docId__": 114,
     "kind": "constructor",
     "name": "constructor",
     "memberof": "src/tokens.js~InstanceToken",
@@ -1588,7 +1608,7 @@
     "undocument": true
   },
   {
-    "__docId__": 114,
+    "__docId__": 115,
     "kind": "member",
     "name": "model",
     "memberof": "src/tokens.js~InstanceToken",
@@ -1605,7 +1625,7 @@
     }
   },
   {
-    "__docId__": 115,
+    "__docId__": 116,
     "kind": "member",
     "name": "instance",
     "memberof": "src/tokens.js~InstanceToken",
@@ -1622,7 +1642,7 @@
     }
   },
   {
-    "__docId__": 116,
+    "__docId__": 117,
     "kind": "member",
     "name": "client",
     "memberof": "src/tokens.js~InstanceToken",
@@ -1639,7 +1659,7 @@
     }
   },
   {
-    "__docId__": 117,
+    "__docId__": 118,
     "kind": "member",
     "name": "create",
     "memberof": "src/tokens.js~InstanceToken",
@@ -1655,7 +1675,7 @@
     }
   },
   {
-    "__docId__": 118,
+    "__docId__": 119,
     "kind": "member",
     "name": "refresh",
     "memberof": "src/tokens.js~InstanceToken",
@@ -1671,7 +1691,7 @@
     }
   },
   {
-    "__docId__": 119,
+    "__docId__": 120,
     "kind": "member",
     "name": "save",
     "memberof": "src/tokens.js~InstanceToken",
@@ -1687,7 +1707,7 @@
     }
   },
   {
-    "__docId__": 120,
+    "__docId__": 121,
     "kind": "member",
     "name": "delete",
     "memberof": "src/tokens.js~InstanceToken",
@@ -1703,7 +1723,7 @@
     }
   },
   {
-    "__docId__": 121,
+    "__docId__": 122,
     "kind": "class",
     "name": "ModelToken",
     "memberof": "src/tokens.js",
@@ -1718,7 +1738,7 @@
     "interface": false
   },
   {
-    "__docId__": 122,
+    "__docId__": 123,
     "kind": "constructor",
     "name": "constructor",
     "memberof": "src/tokens.js~ModelToken",
@@ -1732,7 +1752,7 @@
     "undocument": true
   },
   {
-    "__docId__": 123,
+    "__docId__": 124,
     "kind": "member",
     "name": "model",
     "memberof": "src/tokens.js~ModelToken",
@@ -1749,7 +1769,7 @@
     }
   },
   {
-    "__docId__": 124,
+    "__docId__": 125,
     "kind": "member",
     "name": "client",
     "memberof": "src/tokens.js~ModelToken",
@@ -1766,7 +1786,7 @@
     }
   },
   {
-    "__docId__": 125,
+    "__docId__": 126,
     "kind": "member",
     "name": "list",
     "memberof": "src/tokens.js~ModelToken",
@@ -1782,7 +1802,7 @@
     }
   },
   {
-    "__docId__": 126,
+    "__docId__": 127,
     "kind": "member",
     "name": "read",
     "memberof": "src/tokens.js~ModelToken",
@@ -1798,7 +1818,7 @@
     }
   },
   {
-    "__docId__": 127,
+    "__docId__": 128,
     "kind": "member",
     "name": "create",
     "memberof": "src/tokens.js~ModelToken",
@@ -1814,7 +1834,7 @@
     }
   },
   {
-    "__docId__": 128,
+    "__docId__": 129,
     "kind": "member",
     "name": "update",
     "memberof": "src/tokens.js~ModelToken",
@@ -1830,7 +1850,7 @@
     }
   },
   {
-    "__docId__": 129,
+    "__docId__": 130,
     "kind": "member",
     "name": "delete",
     "memberof": "src/tokens.js~ModelToken",
@@ -1846,10 +1866,10 @@
     }
   },
   {
-    "__docId__": 130,
+    "__docId__": 131,
     "kind": "file",
     "name": "src/tokens.spec.js",
-    "content": "import { Author, Book } from './__mocks__/models';\nimport { Hypnos } from './index';\nimport coreapi from 'coreapi';\nimport { mockedFetch } from './__helpers__/utils';\nimport schema from './__mocks__/schema';\n\nconst defaultConfiguration = {\n    schema,\n    credentials: {},\n    cacheConfig: {},\n};\n\ndescribe('Tokens', () => {\n    beforeEach(() => {\n        Hypnos.flush();\n\n        Hypnos.configuration = { ...defaultConfiguration };\n    });\n\n    describe('Model Tokens', () => {\n        it('should attempt to create a book model', async () => {\n            const bookFixture = {\n                title: 'A Title',\n                author: 'Me',\n                isBestseller: false,\n            };\n\n            const transport = new coreapi.transports.HTTPTransport({\n                fetch: mockedFetch(JSON.stringify({ ...bookFixture }), 'application/json')\n            });\n            Hypnos.client.client = new coreapi.Client({ transports: [transport] });\n\n            const response = await Book.ps.create({ ...bookFixture });\n\n            expect(response.fromCache).toBe(false);\n            expect(response.fetchParams).toEqual(bookFixture);\n            expect(response.many).toEqual(false);\n\n            const book = response.object;\n\n            expect(book.title).toEqual(bookFixture.title);\n            expect(book.author).toEqual(bookFixture.author);\n            expect(book.isBestseller).toEqual(bookFixture.isBestseller);\n        });\n\n        it('should attempt to list all book models -- uncached', async () => {\n            const bookFixtures = [\n                {\n                    title: 'A Title',\n                    author: 'Me',\n                    isBestseller: false,\n                },\n                {\n                    title: 'Another Title',\n                    author: 'You',\n                    isBestseller: true,\n                },\n            ];\n\n            const transport = new coreapi.transports.HTTPTransport({\n                fetch: mockedFetch(JSON.stringify({ results: [...bookFixtures] }), 'application/json')\n            });\n            Hypnos.client.client = new coreapi.Client({ transports: [transport] });\n\n            const response = await Book.ps.list();\n\n            expect(response.fromCache).toBe(false);\n            expect(response.fetchParams).toEqual({});\n            expect(response.many).toEqual(true);\n\n            const books = response.objects;\n\n            expect(books[0].title).toEqual(bookFixtures[0].title);\n            expect(books[0].author).toEqual(bookFixtures[0].author);\n            expect(books[0].isBestseller).toEqual(bookFixtures[0].isBestseller);\n        });\n\n        it('should attempt to retrieve a book model -- uncached', async () => {\n            const bookFixture = {\n                uuid: '12345-123-4352-1234',\n                title: 'A Title',\n                author: 'Me',\n                isBestseller: false,\n            };\n\n            const transport = new coreapi.transports.HTTPTransport({\n                fetch: mockedFetch(JSON.stringify({ ...bookFixture }), 'application/json')\n            });\n            Hypnos.client.client = new coreapi.Client({ transports: [transport] });\n\n            const response = await Book.ps.read({ uuid: bookFixture.uuid });\n\n            expect(response.fromCache).toBe(false);\n            expect(response.fetchParams).toEqual({ uuid: bookFixture.uuid });\n            expect(response.many).toEqual(false);\n\n            const book = response.object;\n\n            expect(book.title).toEqual(bookFixture.title);\n            expect(book.author).toEqual(bookFixture.author);\n            expect(book.isBestseller).toEqual(bookFixture.isBestseller);\n        });\n\n        it('should attempt to update a book model', async () => {\n            const bookFixture = {\n                uuid: '12345-123-4352-1234',\n                title: 'A Title',\n                author: 'Me',\n                isBestseller: false,\n            };\n\n            const transport = new coreapi.transports.HTTPTransport({\n                fetch: mockedFetch(JSON.stringify({ ...bookFixture }), 'application/json')\n            });\n            Hypnos.client.client = new coreapi.Client({ transports: [transport] });\n\n            const response = await Book.ps.update(bookFixture);\n\n            expect(response.fromCache).toBe(false);\n            expect(response.fetchParams).toEqual(bookFixture);\n            expect(response.many).toEqual(false);\n\n            const book = response.object;\n\n            expect(book.title).toEqual(bookFixture.title);\n            expect(book.author).toEqual(bookFixture.author);\n            expect(book.isBestseller).toEqual(bookFixture.isBestseller);\n        });\n    });\n\n    describe('Instance Tokens', () => {\n        it('should attempt to create a book instance', async () => {\n            const bookFixture = {\n                title: 'A Title',\n                author: 'Me',\n                isBestseller: false,\n            };\n\n            const transport = new coreapi.transports.HTTPTransport({\n                fetch: mockedFetch(JSON.stringify({ ...bookFixture }), 'application/json')\n            });\n            Hypnos.client.client = new coreapi.Client({ transports: [transport] });\n\n            const book = new Book(\n                bookFixture.title,\n                bookFixture.author,\n                bookFixture.isBestseller\n            );\n            const response = await book.ps.create();\n\n            expect(response.fromCache).toBe(false);\n            expect(response.fetchParams).toEqual(bookFixture);\n            expect(response.many).toEqual(false);\n\n            expect(book.title).toEqual(bookFixture.title);\n            expect(book.author).toEqual(bookFixture.author);\n            expect(book.isBestseller).toEqual(bookFixture.isBestseller);\n        });\n\n        it('should attempt to refresh a book instance that changed remotely', async () => {\n            const bookFixture = {\n                title: 'A Title',\n                author: 'Me',\n                isBestseller: false,\n            };\n\n            const transport = new coreapi.transports.HTTPTransport({\n                fetch: mockedFetch(JSON.stringify({ ...bookFixture }), 'application/json')\n            });\n            Hypnos.client.client = new coreapi.Client({ transports: [transport] });\n\n            const book = new Book(\n                'Some first draft title',\n                'N/A',\n                false\n            );\n            book.uuid = '09876543';\n            const response = await book.ps.refresh();\n\n            expect(response.fromCache).toBe(false);\n            expect(response.fetchParams.uuid).toEqual(book.uuid);\n            expect(response.many).toEqual(false);\n\n            expect(response.object.title).toEqual(bookFixture.title);\n            expect(response.object.author).toEqual(bookFixture.author);\n            expect(response.object.isBestseller).toEqual(bookFixture.isBestseller);\n        });\n\n        it('should attempt to save a book instance', async () => {\n            const bookFixture = {\n                title: 'A Title',\n                author: 'Me',\n                isBestseller: false,\n            };\n\n            const transport = new coreapi.transports.HTTPTransport({\n                fetch: mockedFetch(JSON.stringify({ ...bookFixture }), 'application/json')\n            });\n            Hypnos.client.client = new coreapi.Client({ transports: [transport] });\n\n            const book = new Book(\n                bookFixture.title,\n                bookFixture.author,\n                bookFixture.isBestseller\n            );\n            const response = await book.ps.create();\n\n            expect(response.fromCache).toBe(false);\n            expect(response.fetchParams).toEqual(bookFixture);\n            expect(response.many).toEqual(false);\n\n            expect(book.title).toEqual(bookFixture.title);\n            expect(book.author).toEqual(bookFixture.author);\n            expect(book.isBestseller).toEqual(bookFixture.isBestseller);\n\n            // Alter and save\n            book.title = 'This new value';\n            const saveResponse = await book.ps.save();\n\n            expect(saveResponse.fromCache).toBe(false);\n            expect(saveResponse.fetchParams.uuid).toEqual(book.uuid);\n            expect(saveResponse.fetchParams.title).toEqual('This new value');\n            expect(saveResponse.many).toEqual(false);\n        });\n\n        it('should attempt to partially update a book instance', async () => {\n            const bookFixture = {\n                uuid: '12345-123-4352-1234',\n                title: 'A Title',\n                author: 'Me',\n                isBestseller: false,\n            };\n\n            const transport = new coreapi.transports.HTTPTransport({\n                fetch: mockedFetch(JSON.stringify({ ...bookFixture }), 'application/json')\n            });\n            Hypnos.client.client = new coreapi.Client({ transports: [transport] });\n\n            const book = new Book(\n                bookFixture.title,\n                bookFixture.author,\n                bookFixture.isBestseller\n            );\n            book.uuid = bookFixture.uuid;\n            const response = await book.ps.create();\n\n            expect(book.title).toEqual(bookFixture.title);\n\n            // Alter and save\n            book.title = 'This new value';\n            const saveResponse = await book.ps.save(['title', 'uuid']);\n\n            expect(saveResponse.fromCache).toBe(false);\n            expect(saveResponse.fetchParams.uuid).toEqual(book.uuid);\n            expect(saveResponse.fetchParams.title).toEqual('This new value');\n            expect(saveResponse.fetchKeys[1]).toEqual('partialUpdate');\n            expect(saveResponse.many).toEqual(false);\n        });\n\n        describe('Cache Dependencies', () => {\n            it('should attempt to create an author instance and flush the cached books', async () => {\n                const bookFixtures = [\n                    {\n                        title: 'A Title',\n                        author: 'Me',\n                        isBestseller: false,\n                    },\n                    {\n                        title: 'Another Title',\n                        author: 'You',\n                        isBestseller: true,\n                    },\n                ];\n\n                const transport = new coreapi.transports.HTTPTransport({\n                    fetch: mockedFetch(JSON.stringify({ ...bookFixtures }), 'application/json')\n                });\n                Hypnos.client.client = new coreapi.Client({ transports: [transport] });\n\n                // Fetch all books.\n                const response1 = await Book.ps.list();\n                expect(response1.fromCache).toBe(false);\n\n                // Fetch again, this time from the cache.\n                const response2 = await Book.ps.list();\n                expect(response2.fromCache).toBe(true);\n\n                // List the authors, which SHOULD NOT clear the book cache.\n                const response3 = await Author.ps.list();\n\n                const response4 = await Book.ps.list();\n                expect(response4.fromCache).toBe(true);\n\n                // Update an author, which SHOULD clear the book cache.\n                const response5 = await Author.ps.create({\n                    firstName: 'test',\n                    lastName: 'testersson'\n                });\n\n                const response6 = await Book.ps.list();\n                expect(response6.fromCache).toBe(false);\n\n                // And if we were to request the book list agin, it SHOULD be cached.\n                const response7 = await Book.ps.list();\n                expect(response7.fromCache).toBe(true);\n            });\n        });\n    });\n});\n",
+    "content": "import { Author, Book } from './__mocks__/models';\nimport { Hypnos } from './index';\nimport coreapi from 'coreapi';\nimport { mockedFetch } from './__helpers__/utils';\nimport schema from './__mocks__/schema';\n\nconst defaultConfiguration = {\n    schema,\n    credentials: {},\n    cacheConfig: {},\n};\n\ndescribe('Tokens', () => {\n    beforeEach(() => {\n        Hypnos.flush();\n\n        Hypnos.configuration = { ...defaultConfiguration };\n    });\n\n    describe('Model Tokens', () => {\n        it('should attempt to create a book model', async () => {\n            const bookFixture = {\n                title: 'A Title',\n                author: 'Me',\n                isBestseller: false,\n            };\n\n            const transport = new coreapi.transports.HTTPTransport({\n                fetch: mockedFetch(JSON.stringify({ ...bookFixture }), 'application/json')\n            });\n            Hypnos.client.client = new coreapi.Client({ transports: [transport] });\n\n            const response = await Book.ps.create({ ...bookFixture });\n\n            expect(response.fromCache).toBe(false);\n            expect(response.fetchParams).toEqual(bookFixture);\n            expect(response.many).toEqual(false);\n\n            const book = response.object;\n\n            expect(book.title).toEqual(bookFixture.title);\n            expect(book.author).toEqual(bookFixture.author);\n            expect(book.isBestseller).toEqual(bookFixture.isBestseller);\n        });\n\n        it('should attempt to list all book models -- uncached', async () => {\n            const bookFixtures = [\n                {\n                    title: 'A Title',\n                    author: 'Me',\n                    isBestseller: false,\n                },\n                {\n                    title: 'Another Title',\n                    author: 'You',\n                    isBestseller: true,\n                },\n            ];\n\n            const transport = new coreapi.transports.HTTPTransport({\n                fetch: mockedFetch(JSON.stringify({ results: [...bookFixtures] }), 'application/json')\n            });\n            Hypnos.client.client = new coreapi.Client({ transports: [transport] });\n\n            const response = await Book.ps.list();\n\n            expect(response.fromCache).toBe(false);\n            expect(response.fetchParams).toEqual({});\n            expect(response.many).toEqual(true);\n\n            const books = response.objects;\n\n            expect(books[0].title).toEqual(bookFixtures[0].title);\n            expect(books[0].author).toEqual(bookFixtures[0].author);\n            expect(books[0].isBestseller).toEqual(bookFixtures[0].isBestseller);\n        });\n\n        it('should attempt to retrieve a book model -- uncached', async () => {\n            const bookFixture = {\n                uuid: '12345-123-4352-1234',\n                title: 'A Title',\n                author: 'Me',\n                isBestseller: false,\n            };\n\n            const transport = new coreapi.transports.HTTPTransport({\n                fetch: mockedFetch(JSON.stringify({ ...bookFixture }), 'application/json')\n            });\n            Hypnos.client.client = new coreapi.Client({ transports: [transport] });\n\n            const response = await Book.ps.read({ uuid: bookFixture.uuid });\n\n            expect(response.fromCache).toBe(false);\n            expect(response.fetchParams).toEqual({ uuid: bookFixture.uuid });\n            expect(response.many).toEqual(false);\n\n            const book = response.object;\n\n            expect(book.title).toEqual(bookFixture.title);\n            expect(book.author).toEqual(bookFixture.author);\n            expect(book.isBestseller).toEqual(bookFixture.isBestseller);\n        });\n\n        it('should attempt to update a book model', async () => {\n            const bookFixture = {\n                uuid: '12345-123-4352-1234',\n                title: 'A Title',\n                author: 'Me',\n                isBestseller: false,\n            };\n\n            const transport = new coreapi.transports.HTTPTransport({\n                fetch: mockedFetch(JSON.stringify({ ...bookFixture }), 'application/json')\n            });\n            Hypnos.client.client = new coreapi.Client({ transports: [transport] });\n\n            const response = await Book.ps.update(bookFixture);\n\n            expect(response.fromCache).toBe(false);\n            expect(response.fetchParams).toEqual(bookFixture);\n            expect(response.many).toEqual(false);\n\n            const book = response.object;\n\n            expect(book.title).toEqual(bookFixture.title);\n            expect(book.author).toEqual(bookFixture.author);\n            expect(book.isBestseller).toEqual(bookFixture.isBestseller);\n        });\n    });\n\n    describe('Instance Tokens', () => {\n        it('should attempt to create a book instance', async () => {\n            const bookFixture = {\n                title: 'A Title',\n                author: 'Me',\n                isBestseller: false,\n            };\n\n            const transport = new coreapi.transports.HTTPTransport({\n                fetch: mockedFetch(JSON.stringify({ ...bookFixture }), 'application/json')\n            });\n            Hypnos.client.client = new coreapi.Client({ transports: [transport] });\n\n            const book = new Book(\n                bookFixture.title,\n                bookFixture.author,\n                bookFixture.isBestseller\n            );\n            const response = await book.ps.create();\n\n            expect(response.fromCache).toBe(false);\n            expect(response.fetchParams).toEqual(bookFixture);\n            expect(response.many).toEqual(false);\n\n            expect(book.title).toEqual(bookFixture.title);\n            expect(book.author).toEqual(bookFixture.author);\n            expect(book.isBestseller).toEqual(bookFixture.isBestseller);\n        });\n\n        it('should attempt to refresh a book instance that changed remotely', async () => {\n            const bookFixture = {\n                title: 'A Title',\n                author: 'Me',\n                isBestseller: false,\n            };\n\n            const transport = new coreapi.transports.HTTPTransport({\n                fetch: mockedFetch(JSON.stringify({ ...bookFixture }), 'application/json')\n            });\n            Hypnos.client.client = new coreapi.Client({ transports: [transport] });\n\n            const book = new Book(\n                'Some first draft title',\n                'N/A',\n                false\n            );\n            book.uuid = '09876543';\n            const response = await book.ps.refresh();\n\n            expect(response.fromCache).toBe(false);\n            expect(response.fetchParams.uuid).toEqual(book.uuid);\n            expect(response.many).toEqual(false);\n\n            expect(response.object.title).toEqual(bookFixture.title);\n            expect(response.object.author).toEqual(bookFixture.author);\n            expect(response.object.isBestseller).toEqual(bookFixture.isBestseller);\n        });\n\n        it('should attempt to save a book instance', async () => {\n            const bookFixture = {\n                title: 'A Title',\n                author: 'Me',\n                isBestseller: false,\n            };\n\n            const transport = new coreapi.transports.HTTPTransport({\n                fetch: mockedFetch(JSON.stringify({ ...bookFixture }), 'application/json')\n            });\n            Hypnos.client.client = new coreapi.Client({ transports: [transport] });\n\n            const book = new Book(\n                bookFixture.title,\n                bookFixture.author,\n                bookFixture.isBestseller\n            );\n            const response = await book.ps.create();\n\n            expect(response.fromCache).toBe(false);\n            expect(response.fetchParams).toEqual(bookFixture);\n            expect(response.many).toEqual(false);\n\n            expect(book.title).toEqual(bookFixture.title);\n            expect(book.author).toEqual(bookFixture.author);\n            expect(book.isBestseller).toEqual(bookFixture.isBestseller);\n\n            // Alter and save\n            book.title = 'This new value';\n            const saveResponse = await book.ps.save();\n\n            expect(saveResponse.fromCache).toBe(false);\n            expect(saveResponse.fetchParams.uuid).toEqual(book.uuid);\n            expect(saveResponse.fetchParams.title).toEqual('This new value');\n            expect(saveResponse.many).toEqual(false);\n        });\n\n        it('should attempt to partially update a book instance', async () => {\n            const bookFixture = {\n                uuid: '12345-123-4352-1234',\n                title: 'A Title',\n                author: 'Me',\n                isBestseller: false,\n            };\n\n            const transport = new coreapi.transports.HTTPTransport({\n                fetch: mockedFetch(JSON.stringify({ ...bookFixture }), 'application/json')\n            });\n            Hypnos.client.client = new coreapi.Client({ transports: [transport] });\n\n            const book = new Book(\n                bookFixture.title,\n                bookFixture.author,\n                bookFixture.isBestseller\n            );\n            book.uuid = bookFixture.uuid;\n            const response = await book.ps.create();\n\n            expect(book.title).toEqual(bookFixture.title);\n\n            // Alter and save\n            book.title = 'This new value';\n            const saveResponse = await book.ps.save(['title', 'uuid']);\n\n            expect(saveResponse.fromCache).toBe(false);\n            expect(saveResponse.fetchParams.uuid).toEqual(book.uuid);\n            expect(saveResponse.fetchParams.title).toEqual('This new value');\n            expect(saveResponse.fetchKeys[1]).toEqual('partialUpdate');\n            expect(saveResponse.many).toEqual(false);\n        });\n\n        describe('Cache Dependencies', () => {\n            it('should attempt to create an author instance and flush the cached books', async () => {\n                const bookFixtures = [\n                    {\n                        title: 'A Title',\n                        author: 'Me',\n                        isBestseller: false,\n                    },\n                    {\n                        title: 'Another Title',\n                        author: 'You',\n                        isBestseller: true,\n                    },\n                ];\n\n                const transport = new coreapi.transports.HTTPTransport({\n                    fetch: mockedFetch(JSON.stringify({ ...bookFixtures }), 'application/json')\n                });\n                Hypnos.client.client = new coreapi.Client({ transports: [transport] });\n\n                // Fetch all books.\n                const response1 = await Book.ps.list();\n                expect(response1.fromCache).toBe(false);\n\n                // Fetch again, this time from the cache.\n                const response2 = await Book.ps.list();\n                expect(response2.fromCache).toBe(true);\n\n                // List the authors, which SHOULD NOT clear the book cache.\n                const response3 = await Author.ps.list();\n\n                const response4 = await Book.ps.list();\n                expect(response4.fromCache).toBe(true);\n\n                // Update an author, which SHOULD clear the book and the author cache.\n                const response5 = await Author.ps.create({\n                    firstName: 'test',\n                    lastName: 'testersson'\n                });\n\n                const response6 = await Book.ps.list();\n                expect(response6.fromCache).toBe(false);\n\n                const response7 = await Author.ps.list();\n                expect(response7.fromCache).toBe(false);\n\n                // And if we were to request the book list agin, it SHOULD be cached.\n                const response8 = await Book.ps.list();\n                expect(response8.fromCache).toBe(true);\n            });\n        });\n    });\n});\n",
     "static": true,
     "longname": "/Users/ifoundit/Projects/adventurers_codex/hypnos/src/tokens.spec.js",
     "access": "public",
@@ -1857,7 +1877,7 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 131,
+    "__docId__": 132,
     "kind": "variable",
     "name": "defaultConfiguration",
     "memberof": "src/tokens.spec.js",

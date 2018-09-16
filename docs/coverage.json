@@ -1,6 +1,6 @@
 {
-  "coverage": "45.2%",
-  "expectCount": 73,
+  "coverage": "44.59%",
+  "expectCount": 74,
   "actualCount": 33,
   "files": {
     "src/hypnos.js": {
@@ -26,14 +26,15 @@
       ]
     },
     "src/models/base.js": {
-      "expectCount": 9,
+      "expectCount": 10,
       "actualCount": 4,
       "undocumentLines": [
         51,
         55,
         57,
-        162,
-        166
+        60,
+        169,
+        173
       ]
     },
     "src/models/ko.js": {

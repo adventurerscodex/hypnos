@@ -420,6 +420,12 @@ window.esdocSearchIndex = [
     "member"
   ],
   [
+    "src/models/base.js~basemodel.getdependents",
+    "class/src/models/base.js~BaseModel.html#static-method-getDependents",
+    "src/models/base.js~BaseModel.getDependents",
+    "method"
+  ],
+  [
     "src/models/base.js~basemodel.ps",
     "class/src/models/base.js~BaseModel.html#static-get-ps",
     "src/models/base.js~BaseModel.ps",

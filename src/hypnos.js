@@ -107,7 +107,7 @@ class _Hypnos {
 
         // If this is a model-based request and we should clear the dep cache, do so.
         if (this.cache && model && flushDepsCache) {
-            const dependents = model.__dependents__ || [];
+            const dependents = model.getDependents();
             const dependentKeys = this.cache.keys().filter(key => (
                 dependents.some(dependent => {
                     if (typeof dependent === 'string') {

@@ -291,7 +291,7 @@ describe('Tokens', () => {
                 const response4 = await Book.ps.list();
                 expect(response4.fromCache).toBe(true);
 
-                // Update an author, which SHOULD clear the book cache.
+                // Update an author, which SHOULD clear the book and the author cache.
                 const response5 = await Author.ps.create({
                     firstName: 'test',
                     lastName: 'testersson'
@@ -300,9 +300,12 @@ describe('Tokens', () => {
                 const response6 = await Book.ps.list();
                 expect(response6.fromCache).toBe(false);
 
+                const response7 = await Author.ps.list();
+                expect(response7.fromCache).toBe(false);
+
                 // And if we were to request the book list agin, it SHOULD be cached.
-                const response7 = await Book.ps.list();
-                expect(response7.fromCache).toBe(true);
+                const response8 = await Book.ps.list();
+                expect(response8.fromCache).toBe(true);
             });
         });
     });

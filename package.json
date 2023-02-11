@@ -60,6 +60,6 @@
     "jest": "^20.0.4",
     "rimraf": "^2.6.1",
     "webpack": "^4.1.1",
-    "webpack-cli": "^2.0.11"
+    "webpack-cli": "^5.0.1"
   }
 }

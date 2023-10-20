@@ -74,6 +74,48 @@ describe('Hypnos', () => {
         expect(response2.data.time).toEqual(time);
     });
 
+    it('should attempt a cached API request after an uncached one with a custom ttl', async () => {
+        const time = (new Date()).getTime();
+
+        const transport = new coreapi.transports.HTTPTransport({
+            fetch: mockedFetch(JSON.stringify({
+                time,
+            }), 'application/json')
+        });
+
+        Hypnos.configuration = {
+            ...defaultConfiguration,
+            cacheConfig: {
+                ttl: 0,
+            }
+        };
+        Hypnos.client.client = new coreapi.Client({ transports: [transport] });
+
+        const ttl = parseInt(Math.random() * 1000);
+        const response1 = await Hypnos.client.action({
+            keys: ['books', 'list'],
+            params: {},
+            useCache: true,
+            ttl: ttl,
+        });
+
+        expect(response1.fromCache).toBe(false);
+        expect(response1.data.time).toEqual(time);
+
+        // Do the same request again.
+        const response2 = await Hypnos.client.action({
+            keys: ['books', 'list'],
+            params: {},
+            useCache: true,
+        });
+
+        expect(response2.fromCache).toBe(true);
+        expect(response2.data.time).toEqual(time);
+
+        const cacheKey = Hypnos.client.cacheKey(['books', 'list']);
+        expect(Hypnos.client.cache.getTtl(cacheKey), ttl);
+    });
+
     describe('Shortcut Actions', () => {
         it('should attempt to list objects and cache the results', async () => {
             const bookFixtures = [

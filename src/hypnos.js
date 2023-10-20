@@ -79,7 +79,7 @@ class _Hypnos {
     /**
      * TODO: Document
      */
-    action = async ({ keys, params, raw, useCache=false, flushDepsCache=true, model=null, many=false }) => {
+    action = async ({ keys, params, raw, useCache=false, flushDepsCache=true, model=null, many=false, ttl=null }) => {
         // If we can and should, prefer the cache.
         if (this.cache && useCache) {
             const key = this.cacheKey(model, keys, params, raw);
@@ -102,7 +102,7 @@ class _Hypnos {
         // If we should, store the new value in the cache.
         if (this.cache && useCache) {
             const key = this.cacheKey(model, keys, params, raw);
-            this.cache.set(key, data);
+            this.cache.set(key, data, ttl);
         }
 
         // If this is a model-based request and we should clear the dep cache, do so.
@@ -166,9 +166,9 @@ class _Hypnos {
      *         // Do stuff with books...
      *     });
      */
-    list = async (model, params={}, raw=false, useCache=true, flushDepsCache=false) => {
+    list = async (model, params={}, raw=false, useCache=true, flushDepsCache=false, ttl=null) => {
         const keys = [...model.__skeys__, 'list'];
-        return await this.action({ keys, params, raw, model, many: true, useCache, flushDepsCache });
+        return await this.action({ keys, params, raw, model, many: true, useCache, flushDepsCache, ttl });
     };
 
     /**
@@ -184,9 +184,9 @@ class _Hypnos {
      *         // Do stuff with your book...
      *     });
      */
-    read = async (model, params={}, raw=false, useCache=true, flushDepsCache=false) => {
+    read = async (model, params={}, raw=false, useCache=true, flushDepsCache=false, ttl=null) => {
         const keys = [...model.__skeys__, 'read'];
-        return await this.action({ keys, params, raw, model, many: false, useCache, flushDepsCache });
+        return await this.action({ keys, params, raw, model, many: false, useCache, flushDepsCache, ttl });
     };
 
     /**
